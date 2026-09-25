@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="paper"><feTurbulence baseFrequency=".018 .08" numOctaves="3" seed="21"/><feColorMatrix values="1 0 0 0 .89 0 1 0 0 .91 0 0 1 0 .82 0 0 0 .16 0"/></filter>
+    <radialGradient id="wash"><stop stop-color="#557f6f" stop-opacity=".38"/><stop offset="1" stop-color="#557f6f" stop-opacity="0"/></radialGradient>
+    <pattern id="weave" width="72" height="72" patternUnits="userSpaceOnUse"><path d="M36 4 68 36 36 68 4 36Z" fill="none" stroke="#9a7133" stroke-opacity=".13" stroke-width="2"/></pattern>
+  </defs>
+  <rect width="1600" height="1200" fill="#f6f0df"/>
+  <rect width="1600" height="1200" filter="url(#paper)" opacity=".55"/>
+  <ellipse cx="260" cy="160" rx="540" ry="360" fill="url(#wash)"/>
+  <ellipse cx="1390" cy="1050" rx="560" ry="410" fill="url(#wash)" opacity=".7"/>
+  <rect width="1600" height="1200" fill="url(#weave)" opacity=".45"/>
+  <g fill="none" stroke="#2a574b" stroke-linecap="round" opacity=".22">
+    <path d="M70 1160C190 920 315 675 510 420" stroke-width="9"/>
+    <path d="M180 940c-94-11-146-68-149-166 100 5 154 62 149 166ZM285 766c-10-97 35-160 133-186 21 94-23 158-133 186ZM365 621c79-57 155-52 226 15-75 65-151 60-226-15Z" stroke-width="5"/>
+  </g>
+  <path d="M0 1060c310-118 559-89 790 31 266 138 527 120 810-34v143H0Z" fill="#183b34" opacity=".08"/>
+</svg>

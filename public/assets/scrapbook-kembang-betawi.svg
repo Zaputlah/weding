@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="paper"><feTurbulence baseFrequency=".019 .072" numOctaves="3" seed="81"/><feColorMatrix values="1 0 0 0 .79 0 1 0 0 .78 0 0 1 0 .61 0 0 0 .13 0"/></filter>
+    <radialGradient id="teal"><stop stop-color="#2f8176" stop-opacity=".34"/><stop offset="1" stop-color="#2f8176" stop-opacity="0"/></radialGradient>
+    <radialGradient id="coral"><stop stop-color="#c75e52" stop-opacity=".28"/><stop offset="1" stop-color="#c75e52" stop-opacity="0"/></radialGradient>
+    <pattern id="tumpal" width="120" height="80" patternUnits="userSpaceOnUse"><path d="M0 76 30 12l30 64 30-64 30 64" fill="none" stroke="#ad7132" stroke-opacity=".16" stroke-width="3"/></pattern>
+  </defs>
+  <rect width="1600" height="1200" fill="#f5ead4"/>
+  <rect width="1600" height="1200" filter="url(#paper)" opacity=".55"/>
+  <ellipse cx="250" cy="190" rx="560" ry="400" fill="url(#teal)"/>
+  <ellipse cx="1400" cy="1040" rx="630" ry="480" fill="url(#coral)"/>
+  <rect width="1600" height="1200" fill="url(#tumpal)" opacity=".72"/>
+  <g fill="none" stroke="#215c58" opacity=".19" stroke-width="6">
+    <path d="M180 850c-52-68-37-129 42-178-2 92 37 125 117 99-49 86-111 112-186 53"/>
+    <path d="M1420 350c52 68 37 129-42 178 2-92-37-125-117-99 49-86 111-112 186-53"/>
+  </g>
+  <g fill="#e7b955" opacity=".18"><circle cx="210" cy="795" r="26"/><circle cx="1390" cy="405" r="26"/></g>
+</svg>

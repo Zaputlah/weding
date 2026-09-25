@@ -1,0 +1,2442 @@
+<svg
+  class="pointer-events-none absolute h-0 w-0 overflow-hidden"
+  width="0"
+  height="0"
+  aria-hidden="true"
+>
+  <defs>
+    <filter
+      id="theme-outfit-recolor"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        in="SourceGraphic"
+        type="hueRotate"
+        [attr.values]="activeOutfitPalette().hueRotation"
+        result="hueShifted"
+      />
+      <feColorMatrix
+        in="hueShifted"
+        type="saturate"
+        [attr.values]="activeOutfitPalette().saturation"
+        result="themeSaturated"
+      />
+      <feComponentTransfer in="themeSaturated" result="themeColored">
+        <feFuncR type="linear" [attr.slope]="activeOutfitPalette().brightness" />
+        <feFuncG type="linear" [attr.slope]="activeOutfitPalette().brightness" />
+        <feFuncB type="linear" [attr.slope]="activeOutfitPalette().brightness" />
+      </feComponentTransfer>
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="
+          0  0 0 0 1
+          0  0 0 0 1
+          0  0 0 0 1
+          1 -1.5 0.3 0 -0.05"
+        result="maroonMaskBase"
+      />
+      <feComponentTransfer in="maroonMaskBase" result="clothingMask">
+        <feFuncA type="linear" slope="5" intercept="0" />
+      </feComponentTransfer>
+      <feComposite
+        in="themeColored"
+        in2="clothingMask"
+        operator="in"
+        result="recoloredClothing"
+      />
+      <feComposite
+        in="SourceGraphic"
+        in2="clothingMask"
+        operator="out"
+        result="originalDetails"
+      />
+      <feMerge>
+        <feMergeNode in="originalDetails" />
+        <feMergeNode in="recoloredClothing" />
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<div
+  class="fixed inset-0 z-50 overflow-hidden bg-linear-to-br from-[var(--theme-deep)] to-[var(--theme-primary)] text-center text-white transition-opacity duration-300 motion-reduce:transition-none"
+  [class.invisible]="isCoverHidden()"
+  [class.pointer-events-none]="isOpening()"
+  [class.opacity-0]="isCoverHidden()"
+  [attr.aria-hidden]="isOpen()"
+>
+  <div
+    class="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40 mix-blend-soft-light"
+    [style.background-image]="'url(' + themeScrapbookBackground() + ')'"
+    aria-hidden="true"
+  ></div>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_5%,var(--theme-deep)_115%)] opacity-65"
+    aria-hidden="true"
+  ></div>
+  @switch (activeThemeId()) {
+    @case ('emerald') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute top-[12%] left-[8%] size-36 rotate-45 border border-current/15 sm:size-56"></span>
+        <span class="absolute right-[7%] bottom-[8%] size-44 rotate-45 border border-current/10 sm:size-64"></span>
+        <span class="absolute inset-5 border border-current/10 sm:inset-9"></span>
+        <span class="absolute top-5 left-5 size-12 border-t border-l border-current/55 sm:top-9 sm:left-9"></span>
+        <span class="absolute right-5 bottom-5 size-12 border-r border-b border-current/55 sm:right-9 sm:bottom-9"></span>
+      </div>
+    }
+    @case ('maroon') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-cream)]" aria-hidden="true">
+        <span class="absolute top-[9%] left-1/2 h-[76%] w-[86%] max-w-2xl -translate-x-1/2 rounded-t-[50%] border border-current/15"></span>
+        <div class="absolute -top-12 -left-12 size-52 rotate-[-18deg] opacity-20">
+          <span class="absolute top-14 left-20 h-24 w-10 rotate-12 rounded-[100%_0_100%_0] border border-current bg-[var(--theme-secondary)]"></span>
+          <span class="absolute top-24 left-10 h-20 w-9 -rotate-35 rounded-[100%_0_100%_0] border border-current bg-[var(--theme-primary)]"></span>
+          <span class="absolute top-7 left-8 size-16 rounded-full border border-current"></span>
+        </div>
+        <div class="absolute -right-10 -bottom-8 size-48 rotate-160 opacity-20">
+          <span class="absolute top-14 left-20 h-24 w-10 rotate-12 rounded-[100%_0_100%_0] border border-current bg-[var(--theme-secondary)]"></span>
+          <span class="absolute top-24 left-10 h-20 w-9 -rotate-35 rounded-[100%_0_100%_0] border border-current bg-[var(--theme-primary)]"></span>
+          <span class="absolute top-7 left-8 size-16 rounded-full border border-current"></span>
+        </div>
+      </div>
+    }
+    @case ('midnight') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute top-[8%] left-[8%] [font-family:Cormorant_Garamond,serif] text-8xl font-light opacity-20 sm:text-9xl">☾</span>
+        <span class="absolute top-[16%] right-[15%] text-xl opacity-35">✦</span>
+        <span class="absolute top-[31%] left-[12%] text-[10px] opacity-40">✦</span>
+        <span class="absolute right-[9%] bottom-[22%] text-sm opacity-30">✦</span>
+        <span class="absolute bottom-[12%] left-[20%] text-[8px] opacity-45">✦</span>
+        <span class="absolute top-[11%] right-[34%] size-1 rounded-full bg-current/50"></span>
+        <span class="absolute right-[24%] bottom-[12%] size-1 rounded-full bg-current/40"></span>
+        <span class="absolute inset-6 rounded-[2rem] border border-current/10 sm:inset-10"></span>
+      </div>
+    }
+    @case ('mocha') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)] opacity-25" aria-hidden="true">
+        <svg class="absolute -bottom-6 -left-8 h-72 w-44" viewBox="0 0 180 300" fill="none" stroke="currentColor">
+          <path d="M28 294C40 226 69 157 142 35" stroke-width="2" />
+          <path d="M63 205c-32-2-47-17-48-43 30-1 48 14 48 43ZM91 145c-4-30 10-49 36-56 7 29-7 49-36 56ZM45 247c19-25 41-30 64-15-16 26-38 31-64 15Z" stroke-width="1.5" />
+        </svg>
+        <svg class="absolute -top-8 -right-10 h-64 w-40 rotate-180" viewBox="0 0 180 300" fill="none" stroke="currentColor">
+          <path d="M28 294C40 226 69 157 142 35" stroke-width="2" />
+          <path d="M63 205c-32-2-47-17-48-43 30-1 48 14 48 43ZM91 145c-4-30 10-49 36-56 7 29-7 49-36 56Z" stroke-width="1.5" />
+        </svg>
+        <span class="absolute inset-4 border border-dashed border-current/35 sm:inset-8"></span>
+      </div>
+    }
+    @case ('ivory') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-cream)]" aria-hidden="true">
+        <span class="absolute top-[8%] left-0 w-full border-t border-current/12"></span>
+        <span class="absolute right-[7%] bottom-[8%] [font-family:Cormorant_Garamond,serif] text-[9rem] leading-none font-light opacity-[0.06] sm:text-[15rem]">{{ coupleInitials() }}</span>
+        <span class="absolute top-[15%] left-[7%] text-[9px] tracking-[0.5em] opacity-35 [writing-mode:vertical-rl]">TWENTY · OCTOBER · 2026</span>
+        <span class="absolute right-[7%] bottom-[13%] h-px w-28 bg-current/25"></span>
+      </div>
+    }
+    @case ('javanese') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <svg class="absolute top-[8%] left-1/2 h-[70%] w-[80%] max-w-xl -translate-x-1/2 opacity-12" viewBox="0 0 500 650" fill="none" stroke="currentColor">
+          <path d="M250 18C225 94 174 129 132 198c-43 70-61 158-26 238 29 66 83 114 144 168 61-54 115-102 144-168 35-80 17-168-26-238-42-69-93-104-118-180Z" stroke-width="3" />
+          <path d="M250 90v438M181 238c45 21 67 61 69 118M319 238c-45 21-67 61-69 118M149 405c55-21 87-5 101 42M351 405c-55-21-87-5-101 42" stroke-width="2" />
+        </svg>
+        <span class="absolute inset-5 border-2 border-current/12 sm:inset-9"></span>
+        <span class="absolute inset-7 border border-current/10 sm:inset-12"></span>
+      </div>
+    }
+    @case ('boho') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute top-[10%] left-1/2 h-[78%] w-[84%] max-w-2xl -translate-x-1/2 rounded-t-[50%] border border-current/12"></span>
+        <svg class="absolute -right-10 -bottom-8 h-80 w-56 opacity-20" viewBox="0 0 220 340" fill="none" stroke="currentColor">
+          <path d="M32 332C58 238 111 147 190 29M81 231c-31-25-43-57-35-94 40 17 54 48 35 94ZM126 151c8-42 31-66 68-70-1 43-23 67-68 70Z" stroke-width="2" />
+          <path d="M77 281c43-15 77-7 102 24-42 19-76 11-102-24Z" stroke-width="1.5" />
+        </svg>
+      </div>
+    }
+    @case ('watercolor') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-cream)]" aria-hidden="true">
+        <span class="absolute -top-20 -left-16 size-72 rounded-full bg-[var(--theme-accent)]/12 blur-3xl"></span>
+        <span class="absolute -right-20 -bottom-16 size-80 rounded-full bg-[var(--theme-secondary)]/22 blur-3xl"></span>
+        <svg class="absolute bottom-[5%] left-1/2 h-[42%] w-[92%] max-w-3xl -translate-x-1/2 opacity-15" viewBox="0 0 700 320" fill="none" stroke="currentColor">
+          <path d="M82 293V124h92V72h75v221M451 293V72h75v52h92v169M249 293V155h202v138M293 155V98h114v57M322 293V204h56v89" stroke-width="2" />
+          <path d="M62 293h576M111 124V89h34v35M555 124V89h34v35" />
+        </svg>
+      </div>
+    }
+    @case ('mihrab') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute top-[8%] left-1/2 h-[78%] w-[78%] max-w-xl -translate-x-1/2 rounded-t-[50%] border border-current/18"></span>
+        <span class="absolute top-[13%] left-1/2 h-[68%] w-[64%] max-w-md -translate-x-1/2 rounded-t-[50%] border border-current/10"></span>
+        <span class="absolute top-[7%] left-1/2 -translate-x-1/2 text-4xl opacity-40">☾</span>
+        <span class="absolute right-[8%] bottom-[8%] size-36 rotate-45 border border-current/10"></span>
+      </div>
+    }
+    @case ('terracotta') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-cream)]" aria-hidden="true">
+        <span class="absolute -top-16 -left-20 h-64 w-40 rotate-35 rounded-[100%_0_100%_0] border border-current/20 bg-[var(--theme-secondary)]/15"></span>
+        <span class="absolute -right-16 -bottom-20 h-72 w-44 -rotate-35 rounded-[100%_0_100%_0] border border-current/15 bg-[var(--theme-accent)]/10"></span>
+        <span class="absolute inset-x-[7%] top-[11%] border-t border-dashed border-current/20"></span>
+        <span class="absolute inset-x-[7%] bottom-[11%] border-b border-dashed border-current/20"></span>
+      </div>
+    }
+    @case ('pearl') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-cream)]" aria-hidden="true">
+        <span class="absolute top-[9%] left-1/2 size-[28rem] max-h-[74vh] max-w-[82vw] -translate-x-1/2 rotate-45 rounded-[4rem] border border-current/10"></span>
+        <span class="absolute top-[15%] left-1/2 size-[22rem] max-h-[62vh] max-w-[68vw] -translate-x-1/2 rotate-45 rounded-[3rem] border border-current/8"></span>
+        <span class="absolute top-[10%] right-[12%] size-2 rounded-full bg-current/35"></span>
+        <span class="absolute bottom-[18%] left-[10%] size-1.5 rounded-full bg-current/30"></span>
+      </div>
+    }
+    @case ('indigo') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <svg class="absolute top-[8%] left-1/2 h-[76%] w-[84%] max-w-2xl -translate-x-1/2 opacity-15" viewBox="0 0 600 700" fill="none" stroke="currentColor">
+          <path d="M300 20 420 140 300 260 180 140 300 20Zm0 230 180 180-180 180L120 430l180-180Z" stroke-width="2" />
+          <path d="M300 75 365 140 300 205 235 140 300 75Zm0 245 110 110-110 110-110-110 110-110Z" />
+        </svg>
+        <span class="absolute inset-5 border border-current/10 sm:inset-9"></span>
+        <span class="absolute top-5 left-1/2 h-20 w-px bg-linear-to-b from-current/50 to-transparent"></span>
+      </div>
+    }
+    @case ('sundanese') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute top-[8%] left-[7%] size-28 rotate-45 rounded-[35%] border border-current/18"></span>
+        <span class="absolute right-[8%] bottom-[10%] size-36 -rotate-12 rounded-[50%_10%] border border-current/14"></span>
+        <span class="absolute inset-6 rounded-t-[8rem] border border-current/12 sm:inset-10"></span>
+      </div>
+    }
+    @case ('minangkabau') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <svg class="absolute inset-x-[5%] top-[7%] h-44 w-[90%] opacity-22" viewBox="0 0 900 180" fill="none" stroke="currentColor"><path d="M10 150C120 130 180 78 225 10c42 68 104 120 215 140M440 150c110-20 170-72 215-140 42 68 104 120 235 140" stroke-width="3"/><path d="M10 164h880"/></svg>
+        <span class="absolute inset-5 border-2 border-current/12 sm:inset-9"></span>
+      </div>
+    }
+    @case ('dayak') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute -top-20 -left-16 size-72 rounded-full border-[10px] border-double border-current/12"></span>
+        <span class="absolute -right-20 -bottom-16 size-80 rounded-full border-[10px] border-double border-current/10"></span>
+        <span class="absolute top-[14%] left-1/2 h-[70%] w-[76%] -translate-x-1/2 rounded-[45%_12%] border border-current/15"></span>
+      </div>
+    }
+    @case ('balinese') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute top-[8%] left-[8%] h-[78%] w-[26%] [clip-path:polygon(50%_0,100%_18%,82%_100%,0_100%,18%_18%)] border border-current/18"></span>
+        <span class="absolute top-[8%] right-[8%] h-[78%] w-[26%] [clip-path:polygon(50%_0,82%_18%,100%_100%,18%_100%,0_18%)] border border-current/18"></span>
+        <span class="absolute inset-x-[12%] bottom-[9%] border-b border-current/22"></span>
+      </div>
+    }
+    @case ('bugis') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <svg class="absolute right-[4%] bottom-[7%] h-[56%] w-[50%] opacity-18" viewBox="0 0 500 500" fill="none" stroke="currentColor"><path d="M248 430V32L96 290h152Zm18-378v378h178Z" stroke-width="3"/><path d="M48 431h410M28 458c70-34 140-34 210 0s140 34 230 0"/></svg>
+        <span class="absolute inset-x-[7%] top-[10%] border-t border-current/20"></span>
+      </div>
+    }
+    @case ('betawi') {
+      <div class="pointer-events-none absolute inset-0 overflow-hidden text-[var(--theme-accent)]" aria-hidden="true">
+        <span class="absolute top-[8%] left-[8%] size-28 rotate-45 rounded-[2.5rem_0] border-2 border-current/16 motion-safe:animate-spin [animation-duration:28s]"></span>
+        <span class="absolute right-[7%] bottom-[8%] size-36 -rotate-45 rounded-[3rem_0] border-2 border-current/14 motion-safe:animate-spin [animation-direction:reverse] [animation-duration:32s]"></span>
+        <span class="absolute inset-5 border border-dashed border-current/18 sm:inset-9"></span>
+      </div>
+    }
+  }
+
+  @if (false) {
+    <div
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center overflow-hidden px-5 py-7 transition-all duration-300 ease-out motion-reduce:transition-none"
+      [class.translate-y-4]="isOpening()"
+      [class.scale-95]="isOpening()"
+      [class.opacity-0]="isOpening()"
+    >
+      <div
+        class="absolute -left-32 -top-32 size-72 rotate-45 border border-white/10"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="absolute -bottom-36 -right-36 size-80 rotate-45 border border-white/10"
+        aria-hidden="true"
+      ></div>
+      <svg
+        class="pointer-events-none absolute inset-4 h-[calc(100%-2rem)] w-[calc(100%-2rem)] sm:inset-8 sm:h-[calc(100%-4rem)] sm:w-[calc(100%-4rem)]"
+        viewBox="0 0 1000 700"
+        preserveAspectRatio="none"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect
+          x="18"
+          y="18"
+          width="964"
+          height="664"
+          rx="24"
+          pathLength="1"
+          stroke="var(--theme-accent)"
+          stroke-width="2"
+          stroke-dasharray="1"
+          vector-effect="non-scaling-stroke"
+          class="transition-[stroke-dashoffset,opacity] duration-[1800ms] ease-out motion-reduce:transition-none"
+          [attr.stroke-dashoffset]="isFrameVisible() ? 0 : 1"
+          [class.opacity-100]="isFrameVisible()"
+          [class.opacity-0]="!isFrameVisible()"
+        />
+        <rect
+          x="32"
+          y="32"
+          width="936"
+          height="636"
+          rx="18"
+          pathLength="1"
+          stroke="var(--theme-cream)"
+          stroke-width="1"
+          stroke-dasharray="1"
+          vector-effect="non-scaling-stroke"
+          class="transition-[stroke-dashoffset,opacity] delay-200 duration-[1800ms] ease-out motion-reduce:transition-none"
+          [attr.stroke-dashoffset]="isFrameVisible() ? 0 : -1"
+          [class.opacity-50]="isFrameVisible()"
+          [class.opacity-0]="!isFrameVisible()"
+        />
+        <g
+          stroke="var(--theme-accent)"
+          stroke-width="2"
+          stroke-linecap="round"
+          vector-effect="non-scaling-stroke"
+          class="transition-opacity delay-1000 duration-700 motion-reduce:transition-none"
+          [class.opacity-100]="isFrameVisible()"
+          [class.opacity-0]="!isFrameVisible()"
+        >
+          <path d="M18 112V52Q18 18 52 18H142M18 78H78V18" />
+          <path d="M858 18H948Q982 18 982 52V112M922 18V78H982" />
+          <path d="M18 588V648Q18 682 52 682H142M18 622H78V682" />
+          <path d="M858 682H948Q982 682 982 648V588M922 682V622H982" />
+        </g>
+        <g
+          fill="var(--theme-cream)"
+          class="transition-opacity delay-[1400ms] duration-500 motion-reduce:transition-none"
+          [class.opacity-100]="isFrameVisible()"
+          [class.opacity-0]="!isFrameVisible()"
+        >
+          <path d="M78 62l6 8-6 8-6-8z" />
+          <path d="M922 62l6 8-6 8-6-8z" />
+          <path d="M78 622l6 8-6 8-6-8z" />
+          <path d="M922 622l6 8-6 8-6-8z" />
+        </g>
+      </svg>
+      <button
+        class="relative mb-5 grid size-12 cursor-pointer place-items-center rounded-full border border-[var(--theme-accent)]/30 bg-white/5 transition hover:border-[var(--theme-accent)]/70 hover:bg-white/10"
+        type="button"
+        aria-label="Tampilkan percikan bintang"
+        (click)="animateStar()"
+      >
+        <span
+          class="relative z-10 block text-3xl text-[var(--theme-accent)] transition-all duration-700 ease-out motion-reduce:transform-none"
+          [class.rotate-[360deg]]="isStarAnimating()"
+          [class.scale-150]="isStarAnimating()"
+          [class.text-[var(--theme-cream)]]="isStarAnimating()"
+          aria-hidden="true"
+          >✦</span
+        >
+        @if (isStarAnimating()) {
+          <span
+            class="absolute -top-2 left-1/2 text-xs text-[var(--theme-cream)] animate-ping motion-reduce:hidden"
+            aria-hidden="true"
+            >✦</span
+          >
+          <span
+            class="absolute top-1/2 -right-2 text-[10px] text-[var(--theme-accent)] animate-ping motion-reduce:hidden"
+            aria-hidden="true"
+            >✦</span
+          >
+          <span
+            class="absolute -bottom-2 left-1/3 text-xs text-[var(--theme-cream)] animate-ping motion-reduce:hidden"
+            aria-hidden="true"
+            >✦</span
+          >
+          <span
+            class="absolute top-1/3 -left-2 text-[10px] text-[var(--theme-accent)] animate-ping motion-reduce:hidden"
+            aria-hidden="true"
+            >✦</span
+          >
+        }
+      </button>
+      <p class="mb-3 [font-family:Cormorant_Garamond,serif] text-xl text-white/90">
+        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+      </p>
+      <p class="mb-4 text-xs font-semibold tracking-[0.28em] text-[var(--theme-accent)]">
+        UNDANGAN WALIMATUL ‘URS
+      </p>
+      <h1
+        class="m-0 [font-family:Cormorant_Garamond,serif] text-6xl leading-[0.9] font-semibold sm:text-8xl"
+      >
+        {{ brideName() }} <span class="font-medium italic text-[var(--theme-accent)]">&</span> {{ groomName() }}
+      </h1>
+      <p class="my-7 text-xs tracking-[0.17em]">SELASA · 20 OKTOBER 2026</p>
+      <form
+        class="w-full max-w-md border-y border-white/20 px-6 py-5"
+        (ngSubmit)="openInvitation()"
+      >
+        <p class="m-0 text-base leading-loose text-white/70" lang="ar" dir="rtl">
+          السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ
+        </p>
+        <label
+          class="mt-4 mb-2 block text-[11px] tracking-wider text-white/60 uppercase"
+          for="guestNameInput"
+          >Silakan tuliskan nama Anda</label
+        >
+        <input
+          class="w-full border border-white/25 bg-white/10 px-4 py-3 text-center [font-family:Cormorant_Garamond,serif] text-xl text-white outline-none placeholder:text-white/35 focus:border-[var(--theme-accent)]"
+          id="guestNameInput"
+          name="guestNameInput"
+          type="text"
+          maxlength="120"
+          autocomplete="name"
+          placeholder="Masukkan nama Anda"
+          [(ngModel)]="nameInput"
+        />
+        @if (nameError()) {
+          <p class="mt-2 mb-0 text-xs text-[#f5c6b8]">{{ nameError() }}</p>
+        }
+        <button
+          class="mt-5 cursor-pointer rounded-full bg-[var(--theme-cream)] px-6 py-3 text-sm font-semibold text-[var(--theme-deep)] transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-wait disabled:opacity-70"
+          type="submit"
+          [disabled]="isOpening()"
+        >
+          {{ isOpening() ? 'Membuka Undangan…' : 'Buka Undangan' }}
+        </button>
+      </form>
+      <span
+        class="pointer-events-none absolute inset-y-0 right-0 w-px bg-linear-to-b from-transparent via-[var(--theme-accent)]/70 to-transparent"
+        aria-hidden="true"
+      ></span>
+    </div>
+  }
+
+  <div
+    class="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden px-5 py-5"
+  >
+    <p
+      class="mb-1 [font-family:Cormorant_Garamond,serif] text-xl text-[var(--theme-cream)] transition-[transform,opacity] duration-700 ease-out motion-reduce:transition-none"
+      [style.opacity]="isEnvelopeReady() ? 1 : 0"
+      [style.transform]="isEnvelopeReady() ? 'translateY(0)' : 'translateY(-14px)'"
+      [style.transition-delay]="'80ms'"
+      lang="ar"
+      dir="rtl"
+    >
+      بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+    </p>
+    <p
+      class="mb-1 text-[10px] font-semibold tracking-[0.25em] text-[var(--theme-accent)] transition-[transform,opacity] duration-700 ease-out motion-reduce:transition-none"
+      [style.opacity]="isEnvelopeReady() ? 1 : 0"
+      [style.transform]="isEnvelopeReady() ? 'translateY(0)' : 'translateY(-12px)'"
+      [style.transition-delay]="'170ms'"
+    >
+      UNDANGAN WALIMATUL ‘URS
+    </p>
+    <p
+      class="mb-2 text-[9px] tracking-[0.17em] text-white/50 transition-[transform,opacity] duration-700 ease-out motion-reduce:transition-none"
+      [style.opacity]="isEnvelopeReady() ? 1 : 0"
+      [style.transform]="isEnvelopeReady() ? 'translateY(0)' : 'translateY(-10px)'"
+      [style.transition-delay]="'250ms'"
+    >
+      SELASA · 20 OKTOBER 2026
+    </p>
+
+    <div
+      class="relative h-[22rem] w-full max-w-md -translate-y-4 [perspective:1200px] sm:h-[27rem] sm:-translate-y-8"
+    >
+      <span
+        class="absolute top-1/2 left-1/2 h-52 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--theme-accent)]/10 blur-3xl"
+      ></span>
+
+      <div
+        class="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] transform-3d motion-reduce:transition-none"
+        [class.rotate-y-180]="isEnvelopeBackVisible()"
+      >
+        <div
+          class="absolute inset-0 [backface-visibility:hidden]"
+          [class.pointer-events-none]="isEnvelopeBackVisible()"
+          [attr.aria-hidden]="isEnvelopeBackVisible()"
+        >
+          <div
+            class="absolute inset-x-0 bottom-6 z-10 h-52 border border-[var(--theme-accent)]/50 bg-[var(--theme-primary)] bg-cover bg-center bg-blend-multiply shadow-2xl transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:bottom-8 sm:h-64"
+            [style.background-image]="'url(' + themeScrapbookBackground() + ')'"
+            [style.border-radius]="envelopeBorderRadius()"
+            [style.opacity]="isEnvelopeReady() ? 1 : 0"
+            [style.transform]="
+              isEnvelopeReady() ? 'translateY(0) scaleX(1)' : 'translateY(42px) scaleX(0.72)'
+            "
+            [style.transition-delay]="'180ms'"
+          ></div>
+
+          <div
+            class="absolute inset-x-0 bottom-6 z-20 h-52 sm:bottom-8 sm:h-64"
+            [style.border-radius]="envelopeBorderRadius()"
+            [style.overflow]="isEnvelopeLetterReleased() ? 'visible' : 'hidden'"
+            aria-hidden="true"
+          >
+          <div
+            class="absolute inset-x-6 bottom-8 flex h-52 flex-col items-center justify-center border border-[var(--theme-border)] bg-[var(--theme-paper)] bg-cover bg-center bg-blend-soft-light px-5 text-[var(--theme-deep)] opacity-0 shadow-xl transition-[transform,opacity] will-change-[transform,opacity] motion-reduce:transition-none sm:inset-x-8 sm:bottom-10 sm:h-64"
+            [style.background-image]="'url(' + themeScrapbookBackground() + ')'"
+            [class.rounded-t-[4rem]]="activeThemeId() === 'maroon'"
+            [class.rounded-2xl]="activeThemeId() === 'midnight'"
+            [class.rounded-lg]="activeThemeId() === 'mocha' || activeThemeId() === 'javanese'"
+            [class.rounded-none]="activeThemeId() === 'ivory'"
+            [class.rounded-tr-[3rem]]="activeThemeId() === 'boho'"
+            [class.rounded-t-[7rem]]="activeThemeId() === 'watercolor'"
+            [class.rounded-t-[6rem]]="activeThemeId() === 'mihrab'"
+            [class.rounded-tl-[3rem]]="activeThemeId() === 'terracotta'"
+            [class.rounded-3xl]="activeThemeId() === 'pearl'"
+            [class.rounded-lg]="activeThemeId() === 'indigo'"
+            [class.opacity-100]="isOpening()"
+            [style.transform]="envelopeLetterTransform()"
+            [style.transition-duration.ms]="envelopeLetterDurationMs()"
+            [style.transition-delay.ms]="isOpening() ? envelopeLetterDelayMs() : 0"
+            [style.transition-timing-function]="envelopeLetterEasing()"
+          >
+            @switch (activeThemeId()) {
+              @case ('emerald') { <span class="mb-2 size-4 rotate-45 border border-[var(--theme-accent-dark)]" aria-hidden="true"></span> }
+              @case ('maroon') { <span class="mb-1 text-3xl text-[var(--theme-accent-dark)]">❀</span> }
+              @case ('midnight') { <span class="mb-1 text-3xl text-[var(--theme-accent-dark)]">☾</span> }
+              @case ('mocha') { <span class="mb-1 text-2xl text-[var(--theme-accent-dark)]">⌁</span> }
+              @case ('ivory') { <span class="mb-2 text-[9px] tracking-[0.38em] text-[var(--theme-accent-dark)]">VOL. 01</span> }
+              @case ('javanese') { <span class="mb-1 text-2xl text-[var(--theme-accent-dark)]">◆</span> }
+              @case ('boho') { <span class="mb-1 text-3xl font-light text-[var(--theme-accent-dark)]">⌇</span> }
+              @case ('watercolor') { <span class="mb-1 text-3xl text-[var(--theme-accent-dark)]">❦</span> }
+              @case ('mihrab') { <span class="mb-1 grid h-9 w-8 place-items-center rounded-t-full border border-[var(--theme-accent-dark)] text-base text-[var(--theme-accent-dark)]">☾</span> }
+              @case ('terracotta') { <span class="mb-1 text-2xl text-[var(--theme-accent-dark)]">⌇</span> }
+              @case ('pearl') { <span class="mb-2 size-3 rounded-full bg-[var(--theme-accent)] ring-4 ring-[var(--theme-accent)]/20"></span> }
+              @case ('indigo') { <span class="mb-2 size-4 rotate-45 border-2 border-[var(--theme-accent-dark)]"></span> }
+              @case ('sundanese') { <span class="mb-2 inline-block h-6 w-4 rotate-45 rounded-[100%_0] border-2 border-[var(--theme-accent-dark)]"></span> }
+              @case ('minangkabau') { <span class="mb-2 h-6 w-10 [clip-path:polygon(50%_0,100%_38%,82%_100%,18%_100%,0_38%)] bg-[var(--theme-accent-dark)]"></span> }
+              @case ('dayak') { <span class="mb-2 size-6 rounded-[45%_12%] border-2 border-double border-[var(--theme-accent-dark)]"></span> }
+              @case ('balinese') { <span class="mb-2 h-7 w-6 [clip-path:polygon(50%_0,88%_28%,82%_100%,18%_100%,12%_28%)] bg-[var(--theme-accent-dark)]"></span> }
+              @case ('bugis') { <span class="mb-2 inline-block h-6 w-8 border-b-2 border-l-2 border-[var(--theme-accent-dark)] [clip-path:polygon(0_100%,50%_0,100%_100%)]"></span> }
+              @case ('betawi') { <span class="mb-2 size-5 rotate-45 rounded-[.6rem_0] border-2 border-[var(--theme-accent-dark)]"></span> }
+            }
+            <span class="text-[10px] font-semibold tracking-[0.22em] text-[var(--theme-muted)]"
+              >UNDANGAN WALIMATUL ‘URS</span
+            >
+            <strong class="mt-2 [font-family:Cormorant_Garamond,serif] text-4xl font-semibold"
+              >{{ brideName() }} <em class="font-medium text-[var(--theme-accent-dark)]">&</em> {{ groomName() }}</strong
+            >
+            <span
+              class="mt-3 block max-w-full truncate border-t border-[var(--theme-border)] px-5 pt-2 [font-family:Cormorant_Garamond,serif] text-lg text-[var(--theme-copy)]"
+              >{{ guestName() }}</span
+            >
+            <span class="mt-2 text-[9px] tracking-[0.15em] text-[var(--theme-muted)]">20 · 10 · 2026</span>
+          </div>
+          </div>
+
+          @if (isOpening()) {
+            <div class="pointer-events-none absolute inset-0 z-[70] grid place-items-center overflow-hidden" aria-hidden="true">
+              @switch (activeThemeId()) {
+                @case ('emerald') {
+                  <span class="size-28 rotate-45 border border-[var(--theme-accent)]/55 motion-safe:animate-ping [animation-duration:1.5s]"></span>
+                  <span class="absolute size-14 rotate-45 border border-[var(--theme-cream)]/40 motion-safe:animate-ping [animation-delay:180ms] [animation-duration:1.5s]"></span>
+                }
+                @case ('maroon') {
+                  <span class="absolute -translate-x-20 -translate-y-12 text-5xl text-[var(--theme-accent)]/65 motion-safe:animate-ping [animation-duration:1.6s]">❀</span>
+                  <span class="absolute translate-x-20 translate-y-8 text-6xl text-[var(--theme-cream)]/45 motion-safe:animate-ping [animation-delay:180ms] [animation-duration:1.8s]">❀</span>
+                  <span class="text-7xl text-[var(--theme-accent)]/35 motion-safe:animate-spin [animation-duration:2s]">❀</span>
+                }
+                @case ('midnight') {
+                  <span class="size-48 rounded-full border border-[var(--theme-accent)]/40 motion-safe:animate-ping [animation-duration:1.8s]"></span>
+                  <span class="absolute text-7xl text-[var(--theme-accent)]/70 motion-safe:animate-pulse">☾</span>
+                  <span class="absolute top-[26%] left-[23%] text-xl text-[var(--theme-cream)] motion-safe:animate-ping">✦</span>
+                  <span class="absolute right-[22%] bottom-[28%] text-sm text-[var(--theme-accent)] motion-safe:animate-ping [animation-delay:250ms]">✦</span>
+                }
+                @case ('mocha') {
+                  <span class="absolute h-48 w-px -rotate-45 bg-linear-to-b from-transparent via-[var(--theme-accent)]/60 to-transparent motion-safe:animate-pulse"></span>
+                  <span class="-translate-x-8 text-6xl font-light text-[var(--theme-accent)]/60 motion-safe:animate-[bounce_1.4s_ease-in-out_infinite]">⌁</span>
+                }
+                @case ('ivory') {
+                  <span class="absolute inset-y-0 left-1/2 w-px bg-white/55 motion-safe:animate-pulse"></span>
+                  <span class="absolute h-px w-[70%] bg-white/35 motion-safe:animate-ping [animation-duration:1.4s]"></span>
+                  <span class="text-[10px] tracking-[0.6em] text-white/80">OPENING · EDITION</span>
+                }
+                @case ('javanese') {
+                  <svg class="h-52 w-40 text-[var(--theme-accent)]/55 motion-safe:animate-pulse" viewBox="0 0 160 220" fill="none" stroke="currentColor"><path d="M80 4C68 43 36 64 25 106c-15 53 13 82 55 108 42-26 70-55 55-108C124 64 92 43 80 4Z" stroke-width="2" /><path d="M80 30v151M49 102c21 12 30 31 31 55M111 102c-21 12-30 31-31 55" /></svg>
+                }
+                @case ('boho') {
+                  <span class="size-52 rounded-t-[50%] border border-[var(--theme-accent)]/45 motion-safe:animate-ping [animation-duration:1.8s]"></span>
+                  <span class="absolute rotate-12 text-8xl font-light text-[var(--theme-cream)]/35 motion-safe:animate-pulse">⌇</span>
+                }
+                @case ('watercolor') {
+                  <span class="absolute size-56 rounded-[45%_55%_38%_62%] bg-[var(--theme-accent)]/22 blur-xl motion-safe:animate-ping [animation-duration:1.8s]"></span>
+                  <span class="absolute size-44 translate-x-10 rounded-[60%_40%_58%_42%] bg-white/16 blur-2xl motion-safe:animate-pulse"></span>
+                  <span class="relative text-7xl text-[var(--theme-cream)]/55">❦</span>
+                }
+                @case ('mihrab') {
+                  <span class="h-56 w-44 rounded-t-[50%] border border-[var(--theme-accent)]/55 motion-safe:animate-ping [animation-duration:1.7s]"></span>
+                  <span class="absolute h-40 w-28 rounded-t-[50%] border border-[var(--theme-cream)]/35 motion-safe:animate-pulse"></span>
+                  <span class="absolute top-[28%] text-4xl text-[var(--theme-accent)]">☾</span>
+                }
+                @case ('terracotta') {
+                  <span class="absolute h-48 w-32 -rotate-12 border border-dashed border-[var(--theme-accent)]/45 motion-safe:animate-ping [animation-duration:1.5s]"></span>
+                  <span class="absolute h-44 w-28 rotate-12 border border-[var(--theme-cream)]/30 motion-safe:animate-pulse"></span>
+                  <span class="text-6xl text-[var(--theme-accent)]/55">⌇</span>
+                }
+                @case ('pearl') {
+                  <span class="size-40 rounded-full border border-white/35 motion-safe:animate-ping [animation-duration:1.8s]"></span>
+                  <span class="absolute size-8 -translate-x-20 -translate-y-14 rounded-full bg-[var(--theme-cream)]/45 motion-safe:animate-ping"></span>
+                  <span class="absolute size-5 translate-x-20 translate-y-12 rounded-full bg-[var(--theme-accent)]/60 motion-safe:animate-ping [animation-delay:250ms]"></span>
+                }
+                @case ('indigo') {
+                  <span class="size-36 rotate-45 border-2 border-[var(--theme-accent)]/55 motion-safe:animate-ping [animation-duration:1.7s]"></span>
+                  <span class="absolute size-20 rotate-45 border border-[var(--theme-cream)]/40 motion-safe:animate-spin [animation-duration:2s]"></span>
+                  <span class="absolute size-5 rotate-45 bg-[var(--theme-accent)]/70"></span>
+                }
+                @case ('sundanese') {
+                  <span class="size-44 rounded-t-[50%] border border-[var(--theme-accent)]/50 motion-safe:animate-ping [animation-duration:1.7s]"></span>
+                  <span class="absolute h-24 w-14 rotate-45 rounded-[100%_0] border-2 border-[var(--theme-cream)]/40 motion-safe:animate-[bounce_1.5s_ease-in-out_infinite]"></span>
+                }
+                @case ('minangkabau') {
+                  <span class="h-36 w-60 [clip-path:polygon(0_24%,20%_0,38%_20%,50%_0,62%_20%,80%_0,100%_24%,94%_100%,6%_100%)] border-2 border-[var(--theme-accent)]/55 bg-[var(--theme-accent)]/8 motion-safe:animate-ping [animation-duration:1.8s]"></span>
+                }
+                @case ('dayak') {
+                  <span class="size-44 rounded-full border-[9px] border-double border-[var(--theme-accent)]/45 motion-safe:animate-spin [animation-duration:2.2s]"></span>
+                  <span class="absolute size-20 rounded-[45%_12%] border border-[var(--theme-cream)]/40 motion-safe:animate-ping"></span>
+                }
+                @case ('balinese') {
+                  <span class="h-52 w-40 [clip-path:polygon(50%_0,92%_20%,100%_80%,72%_100%,28%_100%,0_80%,8%_20%)] border-2 border-[var(--theme-accent)]/55 motion-safe:animate-ping [animation-duration:1.9s]"></span>
+                  <span class="absolute h-32 w-20 border-x border-[var(--theme-cream)]/35 motion-safe:animate-pulse"></span>
+                }
+                @case ('bugis') {
+                  <span class="absolute h-px w-[72%] bg-[var(--theme-accent)]/55 motion-safe:animate-ping [animation-duration:1.5s]"></span>
+                  <span class="h-40 w-32 [clip-path:polygon(0_100%,52%_0,52%_100%,100%_24%,100%_100%)] border-2 border-[var(--theme-cream)]/40 motion-safe:animate-[bounce_1.8s_ease-in-out_infinite]"></span>
+                }
+                @case ('betawi') {
+                  <span class="size-40 rotate-45 rounded-[4rem_0] border-2 border-[var(--theme-accent)]/55 motion-safe:animate-spin [animation-duration:2s]"></span>
+                  <span class="absolute size-20 -rotate-45 rounded-[2rem_0] border border-[var(--theme-cream)]/40 motion-safe:animate-ping"></span>
+                }
+              }
+            </div>
+          }
+
+          <div
+            class="absolute inset-x-0 top-30 h-40 origin-top bg-[var(--theme-secondary)] bg-cover bg-center bg-blend-multiply shadow-lg transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] transform-3d motion-reduce:transition-none sm:top-36 sm:h-48"
+            [style.background-image]="'url(' + themeScrapbookBackground() + ')'"
+            [class.z-30]="!isOpening()"
+            [class.z-0]="isOpening()"
+            [style.clip-path]="envelopeFlapClipPath()"
+            [style.opacity]="isEnvelopeReady() ? 1 : 0"
+            [style.transform]="
+              isOpening()
+                ? 'rotateX(180deg)'
+                : isEnvelopeReady()
+                  ? 'rotateX(0deg)'
+                  : 'rotateX(-95deg)'
+            "
+            [style.transition-delay]="isOpening() ? '150ms' : '420ms'"
+          ></div>
+
+          <div
+            class="absolute inset-x-0 bottom-6 z-40 h-44 bg-[var(--theme-dark)] bg-cover bg-center bg-blend-multiply transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:bottom-8 sm:h-56"
+            [style.background-image]="'url(' + themeScrapbookBackground() + ')'"
+            [class.rounded-b-2xl]="activeThemeId() === 'maroon'"
+            [class.rounded-b-3xl]="activeThemeId() === 'midnight' || activeThemeId() === 'watercolor'"
+            [class.rounded-b-xl]="activeThemeId() === 'mocha'"
+            [class.rounded-b-lg]="activeThemeId() === 'javanese'"
+            [class.rounded-bl-[3rem]]="activeThemeId() === 'boho'"
+            [class.rounded-b-xl]="activeThemeId() === 'mihrab'"
+            [class.rounded-br-[3rem]]="activeThemeId() === 'terracotta'"
+            [class.rounded-b-[2.5rem]]="activeThemeId() === 'pearl'"
+            [class.rounded-b-lg]="activeThemeId() === 'indigo'"
+            [style.clip-path]="envelopePocketClipPath()"
+            [style.opacity]="isEnvelopeReady() ? 1 : 0"
+            [style.transform]="isEnvelopeReady() ? 'translateY(0)' : 'translateY(58px)'"
+            [style.transition-delay]="'650ms'"
+          ></div>
+          <div
+            class="absolute inset-x-0 bottom-6 z-40 h-44 bg-linear-to-t from-black/15 to-transparent transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:bottom-8 sm:h-56"
+            [class.rounded-b-2xl]="activeThemeId() === 'maroon'"
+            [class.rounded-b-3xl]="activeThemeId() === 'midnight' || activeThemeId() === 'watercolor'"
+            [class.rounded-b-xl]="activeThemeId() === 'mocha'"
+            [class.rounded-b-lg]="activeThemeId() === 'javanese'"
+            [class.rounded-bl-[3rem]]="activeThemeId() === 'boho'"
+            [class.rounded-b-xl]="activeThemeId() === 'mihrab'"
+            [class.rounded-br-[3rem]]="activeThemeId() === 'terracotta'"
+            [class.rounded-b-[2.5rem]]="activeThemeId() === 'pearl'"
+            [class.rounded-b-lg]="activeThemeId() === 'indigo'"
+            [style.clip-path]="envelopePocketClipPath()"
+            [style.opacity]="isEnvelopeReady() ? 1 : 0"
+            [style.transform]="isEnvelopeReady() ? 'translateY(0)' : 'translateY(58px)'"
+            [style.transition-delay]="'650ms'"
+          ></div>
+
+          @switch (activeThemeId()) {
+            @case ('emerald') {
+              <div class="pointer-events-none absolute inset-x-5 bottom-9 z-[45] flex items-end justify-between text-[var(--theme-accent)]/25 sm:bottom-12" aria-hidden="true">
+                <span class="size-8 rotate-45 border border-current"></span>
+                <span class="size-8 rotate-45 border border-current"></span>
+              </div>
+            }
+            @case ('maroon') {
+              <div class="pointer-events-none absolute inset-x-5 bottom-10 z-[45] flex items-end justify-between text-[var(--theme-cream)]/25 sm:bottom-12" aria-hidden="true">
+                <span class="text-4xl">❀</span>
+                <span class="text-4xl">❀</span>
+              </div>
+            }
+            @case ('midnight') {
+              <div class="pointer-events-none absolute inset-x-7 bottom-10 z-[45] text-[var(--theme-accent)]/40 sm:bottom-12" aria-hidden="true">
+                <span class="absolute bottom-4 left-0 text-sm">✦</span>
+                <span class="absolute right-0 bottom-8 text-[10px]">✦</span>
+                <span class="absolute right-10 bottom-1 text-[7px]">✦</span>
+                <span class="absolute bottom-1 left-10 text-[7px]">✦</span>
+                <span class="absolute right-3 bottom-3 left-3 h-px -rotate-3 bg-linear-to-r from-transparent via-current/40 to-transparent"></span>
+              </div>
+            }
+            @case ('mocha') {
+              <svg class="pointer-events-none absolute right-4 bottom-7 z-[45] h-24 w-20 text-[var(--theme-accent)]/35 sm:bottom-9" viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M68 94C55 66 39 38 13 8M45 54C59 51 67 43 68 31 54 31 46 39 45 54ZM30 35C18 34 10 27 8 17 20 15 28 22 30 35Z" stroke-width="1.5" />
+              </svg>
+            }
+            @case ('ivory') {
+              <div class="pointer-events-none absolute inset-x-6 bottom-10 z-[45] flex items-center gap-3 text-[var(--theme-cream)]/30 sm:bottom-12" aria-hidden="true">
+                <span class="h-px flex-1 bg-current"></span><span class="text-[8px] tracking-[0.45em]">20 · X · 26</span><span class="h-px flex-1 bg-current"></span>
+              </div>
+            }
+            @case ('javanese') {
+              <svg class="pointer-events-none absolute right-5 bottom-7 z-[45] h-24 w-20 text-[var(--theme-accent)]/35 sm:bottom-9" viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M40 3C33 25 17 35 11 57c-7 25 8 35 29 40 21-5 36-15 29-40C63 35 47 25 40 3Z" stroke-width="1.5" /><path d="M40 18v67M23 52c10 4 16 11 17 22M57 52c-10 4-16 11-17 22" />
+              </svg>
+            }
+            @case ('boho') {
+              <svg class="pointer-events-none absolute right-1 bottom-5 z-[45] h-28 w-24 text-[var(--theme-accent)]/30 sm:bottom-7" viewBox="0 0 90 120" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M76 116C61 78 42 42 14 5M49 64c16-2 25-11 26-26-16 1-25 10-26 26ZM33 43C18 43 9 35 8 22c15-1 24 6 25 21Z" stroke-width="1.5" />
+              </svg>
+            }
+            @case ('watercolor') {
+              <svg class="pointer-events-none absolute right-4 bottom-7 z-[45] h-24 w-28 text-[var(--theme-cream)]/28 sm:bottom-9" viewBox="0 0 120 90" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M10 85V34h20V20h18v65M72 85V20h18v14h20v51M48 85V45h24v40M56 85V62h8v23" stroke-width="1.3" />
+              </svg>
+            }
+            @case ('mihrab') {
+              <div class="pointer-events-none absolute inset-x-6 bottom-8 z-[45] h-24 text-[var(--theme-accent)]/35 sm:bottom-10" aria-hidden="true">
+                <span class="absolute bottom-0 left-1/2 h-20 w-28 -translate-x-1/2 rounded-t-[50%] border border-current"></span>
+                <span class="absolute bottom-0 left-1/2 h-14 w-20 -translate-x-1/2 rounded-t-[50%] border border-current/60"></span>
+              </div>
+            }
+            @case ('terracotta') {
+              <svg class="pointer-events-none absolute right-3 bottom-5 z-[45] h-28 w-24 -rotate-12 text-[var(--theme-cream)]/28" viewBox="0 0 90 120" fill="none" stroke="currentColor" aria-hidden="true"><path d="M75 115C62 78 43 44 15 7M49 65c17-3 25-12 25-27-16 2-25 11-25 27ZM34 44C19 43 11 35 10 23c15-1 23 6 24 21Z" stroke-width="1.5" /></svg>
+            }
+            @case ('pearl') {
+              <div class="pointer-events-none absolute inset-x-9 bottom-10 z-[45] flex justify-between text-[var(--theme-cream)]/45 sm:bottom-12" aria-hidden="true"><span class="size-2 rounded-full bg-current shadow-[0_0_0_5px_rgba(255,255,255,0.05)]"></span><span class="size-2 rounded-full bg-current shadow-[0_0_0_5px_rgba(255,255,255,0.05)]"></span></div>
+            }
+            @case ('indigo') {
+              <div class="pointer-events-none absolute inset-x-7 bottom-9 z-[45] grid grid-cols-5 items-center text-[var(--theme-accent)]/30 sm:bottom-11" aria-hidden="true"><span class="h-px bg-current"></span><span class="size-5 rotate-45 justify-self-center border border-current"></span><span class="size-2 rotate-45 justify-self-center bg-current"></span><span class="size-5 rotate-45 justify-self-center border border-current"></span><span class="h-px bg-current"></span></div>
+            }
+          }
+
+          <div
+            class="absolute inset-x-0 top-36 z-50 flex flex-col items-center transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none sm:top-44"
+            [style.opacity]="isOpening() ? 0 : isEnvelopeReady() ? 1 : 0"
+            [style.transform]="
+              isOpening()
+                ? 'translateY(-8px)'
+                : isEnvelopeReady()
+                  ? 'translateY(0)'
+                  : 'translateY(16px)'
+            "
+            [style.transition-delay]="isOpening() ? '0ms' : '880ms'"
+          >
+            <span class="text-[8px] font-semibold tracking-[0.2em] text-[var(--theme-cream)]/65 uppercase"
+              >Kepada Yth.</span
+            >
+            <input
+              class="mt-0.5 w-full max-w-64 bg-transparent px-2 py-1 text-center [font-family:Cormorant_Garamond,serif] text-xl font-semibold text-[var(--theme-cream)] outline-none placeholder:text-[var(--theme-cream)]/75 focus:text-white"
+              id="frontGuestNameInput"
+              name="frontGuestNameInput"
+              form="invitationOpenForm"
+              type="text"
+              maxlength="120"
+              autocomplete="name"
+              placeholder="Nama Tamu Undangan"
+              [(ngModel)]="nameInput"
+              (ngModelChange)="nameError.set('')"
+              aria-label="Nama tamu undangan"
+            />
+            @if (nameError()) {
+              <p class="absolute top-full mt-1 text-[9px] text-[#f5c6b8]">{{ nameError() }}</p>
+            }
+          </div>
+
+          <button
+            class="absolute top-[13.25rem] left-1/2 z-50 grid size-10 -translate-x-1/2 cursor-pointer place-items-center border border-[var(--theme-cream)]/60 bg-[var(--theme-accent-dark)] [font-family:Cormorant_Garamond,serif] text-base font-semibold text-[var(--theme-deep)] shadow-lg transition-[transform,opacity,background-color] duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-[var(--theme-accent)] motion-reduce:transition-none sm:top-64"
+            [class.rounded-full]="activeThemeId() !== 'mocha' && activeThemeId() !== 'javanese' && activeThemeId() !== 'boho' && activeThemeId() !== 'pearl' && activeThemeId() !== 'indigo'"
+            [class.rounded-md]="activeThemeId() === 'mocha'"
+            [class.border-2]="activeThemeId() === 'maroon' || activeThemeId() === 'midnight' || activeThemeId() === 'javanese'"
+            [style.clip-path]="envelopeSealClipPath()"
+            [style.width.px]="envelopeSealWidth()"
+            [style.opacity]="isOpening() ? 0 : isEnvelopeReady() ? 1 : 0"
+            [style.transform]="envelopeSealTransform()"
+            [style.transition-delay]="isOpening() ? '0ms' : '1030ms'"
+            type="button"
+            (click)="toggleEnvelopeSide()"
+            aria-label="Lihat sisi belakang amplop"
+          >
+            <span [class.-rotate-45]="activeThemeId() === 'mocha'">{{ coupleInitials() }}</span>
+          </button>
+
+          <form
+            id="invitationOpenForm"
+            class="absolute inset-x-7 top-68 z-50 flex flex-col items-center transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none sm:top-[19.5rem]"
+            [style.opacity]="isOpening() ? 0 : isEnvelopeReady() ? 1 : 0"
+            [style.transform]="
+              isOpening()
+                ? 'translateY(12px)'
+                : isEnvelopeReady()
+                  ? 'translateY(0)'
+                  : 'translateY(18px)'
+            "
+            [style.transition-delay]="isOpening() ? '0ms' : '1190ms'"
+            (ngSubmit)="openInvitation()"
+          >
+            <button
+              class="cursor-pointer rounded-full bg-[var(--theme-cream)] px-7 py-2.5 text-xs font-semibold tracking-[0.08em] text-[var(--theme-deep)] shadow-md transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-wait disabled:opacity-70"
+              type="submit"
+              [disabled]="isOpening()"
+            >
+              Buka Undangan
+            </button>
+          </form>
+
+          <span
+            class="absolute inset-x-0 bottom-0 text-[10px] font-semibold tracking-[0.22em] text-[var(--theme-cream)]/80 uppercase opacity-0 transition-opacity delay-300 duration-300 motion-reduce:transition-none"
+            [class.opacity-100]="isOpening()"
+            >Membuka undangan…</span
+          >
+        </div>
+
+        <div
+          class="absolute inset-0 rotate-y-180 [backface-visibility:hidden]"
+          [class.pointer-events-none]="!isEnvelopeBackVisible()"
+          [attr.aria-hidden]="!isEnvelopeBackVisible()"
+        >
+          <div
+            class="absolute inset-x-0 bottom-6 h-52 overflow-hidden border border-[var(--theme-accent)]/60 bg-[var(--theme-dark)] bg-cover bg-center bg-blend-multiply shadow-2xl sm:bottom-8 sm:h-64"
+            [style.background-image]="'url(' + themeScrapbookBackground() + ')'"
+            [style.border-radius]="envelopeBorderRadius()"
+          >
+            <div
+              class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.10),transparent_65%)]"
+            ></div>
+            @switch (activeThemeId()) {
+              @case ('emerald') {
+                <span class="absolute top-5 left-6 size-6 rotate-45 border border-[var(--theme-accent)]/45" aria-hidden="true"></span>
+                <span class="absolute right-6 bottom-5 size-6 rotate-45 border border-[var(--theme-accent)]/45" aria-hidden="true"></span>
+              }
+              @case ('maroon') {
+                <span class="absolute top-4 left-6 text-3xl text-[var(--theme-cream)]/25 motion-safe:animate-spin [animation-duration:12s]" aria-hidden="true">❀</span>
+                <span class="absolute right-6 bottom-4 text-3xl text-[var(--theme-cream)]/25 motion-safe:animate-spin [animation-direction:reverse] [animation-duration:15s]" aria-hidden="true">❀</span>
+              }
+              @case ('midnight') {
+                <span class="absolute top-3 left-6 text-4xl text-[var(--theme-accent)]/35" aria-hidden="true">☾</span>
+                <span class="absolute top-6 right-8 text-xs text-[var(--theme-accent)]/50" aria-hidden="true">✦</span>
+                <span class="absolute right-16 bottom-5 text-[8px] text-[var(--theme-accent)]/45" aria-hidden="true">✦</span>
+              }
+              @case ('mocha') {
+                <svg class="absolute -right-2 -bottom-4 h-28 w-24 text-[var(--theme-accent)]/30" viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path d="M68 94C55 66 39 38 13 8M45 54C59 51 67 43 68 31 54 31 46 39 45 54ZM30 35C18 34 10 27 8 17 20 15 28 22 30 35Z" stroke-width="1.5" />
+                </svg>
+              }
+              @case ('ivory') {
+                <span class="absolute inset-x-8 top-8 border-t border-[var(--theme-cream)]/25" aria-hidden="true"></span>
+                <span class="absolute right-8 bottom-7 text-[8px] tracking-[0.4em] text-[var(--theme-cream)]/35" aria-hidden="true">20 · X · 26</span>
+              }
+              @case ('javanese') {
+                <svg class="absolute right-3 bottom-0 h-28 w-24 text-[var(--theme-accent)]/30" viewBox="0 0 80 100" fill="none" stroke="currentColor" aria-hidden="true"><path d="M40 3C33 25 17 35 11 57c-7 25 8 35 29 40 21-5 36-15 29-40C63 35 47 25 40 3Z" stroke-width="1.5" /><path d="M40 18v67M23 52c10 4 16 11 17 22M57 52c-10 4-16 11-17 22" /></svg>
+              }
+              @case ('boho') {
+                <svg class="absolute -right-2 -bottom-4 h-28 w-24 text-[var(--theme-accent)]/28" viewBox="0 0 90 120" fill="none" stroke="currentColor" aria-hidden="true"><path d="M76 116C61 78 42 42 14 5M49 64c16-2 25-11 26-26-16 1-25 10-26 26ZM33 43C18 43 9 35 8 22c15-1 24 6 25 21Z" stroke-width="1.5" /></svg>
+              }
+              @case ('watercolor') {
+                <span class="absolute -top-8 -left-8 size-32 rounded-full bg-[var(--theme-accent)]/15 blur-2xl" aria-hidden="true"></span>
+                <svg class="absolute right-3 bottom-1 h-24 w-28 text-[var(--theme-cream)]/22" viewBox="0 0 120 90" fill="none" stroke="currentColor" aria-hidden="true"><path d="M10 85V34h20V20h18v65M72 85V20h18v14h20v51M48 85V45h24v40M56 85V62h8v23" stroke-width="1.3" /></svg>
+              }
+              @case ('mihrab') {
+                <span class="absolute top-5 left-1/2 h-36 w-28 -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-accent)]/25" aria-hidden="true"></span>
+              }
+              @case ('terracotta') {
+                <span class="absolute inset-x-5 top-5 border-t border-dashed border-[var(--theme-cream)]/20" aria-hidden="true"></span>
+                <svg class="absolute -right-3 -bottom-5 h-32 w-24 text-[var(--theme-accent)]/25" viewBox="0 0 90 120" fill="none" stroke="currentColor" aria-hidden="true"><path d="M75 115C62 78 43 44 15 7M49 65c17-3 25-12 25-27-16 2-25 11-25 27Z" stroke-width="1.5" /></svg>
+              }
+              @case ('pearl') {
+                <span class="absolute top-7 left-8 size-2 rounded-full bg-[var(--theme-cream)]/35" aria-hidden="true"></span><span class="absolute right-8 bottom-7 size-2 rounded-full bg-[var(--theme-cream)]/35" aria-hidden="true"></span>
+              }
+              @case ('indigo') {
+                <span class="absolute top-8 left-8 size-9 rotate-45 border border-[var(--theme-accent)]/30" aria-hidden="true"></span><span class="absolute right-8 bottom-8 size-9 rotate-45 border border-[var(--theme-accent)]/30" aria-hidden="true"></span>
+              }
+            }
+
+            <div class="absolute inset-0 z-10 flex flex-col items-center justify-center px-6">
+              <p
+                class="mb-3 [font-family:Cormorant_Garamond,serif] text-lg text-[var(--theme-cream)]/80"
+                lang="ar"
+                dir="rtl"
+              >
+                بِسْمِ اللَّهِ
+              </p>
+              <button
+                class="grid size-20 cursor-pointer place-items-center border-2 border-[var(--theme-cream)]/60 bg-[var(--theme-accent-dark)] [font-family:Cormorant_Garamond,serif] text-2xl font-semibold text-[var(--theme-deep)] shadow-xl transition hover:scale-110 hover:bg-[var(--theme-accent)]"
+                [class.rounded-full]="activeThemeId() !== 'mocha' && activeThemeId() !== 'javanese' && activeThemeId() !== 'boho' && activeThemeId() !== 'pearl' && activeThemeId() !== 'indigo'"
+                [class.rotate-45]="activeThemeId() === 'mocha'"
+                [class.rounded-xl]="activeThemeId() === 'mocha'"
+                [style.clip-path]="envelopeSealClipPath()"
+                [style.width.px]="activeThemeId() === 'ivory' || activeThemeId() === 'watercolor' ? 96 : 80"
+                type="button"
+                (click)="toggleEnvelopeSide()"
+                aria-label="Kembali ke sisi depan amplop"
+              >
+                <span [class.-rotate-45]="activeThemeId() === 'mocha'">{{ coupleInitials() }}</span>
+              </button>
+              <p class="mt-4 text-[10px] font-semibold tracking-[0.2em] text-[var(--theme-cream)] uppercase">
+                Klik segel untuk kembali
+              </p>
+              <p class="mt-2 text-[9px] tracking-[0.18em] text-white/45">20 · 10 · 2026</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (isSurpriseRendered()) {
+  <div
+    class="pointer-events-none fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-[var(--theme-deep)]/20 opacity-0 backdrop-blur-[2px] transition-opacity duration-500"
+    [class.opacity-100]="isSurpriseActive()"
+    aria-hidden="true"
+  >
+    <span
+      class="absolute left-1/2 top-1/2 size-24 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--theme-accent)]/80 opacity-0 shadow-[0_0_70px_var(--theme-accent)] transition-[width,height,opacity] duration-1000 ease-out"
+      [class.h-[28rem]]="isSurpriseActive()"
+      [class.w-[28rem]]="isSurpriseActive()"
+      [class.opacity-40]="isSurpriseActive()"
+    ></span>
+    <span
+      class="absolute left-1/2 top-1/2 size-16 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-[var(--theme-cream)]/70 opacity-0 transition-[width,height,opacity,transform] delay-100 duration-1000 ease-out"
+      [class.h-72]="isSurpriseActive()"
+      [class.w-72]="isSurpriseActive()"
+      [class.rotate-[225deg]]="isSurpriseActive()"
+      [class.opacity-50]="isSurpriseActive()"
+    ></span>
+
+    @for (particle of surpriseParticles; track $index) {
+      <span
+        class="absolute left-1/2 top-1/2 -ml-2 -mt-2 text-xl text-[var(--theme-accent)] opacity-0 drop-shadow-[0_0_10px_var(--theme-accent)] transition-[transform,opacity] duration-1000 ease-out sm:text-2xl"
+        [style.transition-delay.ms]="particle.delay"
+        [style.transform]="surpriseParticleTransform(particle)"
+        [style.opacity]="isSurpriseActive() ? 1 : 0"
+      >{{ particle.symbol }}</span>
+    }
+
+    <div
+      class="relative mx-5 max-w-sm translate-y-6 scale-75 border border-[var(--theme-accent)]/50 bg-[var(--theme-deep)]/92 px-7 py-7 text-center opacity-0 shadow-2xl transition-[opacity,transform] delay-300 duration-700"
+      [class.translate-y-0]="isSurpriseActive()"
+      [class.scale-100]="isSurpriseActive()"
+      [class.opacity-100]="isSurpriseActive()"
+      [class.rounded-full]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor' || activeThemeId() === 'mihrab' || activeThemeId() === 'pearl'"
+      [class.rounded-3xl]="activeThemeId() !== 'maroon' && activeThemeId() !== 'watercolor' && activeThemeId() !== 'mihrab' && activeThemeId() !== 'pearl'"
+    >
+      <p class="text-2xl leading-relaxed text-[var(--theme-cream)]" lang="ar" dir="rtl">
+        بَارَكَ اللَّهُ لَكُمَا
+      </p>
+      <p class="mt-2 text-[10px] font-semibold tracking-[0.3em] text-[var(--theme-accent)] uppercase">
+        Sebuah perjalanan baru dimulai
+      </p>
+    </div>
+  </div>
+}
+
+@if (isFlowerRainRendered()) {
+  <div class="pointer-events-none fixed inset-0 z-[96] overflow-hidden" aria-hidden="true">
+    @for (flower of fallingFlowers; track $index; let index = $index) {
+      <span
+        class="absolute top-0 -translate-y-[18vh] text-[var(--theme-accent)] opacity-0 drop-shadow-[0_3px_5px_rgba(0,0,0,0.2)] transition-[transform,opacity] ease-linear"
+        [class.text-[var(--theme-cream)]]="index % 3 === 1"
+        [style.left.%]="flower.left"
+        [style.font-size.px]="flower.size"
+        [style.transition-delay.ms]="flower.delay"
+        [style.transition-duration.ms]="flower.duration"
+        [style.transform]="fallingFlowerTransform(flower)"
+        [style.opacity]="isFlowerRainFalling() ? 0.9 : 0"
+      >{{ flower.symbol }}</span>
+    }
+  </div>
+}
+
+<main
+  class="relative isolate bg-[var(--theme-deep)] pb-20 text-white sm:pb-0"
+  [attr.aria-hidden]="!isOpen()"
+>
+  <div
+    class="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[var(--theme-deep)]"
+    aria-hidden="true"
+  >
+    <span
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-55 mix-blend-soft-light"
+      [style.background-image]="'url(' + themeScrapbookBackground() + ')'"
+    ></span>
+    <span
+      class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(255,255,255,0.10)_0%,transparent_45%,rgba(0,0,0,0.20)_100%)]"
+    ></span>
+  </div>
+
+  <section
+    id="home-section"
+    class="relative z-10 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-transparent px-5 py-24 text-center text-white"
+  >
+    @switch (activeThemeId()) {
+      @case ('emerald') {
+        <div class="pointer-events-none absolute -top-24 -left-60 h-[600px] w-80 rotate-45 rounded-tl-[100%] border-2 border-white/10" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -right-60 -bottom-28 h-[600px] w-80 rotate-[215deg] rounded-tl-[100%] border-2 border-white/10" aria-hidden="true"></div>
+      }
+      @case ('maroon') {
+        <svg
+          class="pointer-events-none absolute -top-20 -left-16 h-80 w-64 -rotate-12 text-[var(--theme-cream)]/22 motion-safe:animate-[pulse_6s_ease-in-out_infinite] sm:-left-8 sm:h-96 sm:w-72"
+          viewBox="0 0 260 390"
+          fill="none"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M30 382C58 279 103 185 194 50M73 280c-48-6-68-31-60-72 45 4 67 28 60 72ZM118 192c-5-44 16-72 58-82 9 42-12 71-58 82ZM53 329c42-34 82-35 116-2-39 36-78 37-116 2Z" stroke-width="2" />
+          <g class="origin-[194px_50px] motion-safe:animate-spin [animation-duration:18s]" fill="currentColor" fill-opacity="0.2" stroke-width="1.4">
+            <ellipse cx="194" cy="26" rx="11" ry="24" />
+            <ellipse cx="218" cy="50" rx="24" ry="11" />
+            <ellipse cx="194" cy="74" rx="11" ry="24" />
+            <ellipse cx="170" cy="50" rx="24" ry="11" />
+            <circle cx="194" cy="50" r="9" fill-opacity="0.5" />
+          </g>
+        </svg>
+
+        <svg
+          class="pointer-events-none absolute -right-20 -bottom-16 h-96 w-72 rotate-165 text-[#e9c6ce]/22 motion-safe:animate-[pulse_7s_ease-in-out_infinite] sm:-right-8 sm:h-[28rem] sm:w-80"
+          viewBox="0 0 280 430"
+          fill="none"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M35 421C65 308 114 205 214 56M83 309c-53-7-75-34-66-79 50 4 74 31 66 79ZM132 212c-6-48 18-80 64-91 10 47-14 79-64 91ZM61 365c46-38 90-39 128-2-43 40-86 41-128 2Z" stroke-width="2" />
+          <g class="origin-[214px_56px] motion-safe:animate-spin [animation-direction:reverse] [animation-duration:22s]" fill="currentColor" fill-opacity="0.18" stroke-width="1.4">
+            <ellipse cx="214" cy="29" rx="12" ry="27" />
+            <ellipse cx="241" cy="56" rx="27" ry="12" />
+            <ellipse cx="214" cy="83" rx="12" ry="27" />
+            <ellipse cx="187" cy="56" rx="27" ry="12" />
+            <circle cx="214" cy="56" r="10" fill-opacity="0.5" />
+          </g>
+        </svg>
+
+        <span class="pointer-events-none absolute top-[17%] left-[13%] text-5xl text-[#f0d3d9]/24 motion-safe:animate-[bounce_6s_ease-in-out_infinite] sm:text-7xl" aria-hidden="true">❀</span>
+        <span class="pointer-events-none absolute right-[10%] bottom-[14%] text-6xl text-[#e8bec8]/20 motion-safe:animate-spin [animation-direction:reverse] [animation-duration:20s] sm:text-8xl" aria-hidden="true">❀</span>
+        <div class="pointer-events-none absolute top-[8%] left-1/2 h-[82%] w-[88%] max-w-3xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-cream)]/22 shadow-[inset_0_0_80px_rgba(246,229,207,0.04)]" aria-hidden="true"></div>
+      }
+      @case ('midnight') {
+        <span class="pointer-events-none absolute top-[7%] right-[10%] [font-family:Cormorant_Garamond,serif] text-9xl text-[var(--theme-accent)]/18" aria-hidden="true">☾</span>
+        <span class="pointer-events-none absolute top-[20%] left-[12%] text-lg text-[var(--theme-accent)]/35" aria-hidden="true">✦</span>
+        <span class="pointer-events-none absolute right-[18%] bottom-[18%] text-xs text-[var(--theme-accent)]/35" aria-hidden="true">✦</span>
+        <div class="pointer-events-none absolute inset-6 rounded-[2.5rem] border border-[var(--theme-accent)]/12 sm:inset-12" aria-hidden="true"></div>
+      }
+      @case ('mocha') {
+        <svg class="pointer-events-none absolute -bottom-8 -left-10 h-[55%] w-60 text-[var(--theme-accent)]/22" viewBox="0 0 240 500" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="M25 490C52 348 112 204 216 24M79 328c-51-4-72-31-68-76 48 2 71 28 68 76ZM126 227c-4-48 19-78 64-87 7 45-16 76-64 87ZM52 402c38-38 78-43 116-13-34 41-74 45-116 13Z" stroke-width="2" />
+        </svg>
+        <svg class="pointer-events-none absolute -top-16 -right-12 h-[45%] w-52 rotate-180 text-[var(--theme-accent)]/18" viewBox="0 0 240 500" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="M25 490C52 348 112 204 216 24M79 328c-51-4-72-31-68-76 48 2 71 28 68 76ZM126 227c-4-48 19-78 64-87 7 45-16 76-64 87Z" stroke-width="2" />
+        </svg>
+      }
+      @case ('ivory') {
+        <span class="pointer-events-none absolute top-[12%] left-[6%] text-[9px] tracking-[0.5em] text-white/35 [writing-mode:vertical-rl]" aria-hidden="true">THE WEDDING EDITION</span>
+        <span class="pointer-events-none absolute right-[4%] bottom-[4%] [font-family:Cormorant_Garamond,serif] text-[11rem] leading-none text-white/[0.05] sm:text-[17rem]" aria-hidden="true">20</span>
+        <span class="pointer-events-none absolute inset-x-[6%] top-[8%] border-t border-white/15" aria-hidden="true"></span>
+      }
+      @case ('javanese') {
+        <svg class="pointer-events-none absolute top-[8%] left-1/2 h-[78%] w-[80%] max-w-xl -translate-x-1/2 text-[var(--theme-accent)]/12" viewBox="0 0 500 650" fill="none" stroke="currentColor" aria-hidden="true"><path d="M250 18C225 94 174 129 132 198c-43 70-61 158-26 238 29 66 83 114 144 168 61-54 115-102 144-168 35-80 17-168-26-238-42-69-93-104-118-180Z" stroke-width="3" /><path d="M250 90v438M181 238c45 21 67 61 69 118M319 238c-45 21-67 61-69 118" stroke-width="2" /></svg>
+      }
+      @case ('boho') {
+        <span class="pointer-events-none absolute top-[7%] left-1/2 h-[86%] w-[88%] max-w-3xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-accent)]/12" aria-hidden="true"></span>
+        <svg class="pointer-events-none absolute -right-10 -bottom-10 h-80 w-56 text-[var(--theme-accent)]/18" viewBox="0 0 220 340" fill="none" stroke="currentColor" aria-hidden="true"><path d="M32 332C58 238 111 147 190 29M81 231c-31-25-43-57-35-94 40 17 54 48 35 94ZM126 151c8-42 31-66 68-70-1 43-23 67-68 70Z" stroke-width="2" /></svg>
+      }
+      @case ('watercolor') {
+        <span class="pointer-events-none absolute -top-20 -left-14 size-72 rounded-full bg-[var(--theme-accent)]/15 blur-3xl" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute -right-16 -bottom-16 size-80 rounded-full bg-white/8 blur-3xl" aria-hidden="true"></span>
+        <svg class="pointer-events-none absolute bottom-[4%] left-1/2 h-[40%] w-[90%] max-w-3xl -translate-x-1/2 text-[var(--theme-cream)]/14" viewBox="0 0 700 320" fill="none" stroke="currentColor" aria-hidden="true"><path d="M82 293V124h92V72h75v221M451 293V72h75v52h92v169M249 293V155h202v138M293 155V98h114v57M322 293V204h56v89M62 293h576" stroke-width="2" /></svg>
+      }
+      @case ('mihrab') {
+        <span class="pointer-events-none absolute top-[7%] left-1/2 h-[84%] w-[86%] max-w-3xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-accent)]/16" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute top-[12%] left-1/2 h-[72%] w-[68%] max-w-xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-accent)]/9" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute top-[8%] left-1/2 -translate-x-1/2 text-5xl text-[var(--theme-accent)]/35" aria-hidden="true">☾</span>
+      }
+      @case ('terracotta') {
+        <span class="pointer-events-none absolute inset-x-[7%] top-[8%] border-t border-dashed border-white/15" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute -bottom-24 -left-14 h-96 w-52 rotate-35 rounded-[100%_0_100%_0] border border-[var(--theme-cream)]/12 bg-white/3" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute -top-28 -right-16 h-80 w-48 -rotate-30 rounded-[100%_0_100%_0] border border-[var(--theme-cream)]/10" aria-hidden="true"></span>
+      }
+      @case ('pearl') {
+        <span class="pointer-events-none absolute top-[9%] left-1/2 size-[32rem] max-h-[75vh] max-w-[80vw] -translate-x-1/2 rotate-45 rounded-[5rem] border border-white/10" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute top-[13%] left-1/2 size-[25rem] max-h-[64vh] max-w-[66vw] -translate-x-1/2 rotate-45 rounded-[4rem] border border-white/8" aria-hidden="true"></span>
+      }
+      @case ('indigo') {
+        <svg class="pointer-events-none absolute top-[8%] left-1/2 h-[80%] w-[88%] max-w-3xl -translate-x-1/2 text-[var(--theme-accent)]/12" viewBox="0 0 650 720" fill="none" stroke="currentColor" aria-hidden="true"><path d="M325 25 470 170 325 315 180 170 325 25Zm0 270 205 205-205 205L120 500l205-205Z" stroke-width="2" /><path d="M325 95 400 170 325 245 250 170 325 95Zm0 285 120 120-120 120-120-120 120-120Z" /></svg>
+      }
+      @case ('sundanese') {
+        <svg class="pointer-events-none absolute -bottom-16 -left-12 h-[58%] w-64 text-[var(--theme-accent)]/18" viewBox="0 0 240 520" fill="none" stroke="currentColor" aria-hidden="true"><path d="M24 510C58 356 112 218 218 24M74 350c-48-2-71-28-67-72 46 1 70 26 67 72Zm62-128c-4-49 21-78 66-85 6 46-18 76-66 85Z" stroke-width="3"/></svg>
+        <span class="pointer-events-none absolute inset-7 rounded-t-[10rem] border border-[var(--theme-accent)]/14" aria-hidden="true"></span>
+      }
+      @case ('minangkabau') {
+        <svg class="pointer-events-none absolute inset-x-[5%] top-[7%] h-44 w-[90%] text-[var(--theme-accent)]/22" viewBox="0 0 900 180" fill="none" stroke="currentColor" aria-hidden="true"><path d="M10 150C120 130 180 78 225 10c42 68 104 120 215 140M440 150c110-20 170-72 215-140 42 68 104 120 235 140" stroke-width="3"/><path d="M10 164h880"/></svg>
+        <span class="pointer-events-none absolute inset-8 border-2 border-[var(--theme-accent)]/12" aria-hidden="true"></span>
+      }
+      @case ('dayak') {
+        <span class="pointer-events-none absolute -top-32 -left-24 size-96 rounded-full border-[12px] border-double border-[var(--theme-accent)]/10" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute -right-28 -bottom-36 size-[28rem] rounded-full border-[12px] border-double border-[var(--theme-accent)]/8" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute top-[10%] left-1/2 h-[78%] w-[78%] -translate-x-1/2 rounded-[45%_10%] border border-[var(--theme-accent)]/14" aria-hidden="true"></span>
+      }
+      @case ('balinese') {
+        <span class="pointer-events-none absolute top-[7%] left-[7%] h-[82%] w-[27%] [clip-path:polygon(50%_0,100%_18%,82%_100%,0_100%,18%_18%)] bg-[var(--theme-accent)]/8" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute top-[7%] right-[7%] h-[82%] w-[27%] [clip-path:polygon(50%_0,82%_18%,100%_100%,18%_100%,0_18%)] bg-[var(--theme-accent)]/8" aria-hidden="true"></span>
+      }
+      @case ('bugis') {
+        <svg class="pointer-events-none absolute right-[4%] bottom-[5%] h-[60%] w-[52%] text-[var(--theme-accent)]/16" viewBox="0 0 500 500" fill="none" stroke="currentColor" aria-hidden="true"><path d="M248 430V32L96 290h152Zm18-378v378h178Z" stroke-width="3"/><path d="M48 431h410M28 458c70-34 140-34 210 0s140 34 230 0"/></svg>
+        <span class="pointer-events-none absolute inset-x-[7%] top-[9%] border-t border-[var(--theme-accent)]/18" aria-hidden="true"></span>
+      }
+      @case ('betawi') {
+        <span class="pointer-events-none absolute top-[12%] left-[8%] size-28 rotate-45 rounded-[2.5rem_0] border-2 border-[var(--theme-accent)]/14 motion-safe:animate-spin [animation-duration:26s]" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute right-[7%] bottom-[11%] size-36 -rotate-45 rounded-[3rem_0] border-2 border-[var(--theme-accent)]/12 motion-safe:animate-spin [animation-direction:reverse] [animation-duration:31s]" aria-hidden="true"></span>
+      }
+    }
+    <div
+      class="relative z-10 flex w-full flex-col items-center transition-[transform,opacity] will-change-[transform,opacity] motion-reduce:transform-none motion-reduce:transition-none"
+      [style.opacity]="isCoverHidden() ? 1 : 0"
+      [style.transform]="homeContentTransform()"
+      [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+      [style.transition-timing-function]="themeContentEasing()"
+    >
+    <p class="relative z-10 mb-4 text-sm font-bold tracking-[0.2em] text-[var(--theme-cream)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.38)] sm:text-base">
+      بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+    </p>
+    <h2
+      class="relative z-10 m-0 [font-family:Cormorant_Garamond,serif] text-6xl leading-[0.9] font-bold drop-shadow-[0_4px_18px_rgba(0,0,0,0.24)] sm:text-8xl"
+      [class.leading-[0.68]]="activeThemeId() === 'maroon'"
+      [class.tracking-[0.08em]]="activeThemeId() === 'midnight'"
+      [class.uppercase]="activeThemeId() === 'ivory'"
+      [class.tracking-[0.06em]]="activeThemeId() === 'ivory'"
+    >
+      @switch (activeThemeId()) {
+        @case ('maroon') {
+          <span class="block italic">{{ brideName() }}</span>
+          <span class="my-3 block text-2xl font-normal tracking-[0.2em] text-[var(--theme-accent)] not-italic sm:text-3xl">dan</span>
+          <span class="block italic">{{ groomName() }}</span>
+        }
+        @case ('midnight') {
+          <span>{{ brideName() }}</span>
+          <span class="mx-1 inline-grid size-10 place-items-center rounded-full border border-[var(--theme-accent)]/45 align-middle text-2xl text-[var(--theme-accent)] sm:size-14 sm:text-3xl">✦</span>
+          <span>{{ groomName() }}</span>
+        }
+        @case ('mocha') {
+          <span>{{ brideName() }}</span>
+          <span class="mx-3 inline-flex items-center align-middle text-3xl text-[var(--theme-accent)] sm:text-4xl"><span class="mr-2 h-px w-5 bg-current"></span>&<span class="ml-2 h-px w-5 bg-current"></span></span>
+          <span>{{ groomName() }}</span>
+        }
+        @case ('ivory') {
+          <span class="block text-5xl sm:text-7xl">{{ brideName() }}</span>
+          <span class="my-3 flex items-center justify-center gap-3 text-xl font-normal text-[var(--theme-accent)]"><span class="h-px w-12 bg-current"></span>&<span class="h-px w-12 bg-current"></span></span>
+          <span class="block text-5xl sm:text-7xl">{{ groomName() }}</span>
+        }
+        @case ('javanese') {
+          <span>{{ brideName() }}</span>
+          <span class="mx-2 inline-grid size-12 place-items-center align-middle text-[var(--theme-accent)] sm:size-16">
+            <svg viewBox="0 0 50 62" fill="none" stroke="currentColor" aria-hidden="true"><path d="M25 2C21 16 10 22 7 36c-4 15 6 21 18 24 12-3 22-9 18-24C40 22 29 16 25 2Z" /><path d="M25 11v39" /></svg>
+          </span>
+          <span>{{ groomName() }}</span>
+        }
+        @case ('boho') {
+          <span class="font-light italic">{{ brideName() }}</span>
+          <span class="mx-3 text-3xl font-light text-[var(--theme-accent)]">×</span>
+          <span class="font-light italic">{{ groomName() }}</span>
+        }
+        @case ('watercolor') {
+          <span class="block italic">{{ brideName() }}</span>
+          <span class="my-2 block text-2xl font-normal tracking-[0.2em] text-[var(--theme-accent)]">&</span>
+          <span class="block italic">{{ groomName() }}</span>
+        }
+        @case ('mihrab') {
+          <span class="block">{{ brideName() }}</span><span class="my-1 block text-xl font-normal tracking-[0.35em] text-[var(--theme-accent)]">DALAM KEBENARAN</span><span class="block">{{ groomName() }}</span>
+        }
+        @case ('terracotta') {
+          <span class="block -translate-x-6 text-left italic sm:-translate-x-12">{{ brideName() }}</span><span class="my-1 block text-2xl font-normal text-[var(--theme-accent)]">&</span><span class="block translate-x-6 text-right italic sm:translate-x-12">{{ groomName() }}</span>
+        }
+        @case ('pearl') {
+          <span class="block text-5xl font-light tracking-wide sm:text-7xl">{{ brideName() }}</span><span class="my-3 inline-grid size-10 place-items-center rounded-full border border-[var(--theme-accent)]/40 text-xl text-[var(--theme-accent)]">✧</span><span class="block text-5xl font-light tracking-wide sm:text-7xl">{{ groomName() }}</span>
+        }
+        @case ('indigo') {
+          <span>{{ brideName() }}</span><span class="mx-3 inline-grid size-12 rotate-45 place-items-center border border-[var(--theme-accent)]/45 align-middle text-2xl text-[var(--theme-accent)]"><span class="-rotate-45">&</span></span><span>{{ groomName() }}</span>
+        }
+        @case ('sundanese') {
+          <span class="block text-left italic">{{ brideName() }}</span><span class="my-2 flex items-center justify-center gap-3 text-xl font-normal text-[var(--theme-accent)]"><span class="h-px w-10 bg-current"></span>sareng<span class="h-px w-10 bg-current"></span></span><span class="block text-right italic">{{ groomName() }}</span>
+        }
+        @case ('minangkabau') {
+          <span class="block">{{ brideName() }}</span><span class="mx-auto my-2 grid h-10 w-16 place-items-center [clip-path:polygon(50%_0,100%_38%,82%_100%,18%_100%,0_38%)] bg-[var(--theme-accent)] text-xl text-[var(--theme-deep)]">&</span><span class="block">{{ groomName() }}</span>
+        }
+        @case ('dayak') {
+          <span class="font-semibold">{{ brideName() }}</span><span class="mx-3 inline-grid size-12 place-items-center rounded-[45%_12%] border-2 border-[var(--theme-accent)]/55 align-middle text-2xl text-[var(--theme-accent)]">&</span><span class="font-semibold">{{ groomName() }}</span>
+        }
+        @case ('balinese') {
+          <span class="block tracking-wide">{{ brideName() }}</span><span class="my-2 block text-2xl font-normal tracking-[0.4em] text-[var(--theme-accent)]">DALAM DOA</span><span class="block tracking-wide">{{ groomName() }}</span>
+        }
+        @case ('bugis') {
+          <span class="block -translate-x-8 text-left italic">{{ brideName() }}</span><span class="my-1 block text-2xl font-normal text-[var(--theme-accent)]">&nbsp;⟡&nbsp;</span><span class="block translate-x-8 text-right italic">{{ groomName() }}</span>
+        }
+        @case ('betawi') {
+          <span class="block italic">{{ brideName() }}</span><span class="my-2 inline-grid size-11 rotate-45 place-items-center rounded-[1.2rem_0] bg-[var(--theme-accent)] text-2xl text-[var(--theme-deep)]"><span class="-rotate-45">&</span></span><span class="block italic">{{ groomName() }}</span>
+        }
+        @default {
+          {{ brideName() }} <span class="italic text-[var(--theme-accent)]">&</span> {{ groomName() }}
+        }
+      }
+    </h2>
+    <p class="relative z-10 mx-auto mt-8 mb-5 max-w-xl text-base leading-7 font-medium text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.32)] sm:leading-8">
+      Dengan memohon rahmat dan ridha Allah Subḥānahu wa Ta‘ālā, kami bermaksud menyelenggarakan
+      akad nikah dan walimah putra-putri kami.
+    </p>
+    <div
+      class="relative z-10 mb-8 border-y border-white/30 bg-black/10 px-8 py-3 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-[2px]"
+      [class.rounded-full]="activeThemeId() === 'maroon'"
+      [class.border]="activeThemeId() === 'midnight'"
+      [class.rounded-xl]="activeThemeId() === 'midnight'"
+      [class.border-x-0]="activeThemeId() === 'mocha' || activeThemeId() === 'ivory'"
+      [class.border-2]="activeThemeId() === 'javanese'"
+      [class.rounded-t-full]="activeThemeId() === 'boho'"
+      [class.rounded-full]="activeThemeId() === 'watercolor'"
+      [class.rounded-t-full]="activeThemeId() === 'mihrab'"
+      [class.border-dashed]="activeThemeId() === 'terracotta'"
+      [class.rounded-full]="activeThemeId() === 'pearl'"
+      [class.border-2]="activeThemeId() === 'indigo'"
+    >
+      <span class="block text-[10px] font-bold tracking-widest text-white/75 uppercase">Kepada Yth.</span
+      ><strong class="mt-1 block [font-family:Cormorant_Garamond,serif] text-2xl font-bold text-[var(--theme-cream)] drop-shadow-sm">{{
+        guestName()
+      }}</strong>
+    </div>
+    <div class="relative z-10 grid w-full max-w-sm grid-cols-4 gap-2.5">
+      <div class="border border-white/35 bg-black/10 px-1 py-3 shadow-[0_10px_26px_rgba(0,0,0,0.08)] backdrop-blur-[2px]" [class.rounded-full]="activeThemeId() === 'maroon'" [class.rounded-xl]="activeThemeId() === 'midnight'" [class.border-x-0]="activeThemeId() === 'mocha' || activeThemeId() === 'ivory'" [class.border-2]="activeThemeId() === 'javanese'" [class.rounded-t-full]="activeThemeId() === 'boho'" [class.rounded-full]="activeThemeId() === 'watercolor'">
+        <strong class="block [font-family:Cormorant_Garamond,serif] text-3xl font-bold">{{
+          countdown().days.toString().padStart(2, '0')
+        }}</strong
+        ><span class="block text-[10px] font-semibold text-white/80">Hari</span>
+      </div>
+      <div class="border border-white/35 bg-black/10 px-1 py-3 shadow-[0_10px_26px_rgba(0,0,0,0.08)] backdrop-blur-[2px]" [class.rounded-full]="activeThemeId() === 'maroon'" [class.rounded-xl]="activeThemeId() === 'midnight'" [class.border-x-0]="activeThemeId() === 'mocha' || activeThemeId() === 'ivory'" [class.border-2]="activeThemeId() === 'javanese'" [class.rounded-t-full]="activeThemeId() === 'boho'" [class.rounded-full]="activeThemeId() === 'watercolor'">
+        <strong class="block [font-family:Cormorant_Garamond,serif] text-3xl font-bold">{{
+          countdown().hours.toString().padStart(2, '0')
+        }}</strong
+        ><span class="block text-[10px] font-semibold text-white/80">Jam</span>
+      </div>
+      <div class="border border-white/35 bg-black/10 px-1 py-3 shadow-[0_10px_26px_rgba(0,0,0,0.08)] backdrop-blur-[2px]" [class.rounded-full]="activeThemeId() === 'maroon'" [class.rounded-xl]="activeThemeId() === 'midnight'" [class.border-x-0]="activeThemeId() === 'mocha' || activeThemeId() === 'ivory'" [class.border-2]="activeThemeId() === 'javanese'" [class.rounded-t-full]="activeThemeId() === 'boho'" [class.rounded-full]="activeThemeId() === 'watercolor'">
+        <strong class="block [font-family:Cormorant_Garamond,serif] text-3xl font-bold">{{
+          countdown().minutes.toString().padStart(2, '0')
+        }}</strong
+        ><span class="block text-[10px] font-semibold text-white/80">Menit</span>
+      </div>
+      <div class="border border-white/35 bg-black/10 px-1 py-3 shadow-[0_10px_26px_rgba(0,0,0,0.08)] backdrop-blur-[2px]" [class.rounded-full]="activeThemeId() === 'maroon'" [class.rounded-xl]="activeThemeId() === 'midnight'" [class.border-x-0]="activeThemeId() === 'mocha' || activeThemeId() === 'ivory'" [class.border-2]="activeThemeId() === 'javanese'" [class.rounded-t-full]="activeThemeId() === 'boho'" [class.rounded-full]="activeThemeId() === 'watercolor'">
+        <strong class="block [font-family:Cormorant_Garamond,serif] text-3xl font-bold">{{
+          countdown().seconds.toString().padStart(2, '0')
+        }}</strong
+        ><span class="block text-[10px] font-semibold text-white/80">Detik</span>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section
+    class="relative z-10 flex min-h-[68vh] items-center justify-center overflow-hidden bg-transparent px-5 py-20 text-center text-[var(--theme-cream)]"
+    aria-label="Pembuka konsep undangan"
+  >
+    @switch (activeThemeId()) {
+      @case ('emerald') {
+        <article class="relative grid size-[19rem] place-items-center sm:size-[25rem]">
+          <span class="pointer-events-none absolute inset-3 rotate-45 border border-[var(--theme-accent)]/45" aria-hidden="true"></span>
+          <span class="pointer-events-none absolute inset-10 rotate-45 border border-[var(--theme-accent)]/20" aria-hidden="true"></span>
+          <div class="relative max-w-64 px-5">
+            <span class="mx-auto mb-5 block size-4 rotate-45 border border-[var(--theme-accent)]"></span>
+            <p class="text-[9px] font-semibold tracking-[0.34em] text-[var(--theme-accent)] uppercase">Klasik Zamrud</p>
+            <h3 class="mt-3 [font-family:Cormorant_Garamond,serif] text-4xl font-semibold sm:text-5xl">{{ coupleName() }}</h3>
+            <p class="mt-4 text-xs leading-6 text-white/65">Sebuah ikatan yang dirangkai dalam garis tegas, tenang, dan berkelas.</p>
+          </div>
+        </article>
+      }
+      @case ('maroon') {
+        <article class="relative w-full max-w-xl overflow-hidden rounded-t-[12rem] rounded-b-[2.5rem] border border-[var(--theme-accent)]/40 bg-[var(--theme-dark)]/55 px-7 py-16 shadow-[0_30px_90px_rgba(0,0,0,0.22)] backdrop-blur-sm sm:px-14">
+          <span class="pointer-events-none absolute top-8 left-8 text-6xl text-[var(--theme-accent)]/20 motion-safe:animate-spin [animation-duration:18s]" aria-hidden="true">❀</span>
+          <span class="pointer-events-none absolute right-8 bottom-7 text-7xl text-[var(--theme-accent)]/15 motion-safe:animate-spin [animation-direction:reverse] [animation-duration:22s]" aria-hidden="true">❀</span>
+          <p class="relative text-[9px] font-semibold tracking-[0.36em] text-[var(--theme-accent)] uppercase">Taman Andalusia</p>
+          <h3 class="relative mt-4 [font-family:Cormorant_Garamond,serif] text-5xl leading-none font-semibold italic sm:text-6xl">{{ brideName() }}<span class="my-2 block text-2xl font-normal not-italic text-[var(--theme-accent)]">dan</span>{{ groomName() }}</h3>
+          <p class="relative mx-auto mt-5 max-w-sm text-sm leading-7 text-white/68">Kisah yang bertumbuh perlahan, seperti mawar yang dijaga hingga tiba waktunya bermekaran.</p>
+        </article>
+      }
+      @case ('midnight') {
+        <article class="relative w-full max-w-xl overflow-hidden rounded-[3rem] border border-[var(--theme-accent)]/30 bg-[#091424]/55 px-7 py-14 shadow-[inset_0_0_80px_rgba(201,170,100,0.05),0_30px_90px_rgba(0,0,0,0.28)] backdrop-blur-sm sm:px-14">
+          <span class="pointer-events-none absolute -top-14 -right-8 text-[11rem] leading-none text-[var(--theme-accent)]/12" aria-hidden="true">☾</span>
+          <span class="pointer-events-none absolute top-[24%] left-[12%] text-lg text-[var(--theme-accent)]/45 motion-safe:animate-pulse" aria-hidden="true">✦</span>
+          <span class="pointer-events-none absolute right-[16%] bottom-[18%] text-xs text-[var(--theme-accent)]/40 motion-safe:animate-pulse" aria-hidden="true">✦</span>
+          <div class="relative mx-auto grid size-44 place-items-center rounded-full border border-[var(--theme-accent)]/25 sm:size-52">
+            <div>
+              <p class="text-[9px] tracking-[0.4em] text-[var(--theme-accent)] uppercase">Di Bawah Qamar</p>
+              <h3 class="mt-3 [font-family:Cormorant_Garamond,serif] text-4xl font-semibold">{{ coupleName() }}</h3>
+            </div>
+          </div>
+          <p class="relative mx-auto mt-6 max-w-sm text-xs leading-6 text-white/62">Dua nama, satu doa, dan perjalanan yang bernaung di bawah petunjuk-Nya.</p>
+        </article>
+      }
+      @case ('mocha') {
+        <article class="relative w-full max-w-xl -rotate-1 border border-dashed border-[var(--theme-accent)]/45 bg-[var(--theme-paper)] px-7 py-12 text-[var(--theme-copy)] shadow-[12px_16px_0_rgba(0,0,0,0.14)] sm:px-14">
+          <svg class="pointer-events-none absolute -bottom-5 -left-6 h-44 w-36 text-[var(--theme-primary)]/18" viewBox="0 0 150 190" fill="none" stroke="currentColor" aria-hidden="true"><path d="M10 183C32 123 67 75 135 14M45 120c-29-2-42-17-40-42 28 0 42 14 40 42ZM80 72c-2-28 12-44 38-49 4 26-9 43-38 49Z" stroke-width="2" /></svg>
+          <p class="text-left text-[9px] font-semibold tracking-[0.34em] text-[var(--theme-accent-dark)] uppercase">Catatan Kebun Senja</p>
+          <div class="mt-8 border-y border-[var(--theme-border)] py-7 text-left sm:grid sm:grid-cols-[1fr_auto] sm:items-end sm:gap-8">
+            <h3 class="[font-family:Cormorant_Garamond,serif] text-5xl leading-none font-semibold">{{ brideName() }}<span class="block text-[var(--theme-accent-dark)]">& {{ groomName() }}</span></h3>
+            <span class="mt-5 inline-block text-[10px] tracking-[0.26em] text-[var(--theme-muted)] sm:mt-0">20 · 10 · 2026</span>
+          </div>
+          <p class="mt-6 text-left text-sm leading-7 text-[var(--theme-muted)]">Sebuah surat kecil tentang niat baik yang tumbuh bersama keluarga.</p>
+        </article>
+      }
+      @case ('ivory') {
+        <article class="w-full max-w-4xl border-y border-white/30 py-10 text-left sm:grid sm:grid-cols-[0.42fr_1fr] sm:items-center sm:gap-12 sm:py-14">
+          <div class="border-b border-white/18 pb-7 sm:border-r sm:border-b-0 sm:pr-10 sm:pb-0">
+            <span class="text-[10px] tracking-[0.42em] text-[var(--theme-accent)] uppercase">The Wedding Edition</span>
+            <strong class="mt-4 block [font-family:Cormorant_Garamond,serif] text-7xl font-light">20</strong>
+            <span class="text-[10px] tracking-[0.34em] text-white/50">OCTOBER · 2026</span>
+          </div>
+          <div class="pt-7 sm:pt-0">
+            <p class="text-[9px] tracking-[0.36em] text-white/55 uppercase">Volume One · The Sacred Union</p>
+            <h3 class="mt-4 [font-family:Cormorant_Garamond,serif] text-5xl leading-none font-semibold uppercase sm:text-7xl">{{ brideName() }}<br />{{ groomName() }}</h3>
+            <p class="mt-6 max-w-lg text-sm leading-7 text-white/62">Komposisi editorial yang bersih untuk kisah yang sederhana dan bermakna.</p>
+          </div>
+        </article>
+      }
+      @case ('javanese') {
+        <article class="relative w-full max-w-xl border-2 border-[var(--theme-accent)]/35 bg-[var(--theme-dark)]/45 px-7 py-14 shadow-[inset_0_0_0_8px_rgba(213,171,105,0.04)] backdrop-blur-sm sm:px-14">
+          <svg class="pointer-events-none absolute top-1/2 left-1/2 h-[88%] w-[70%] -translate-x-1/2 -translate-y-1/2 text-[var(--theme-accent)]/10" viewBox="0 0 300 420" fill="none" stroke="currentColor" aria-hidden="true"><path d="M150 8C132 63 85 98 66 158c-24 76 18 137 84 248 66-111 108-172 84-248-19-60-66-95-84-150Z" stroke-width="3" /><path d="M150 64v268M100 170c34 23 49 54 50 92M200 170c-34 23-49 54-50 92" /></svg>
+          <p class="relative text-[9px] tracking-[0.4em] text-[var(--theme-accent)] uppercase">Pawiwahan · Pusaka Jawa</p>
+          <h3 class="relative mt-5 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold sm:text-6xl">{{ coupleName() }}</h3>
+          <span class="relative mx-auto my-6 block h-px w-20 bg-[var(--theme-accent)]/45"></span>
+          <p class="relative mx-auto max-w-sm text-sm leading-7 text-white/66">Menghormati keluarga, menjaga adab, dan merawat nilai yang diwariskan.</p>
+        </article>
+      }
+      @case ('boho') {
+        <article class="relative w-full max-w-xl overflow-hidden rounded-t-[13rem] rounded-br-[5rem] border border-[var(--theme-accent)]/30 bg-black/20 px-7 py-16 backdrop-blur-sm sm:px-14">
+          <svg class="pointer-events-none absolute -right-8 -bottom-8 h-56 w-44 text-[var(--theme-accent)]/18" viewBox="0 0 180 250" fill="none" stroke="currentColor" aria-hidden="true"><path d="M18 242C46 169 91 96 164 14M62 158c-34-20-45-47-34-80 36 16 48 43 34 80ZM105 91c8-35 27-54 58-56-1 35-20 54-58 56Z" stroke-width="2" /></svg>
+          <p class="text-[9px] tracking-[0.4em] text-[var(--theme-accent)] uppercase">A Sacred Union</p>
+          <h3 class="mt-5 [font-family:Cormorant_Garamond,serif] text-6xl font-light italic">{{ brideName() }}<span class="mx-2 text-3xl text-[var(--theme-accent)]">×</span>{{ groomName() }}</h3>
+          <p class="mx-auto mt-6 max-w-sm text-sm leading-7 text-white/60">Organik, intim, dan hangat—sebuah perayaan yang kembali pada hal-hal esensial.</p>
+        </article>
+      }
+      @case ('watercolor') {
+        <article class="relative w-full max-w-xl py-10">
+          <span class="pointer-events-none absolute top-0 left-[8%] h-48 w-48 rounded-[55%_45%_60%_40%] bg-[var(--theme-primary)]/22 blur-2xl" aria-hidden="true"></span>
+          <span class="pointer-events-none absolute right-[7%] bottom-0 h-44 w-52 rounded-[40%_60%_45%_55%] bg-white/10 blur-2xl" aria-hidden="true"></span>
+          <div class="relative mx-auto w-[88%] rounded-t-[10rem] rounded-b-[3rem] border border-white/28 bg-white/8 px-7 py-14 shadow-[0_28px_80px_rgba(0,0,0,0.18)] backdrop-blur-md sm:px-14">
+            <span class="text-4xl text-[var(--theme-accent)]/75">❦</span>
+            <p class="mt-3 text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Château Watercolor</p>
+            <h3 class="mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold italic sm:text-6xl">{{ coupleName() }}</h3>
+            <p class="mx-auto mt-5 max-w-sm text-sm leading-7 text-white/65">Sapuan lembut yang menyatukan taman, doa, dan kenangan dalam satu kanvas.</p>
+          </div>
+        </article>
+      }
+      @case ('mihrab') {
+        <article class="relative w-full max-w-xl rounded-t-[14rem] rounded-b-2xl border border-[var(--theme-accent)]/35 bg-[var(--theme-dark)]/45 px-7 pt-20 pb-14 backdrop-blur-sm sm:px-14">
+          <span class="pointer-events-none absolute inset-x-[10%] top-8 h-[78%] rounded-t-[12rem] border border-[var(--theme-accent)]/13" aria-hidden="true"></span>
+          <span class="relative text-4xl text-[var(--theme-accent)]">☾</span>
+          <p class="relative mt-4 text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Mihrab Sage</p>
+          <h3 class="relative mt-5 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold sm:text-6xl">{{ coupleName() }}</h3>
+          <p class="relative mx-auto mt-6 max-w-sm text-sm leading-7 text-white/65">Berjalan menuju akad dengan niat yang lurus dan memohon keberkahan Allah.</p>
+        </article>
+      }
+      @case ('terracotta') {
+        <article class="relative w-full max-w-xl rotate-1 rounded-tr-[4rem] rounded-bl-[4rem] border-2 border-dashed border-[var(--theme-accent)]/38 bg-[var(--theme-paper)] px-7 py-12 text-[var(--theme-copy)] shadow-[10px_12px_0_rgba(0,0,0,0.15)] sm:px-14">
+          <span class="absolute top-5 left-6 text-xs text-[var(--theme-accent-dark)]/55">⌇⌇⌇</span>
+          <p class="text-[9px] tracking-[0.38em] text-[var(--theme-accent-dark)] uppercase">Surat dari Kami</p>
+          <h3 class="mt-5 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold italic sm:text-6xl">{{ coupleName() }}</h3>
+          <p class="mx-auto mt-6 max-w-sm text-sm leading-7 text-[var(--theme-muted)]">Ditulis dengan hangat, disampaikan kepada orang-orang terdekat yang kami muliakan.</p>
+          <span class="mx-auto mt-7 block w-fit rounded-full border border-[var(--theme-border)] px-5 py-2 text-[9px] tracking-[0.28em] text-[var(--theme-accent-dark)]">20 · 10 · 2026</span>
+        </article>
+      }
+      @case ('pearl') {
+        <article class="relative grid min-h-[25rem] w-full max-w-xl place-items-center overflow-hidden rounded-[50%] border border-white/25 bg-white/7 px-10 py-16 shadow-[inset_0_0_70px_rgba(255,255,255,0.06)] backdrop-blur-sm">
+          <span class="pointer-events-none absolute top-[16%] left-[15%] size-3 rounded-full bg-[var(--theme-accent)]/45 ring-4 ring-white/8" aria-hidden="true"></span>
+          <span class="pointer-events-none absolute right-[15%] bottom-[18%] size-4 rounded-full bg-white/25 ring-4 ring-[var(--theme-accent)]/10" aria-hidden="true"></span>
+          <div>
+            <span class="mx-auto mb-5 block size-4 rounded-full bg-[var(--theme-cream)] ring-4 ring-[var(--theme-accent)]/25"></span>
+            <p class="text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Mutiara Nikah</p>
+            <h3 class="mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-light sm:text-6xl">{{ coupleName() }}</h3>
+            <p class="mx-auto mt-6 max-w-sm text-sm leading-7 text-white/62">Lembut dalam rupa, kokoh dalam janji, dan bernilai dalam setiap doa.</p>
+          </div>
+        </article>
+      }
+      @case ('indigo') {
+        <article class="relative grid size-[20rem] rotate-45 place-items-center border-2 border-[var(--theme-accent)]/38 bg-[var(--theme-dark)]/45 shadow-[0_30px_90px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:size-[26rem]">
+          <span class="pointer-events-none absolute inset-7 border border-[var(--theme-accent)]/18" aria-hidden="true"></span>
+          <div class="max-w-64 -rotate-45 px-5">
+            <span class="mx-auto mb-5 block size-5 rotate-45 border-2 border-[var(--theme-accent)]/65"></span>
+            <p class="text-[9px] tracking-[0.36em] text-[var(--theme-accent)] uppercase">Naskah Nusantara</p>
+            <h3 class="mt-4 [font-family:Cormorant_Garamond,serif] text-4xl font-semibold sm:text-5xl">{{ coupleName() }}</h3>
+            <p class="mt-5 text-xs leading-6 text-white/62">Geometri yang teratur untuk kisah yang dituntun oleh niat dan adab.</p>
+          </div>
+        </article>
+      }
+      @case ('sundanese') {
+        <article class="relative w-full max-w-xl overflow-hidden rounded-t-[10rem] rounded-b-[2rem] border border-[var(--theme-accent)]/38 bg-[var(--theme-dark)]/42 px-7 py-16 shadow-[0_30px_90px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:px-14">
+          <svg class="pointer-events-none absolute -bottom-14 -left-10 h-56 w-40 text-[var(--theme-accent)]/18" viewBox="0 0 180 280" fill="none" stroke="currentColor"><path d="M20 270C50 194 94 116 164 18M58 186c-36-2-54-22-52-54 35 0 54 18 52 54Zm53-91c-2-34 15-55 48-62 5 33-12 54-48 62Z" stroke-width="2"/></svg>
+          <p class="relative text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Lalakon Priangan</p>
+          <h3 class="relative mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold italic sm:text-6xl">{{ coupleName() }}</h3>
+          <p class="relative mx-auto mt-6 max-w-sm text-sm leading-7 text-white/68">Kisah yang tumbuh teduh dalam tuntunan keluarga, adab, dan doa.</p>
+        </article>
+      }
+      @case ('minangkabau') {
+        <article class="relative isolate w-full max-w-2xl border-2 border-[var(--theme-accent)]/38 bg-[var(--theme-dark)]/48 px-7 pt-20 pb-14 shadow-[0_30px_90px_rgba(0,0,0,0.24)] backdrop-blur-sm sm:px-16">
+          <span class="pointer-events-none absolute -inset-2 -z-10 bg-[var(--theme-accent)]/14 [clip-path:polygon(0_14%,14%_0,32%_12%,50%_0,68%_12%,86%_0,100%_14%,96%_100%,4%_100%)]" aria-hidden="true"></span>
+          <p class="relative text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Kaba dari Ranah</p>
+          <h3 class="relative mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold sm:text-6xl">{{ coupleName() }}</h3>
+          <div class="relative mx-auto my-5 h-px w-24 bg-[var(--theme-accent)]/50"></div>
+          <p class="relative mx-auto max-w-sm text-sm leading-7 text-white/68">Dua keluarga bersepakat menjaga langkah hingga janji diikrarkan.</p>
+        </article>
+      }
+      @case ('dayak') {
+        <article class="relative w-full max-w-xl overflow-hidden rounded-[5rem_1.5rem] border border-[var(--theme-accent)]/38 bg-[var(--theme-dark)]/48 px-8 py-14 shadow-[0_30px_90px_rgba(0,0,0,0.24)] backdrop-blur-sm sm:px-14">
+          <span class="pointer-events-none absolute -top-20 -right-16 size-60 rounded-full border-[9px] border-double border-[var(--theme-accent)]/12"></span>
+          <p class="relative text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Jejak Rimba</p>
+          <h3 class="relative mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold sm:text-6xl">{{ coupleName() }}</h3>
+          <p class="relative mx-auto mt-6 max-w-sm text-sm leading-7 text-white/68">Langkah yang berakar pada keluarga dan bertumbuh menuju akad.</p>
+        </article>
+      }
+      @case ('balinese') {
+        <article class="relative grid min-h-[24rem] w-full max-w-xl place-items-center border-y-2 border-[var(--theme-accent)]/38 bg-[var(--theme-dark)]/42 px-16 py-14 shadow-[0_30px_90px_rgba(0,0,0,0.22)] backdrop-blur-sm">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-20 [clip-path:polygon(50%_0,100%_18%,82%_100%,0_100%,18%_18%)] bg-[var(--theme-accent)]/12"></span>
+          <span class="pointer-events-none absolute inset-y-0 right-0 w-20 [clip-path:polygon(50%_0,82%_18%,100%_100%,18%_100%,0_18%)] bg-[var(--theme-accent)]/12"></span>
+          <div class="relative">
+            <p class="text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Lontar Perjalanan</p>
+            <h3 class="mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold sm:text-6xl">{{ coupleName() }}</h3>
+            <p class="mx-auto mt-6 max-w-xs text-sm leading-7 text-white/68">Melewati gerbang niat baik menuju kehidupan yang diberkahi.</p>
+          </div>
+        </article>
+      }
+      @case ('bugis') {
+        <article class="relative w-full max-w-2xl overflow-hidden border-l-4 border-[var(--theme-accent)]/55 bg-[var(--theme-dark)]/42 px-8 py-14 text-left shadow-[18px_24px_0_rgba(0,0,0,0.12)] backdrop-blur-sm sm:px-16">
+          <svg class="pointer-events-none absolute right-3 bottom-0 h-44 w-44 text-[var(--theme-accent)]/14" viewBox="0 0 220 220" fill="none" stroke="currentColor"><path d="M108 190V18L40 132h68Zm10-164v164h70Z" stroke-width="2"/><path d="M20 190h180"/></svg>
+          <p class="relative text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Catatan Pelayaran</p>
+          <h3 class="relative mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold italic sm:text-6xl">{{ coupleName() }}</h3>
+          <p class="relative mt-6 max-w-sm text-sm leading-7 text-white/68">Menetapkan haluan bersama, dengan akad sebagai pelabuhan pertama.</p>
+        </article>
+      }
+      @case ('betawi') {
+        <article class="relative w-full max-w-xl overflow-hidden rounded-[4rem_1rem_4rem_1rem] border-2 border-dashed border-[var(--theme-accent)]/45 bg-[var(--theme-dark)]/45 px-8 py-14 shadow-[0_30px_90px_rgba(0,0,0,0.22)] backdrop-blur-sm sm:px-14">
+          <span class="pointer-events-none absolute -top-10 -left-8 size-28 rotate-45 rounded-[2.5rem_0] border-2 border-[var(--theme-accent)]/18 motion-safe:animate-spin [animation-duration:24s]"></span>
+          <p class="relative text-[9px] tracking-[0.38em] text-[var(--theme-accent)] uppercase">Cerite Kite</p>
+          <h3 class="relative mt-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold italic sm:text-6xl">{{ coupleName() }}</h3>
+          <p class="relative mx-auto mt-6 max-w-sm text-sm leading-7 text-white/68">Dari perkenalan yang dijaga hingga hari bahagia bersama keluarga.</p>
+        </article>
+      }
+    }
+  </section>
+
+  <section
+    id="stories-section"
+    class="relative z-10 h-[450vh] overflow-clip bg-transparent"
+  >
+    <span class="pointer-events-none absolute -top-24 -right-24 size-72 rounded-full border border-[var(--theme-accent)]/15" aria-hidden="true"></span>
+    <span class="pointer-events-none absolute -bottom-24 -left-24 size-72 rotate-45 border border-[var(--theme-primary)]/10" aria-hidden="true"></span>
+
+    <div class="sticky top-0 flex min-h-screen items-center overflow-hidden px-5 py-16">
+      <div class="relative mx-auto w-full max-w-4xl">
+        <header
+          class="mx-auto mb-8 max-w-2xl sm:mb-10"
+          [style.text-align]="activeExperience().storyTextAlign"
+        >
+          <p class="mb-3 text-[10px] font-semibold tracking-[0.38em] text-[var(--theme-accent-dark)] uppercase">
+            {{ activeExperience().storyLabel }}
+          </p>
+          <h3 class="[font-family:Cormorant_Garamond,serif] text-5xl font-semibold text-[var(--theme-cream)] drop-shadow-[0_3px_14px_rgba(0,0,0,0.24)] sm:text-6xl">
+            Kisah Menuju Akad
+          </h3>
+          <p class="mx-auto mt-3 max-w-xl text-xs leading-6 text-[var(--theme-cream)]/75 sm:text-sm sm:leading-7">
+            Gulir perlahan untuk mengikuti setiap tahap perjalanan kami.
+          </p>
+        </header>
+
+        <div class="mx-auto mb-7 flex max-w-lg items-center" aria-label="Tahapan cerita">
+          @for (story of storyMoments; track story.step; let index = $index; let last = $last) {
+            <span
+              class="relative z-10 grid size-8 shrink-0 place-items-center rounded-full border text-[9px] font-bold transition-[background-color,color,transform] duration-300"
+              [style.clip-path]="activeExperience().storyMarkerClipPath"
+              [class.scale-110]="index === activeStoryIndex()"
+              [class.border-[var(--theme-deep)]]="index <= activeStoryIndex()"
+              [class.bg-[var(--theme-deep)]]="index <= activeStoryIndex()"
+              [class.text-[var(--theme-cream)]]="index <= activeStoryIndex()"
+              [class.border-[var(--theme-accent)]]="index > activeStoryIndex()"
+              [class.bg-[var(--theme-deep)]]="index > activeStoryIndex()"
+              [class.text-[var(--theme-cream)]]="index > activeStoryIndex()"
+            >{{ story.step }}</span>
+            @if (!last) {
+              <span class="relative h-px flex-1 overflow-hidden bg-[var(--theme-accent)]/25">
+                <span
+                  class="absolute inset-y-0 left-0 bg-[var(--theme-accent-dark)] transition-[width] duration-300"
+                  [style.width.%]="storyScrollProgress() * (storyMoments.length - 1) > index ? 100 : 0"
+                ></span>
+              </span>
+            }
+          }
+        </div>
+
+        <div
+          class="relative mx-auto h-72 w-full sm:h-64"
+          [style.max-width]="activeExperience().storyCardWidth"
+          [style.min-height]="activeExperience().storyCardMinHeight"
+        >
+          @for (story of storyMoments; track story.step; let index = $index) {
+            <article
+              class="absolute inset-0 isolate flex will-change-[transform,opacity] flex-col justify-center overflow-visible rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-soft)]/95 p-7 text-center shadow-[0_24px_70px_rgba(0,0,0,0.12)] backdrop-blur-sm transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:p-10"
+              [class.pointer-events-none]="index !== activeStoryIndex()"
+              [class.opacity-100]="index === activeStoryIndex()"
+              [class.opacity-0]="index !== activeStoryIndex()"
+              [class.rounded-t-[7rem]]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor' || activeThemeId() === 'mihrab'"
+              [class.rounded-b-3xl]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor' || activeThemeId() === 'mihrab'"
+              [class.rounded-3xl]="activeThemeId() === 'midnight' || activeThemeId() === 'pearl'"
+              [class.border-dashed]="activeThemeId() === 'mocha' || activeThemeId() === 'terracotta'"
+              [class.border-x-0]="activeThemeId() === 'ivory'"
+              [class.border-2]="activeThemeId() === 'javanese' || activeThemeId() === 'indigo'"
+              [class.rounded-tr-[4rem]]="activeThemeId() === 'boho'"
+              [class.rounded-bl-[3rem]]="activeThemeId() === 'boho'"
+              [style.transform]="storyCardTransform(index)"
+              [style.min-height]="activeExperience().storyCardMinHeight"
+              [style.text-align]="activeExperience().storyTextAlign"
+              [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+              [style.transition-timing-function]="themeContentEasing()"
+              [style.z-index]="index === activeStoryIndex() ? 20 : 10"
+            >
+              <span
+                class="pointer-events-none absolute -inset-1 -z-10 bg-[var(--theme-accent)]/22"
+                [style.clip-path]="activeExperience().storyCardClipPath"
+                aria-hidden="true"
+              ></span>
+              <span class="pointer-events-none absolute -top-8 -right-6 text-8xl text-[var(--theme-primary)]/8 motion-safe:animate-spin [animation-duration:20s]" aria-hidden="true">❀</span>
+              <p class="text-[9px] font-semibold tracking-[0.28em] text-[var(--theme-accent-dark)] uppercase">{{ story.date }}</p>
+              <h4 class="mt-3 [font-family:Cormorant_Garamond,serif] text-4xl font-semibold text-[var(--theme-dark)] sm:text-5xl">{{ story.title }}</h4>
+              <div class="mx-auto my-4 h-px w-12 bg-[var(--theme-accent-dark)]/45"></div>
+              <p class="mx-auto max-w-lg text-sm leading-7 text-[var(--theme-copy)]">{{ story.description }}</p>
+            </article>
+          }
+        </div>
+
+        <div class="mt-6 flex items-center justify-center gap-3 text-[9px] font-semibold tracking-[0.2em] text-[var(--theme-accent-dark)] uppercase">
+          <span class="h-px w-8 bg-current/35"></span>
+          <span>{{ storyMoments[activeStoryIndex()].title }} · Scroll perlahan</span>
+          <span class="h-px w-8 bg-current/35"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section
+    id="gallery-section"
+    class="relative z-10 overflow-hidden bg-transparent px-5 py-24"
+  >
+    <div class="pointer-events-none absolute inset-x-[8%] top-10 border-t border-[var(--theme-accent-dark)]/15" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-6xl">
+      <header
+        class="mx-auto mb-12 max-w-2xl text-center transition-[transform,opacity] motion-reduce:transition-none"
+        [style.opacity]="galleryScrollProgress()"
+        [style.transform]="themedSectionTransform(galleryScrollProgress(), 'couple')"
+        [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+        [style.transition-timing-function]="themeContentEasing()"
+        [style.text-align]="activeExperience().galleryTextAlign"
+      >
+        <p class="mb-3 text-[10px] font-semibold tracking-[0.38em] text-[var(--theme-accent-dark)] uppercase">
+          {{ activeExperience().galleryLabel }}
+        </p>
+        <h3 class="[font-family:Cormorant_Garamond,serif] text-5xl font-semibold text-[var(--theme-cream)] drop-shadow-[0_3px_14px_rgba(0,0,0,0.24)] sm:text-6xl">
+          Galeri Kami
+        </h3>
+        <p class="mt-4 text-sm leading-7 text-[var(--theme-cream)]/75">
+          Dari perkenalan melalui biro jodoh, nazhor, istikharah, khitbah, silaturahmi keluarga, hingga ijab qabul—seluruhnya dalam ilustrasi tanpa fitur wajah.
+        </p>
+      </header>
+
+      <div
+        class="grid"
+        [style.grid-template-columns]="activeExperience().galleryColumns"
+        [style.gap]="activeExperience().galleryGap"
+      >
+        @for (photo of galleryItems; track photo.src; let index = $index) {
+          <button
+            class="group relative min-w-0 cursor-zoom-in border-0 bg-transparent p-0 text-left transition-[transform,opacity] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--theme-accent-dark)] motion-reduce:transition-none"
+            [style.opacity]="galleryItemProgress(index)"
+            [style.transform]="galleryItemTransform(index)"
+            [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+            [style.transition-timing-function]="themeContentEasing()"
+            type="button"
+            (click)="openGallery(photo)"
+            [attr.aria-label]="'Buka ' + photo.caption"
+          >
+            <span
+              class="relative block w-full overflow-hidden border border-[var(--theme-border)] bg-[var(--theme-paper)] shadow-lg transition-shadow duration-500 group-hover:shadow-2xl"
+              [style.clip-path]="activeExperience().galleryCardClipPaths[index % activeExperience().galleryCardClipPaths.length]"
+              [style.height]="activeExperience().galleryCardHeights[index % activeExperience().galleryCardHeights.length]"
+            >
+              <img
+                class="h-full w-full object-cover transition-[transform,filter] duration-700 group-hover:scale-105"
+                [src]="galleryImageUrl(photo)"
+                [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
+                [alt]="photo.alt"
+                loading="lazy"
+              />
+              <span
+                class="pointer-events-none absolute inset-0 bg-linear-to-t from-[var(--theme-deep)]/45 via-transparent to-transparent"
+                aria-hidden="true"
+              ></span>
+            </span>
+            <span
+              class="relative z-10 mx-auto -mt-5 block min-h-16 w-[88%] border border-[var(--theme-border)] bg-[var(--theme-paper)] px-4 py-3.5 text-center text-xs leading-5 font-semibold tracking-[0.14em] text-[var(--theme-dark)] uppercase shadow-[0_12px_28px_rgba(0,0,0,0.14)] transition duration-300 group-hover:-translate-y-1 group-hover:border-[var(--theme-accent-dark)]"
+            >
+              {{ photo.caption }}
+            </span>
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+
+  @if (selectedGalleryItem(); as photo) {
+    <div
+      class="fixed inset-0 z-[110] grid cursor-zoom-out place-items-center overflow-y-auto bg-[var(--theme-deep)]/95 p-4 backdrop-blur-md sm:p-8"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="photo.caption"
+      (click)="closeGallery()"
+    >
+      <div
+        class="relative w-full max-w-5xl cursor-default border border-[var(--theme-accent)]/50 bg-[var(--theme-paper)] p-3 shadow-2xl sm:p-5"
+        [class.rounded-[3rem]]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor' || activeThemeId() === 'mihrab' || activeThemeId() === 'pearl'"
+        [class.rounded-xl]="activeThemeId() !== 'maroon' && activeThemeId() !== 'watercolor' && activeThemeId() !== 'mihrab' && activeThemeId() !== 'pearl'"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          class="absolute top-3 right-3 z-10 grid size-11 cursor-pointer place-items-center rounded-full bg-[var(--theme-deep)] text-xl text-[var(--theme-cream)] shadow-lg transition hover:rotate-90 hover:bg-[var(--theme-primary)]"
+          type="button"
+          aria-label="Tutup galeri"
+          (click)="closeGallery()"
+        >
+          ×
+        </button>
+        <img
+          class="max-h-[75vh] w-full object-contain transition-[filter] duration-500"
+          [src]="galleryImageUrl(photo)"
+          [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
+          [alt]="photo.alt"
+        />
+        <p class="px-3 pt-4 pb-2 text-center [font-family:Cormorant_Garamond,serif] text-2xl font-semibold text-[var(--theme-dark)]">
+          {{ photo.caption }}
+        </p>
+      </div>
+    </div>
+  }
+
+  <section
+    id="verse-section"
+    class="relative z-10 flex min-h-[70vh] items-center justify-center overflow-hidden bg-transparent px-5 py-24 text-center"
+  >
+    @if (activeThemeId() === 'maroon') {
+      <span class="pointer-events-none absolute -top-10 left-6 text-9xl text-[var(--theme-primary)]/8 motion-safe:animate-spin [animation-duration:16s]" aria-hidden="true">❀</span>
+      <span class="pointer-events-none absolute right-4 -bottom-12 text-9xl text-[var(--theme-primary)]/8 motion-safe:animate-spin [animation-direction:reverse] [animation-duration:20s]" aria-hidden="true">❀</span>
+    } @else if (activeThemeId() === 'midnight') {
+      <span class="pointer-events-none absolute top-10 right-[12%] text-6xl text-[var(--theme-accent)]/18" aria-hidden="true">☾</span>
+      <span class="pointer-events-none absolute bottom-12 left-[14%] text-sm text-[var(--theme-accent-dark)]/25" aria-hidden="true">✦</span>
+    } @else if (activeThemeId() === 'mocha') {
+      <svg class="pointer-events-none absolute -bottom-8 -left-8 h-52 w-44 text-[var(--theme-accent-dark)]/16" viewBox="0 0 180 240" fill="none" stroke="currentColor" aria-hidden="true"><path d="M14 230C35 164 82 92 166 17M63 147c-31-2-48-19-49-47 31 0 48 16 49 47ZM102 92c0-29 15-47 43-53 3 28-12 47-43 53Z" stroke-width="2" /></svg>
+    } @else if (activeThemeId() === 'mihrab') {
+      <span class="pointer-events-none absolute top-10 left-1/2 h-[78%] w-[80%] max-w-3xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-accent-dark)]/12" aria-hidden="true"></span>
+    } @else if (activeThemeId() === 'terracotta') {
+      <span class="pointer-events-none absolute -right-20 -bottom-20 h-80 w-48 -rotate-35 rounded-[100%_0_100%_0] bg-[var(--theme-primary)]/8" aria-hidden="true"></span>
+    } @else if (activeThemeId() === 'pearl') {
+      <span class="pointer-events-none absolute top-12 left-[10%] size-3 rounded-full bg-[var(--theme-primary)]/15" aria-hidden="true"></span><span class="pointer-events-none absolute right-[12%] bottom-12 size-4 rounded-full bg-[var(--theme-accent)]/20" aria-hidden="true"></span>
+    } @else if (activeThemeId() === 'indigo') {
+      <span class="pointer-events-none absolute top-14 left-1/2 size-64 -translate-x-1/2 rotate-45 border border-[var(--theme-primary)]/8" aria-hidden="true"></span>
+    }
+    <div
+      class="relative isolate w-full max-w-3xl overflow-visible rounded-[2rem] border border-[var(--theme-border)] bg-[var(--theme-paper)]/96 px-6 py-10 text-[var(--theme-copy)] shadow-[0_24px_70px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[transform,opacity] will-change-[transform,opacity] motion-reduce:transition-none sm:p-12"
+      [class.rounded-t-[8rem]]="activeThemeId() === 'maroon'"
+      [class.rounded-b-3xl]="activeThemeId() === 'maroon'"
+      [class.rounded-3xl]="activeThemeId() === 'midnight'"
+      [class.border-2]="activeThemeId() === 'midnight'"
+      [class.-rotate-1]="activeThemeId() === 'mocha'"
+      [class.border-x-4]="activeThemeId() === 'mocha'"
+      [class.rounded-t-[8rem]]="activeThemeId() === 'mihrab'"
+      [class.border-dashed]="activeThemeId() === 'terracotta'"
+      [class.-rotate-1]="activeThemeId() === 'terracotta'"
+      [class.rounded-[3rem]]="activeThemeId() === 'pearl'"
+      [class.border-2]="activeThemeId() === 'indigo'"
+      [style.opacity]="verseScrollProgress()"
+      [style.transform]="themedSectionTransform(verseScrollProgress(), 'closing')"
+      [style.max-width]="activeExperience().storyCardWidth"
+      [style.text-align]="activeExperience().storyTextAlign"
+      [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+      [style.transition-timing-function]="themeContentEasing()"
+    >
+      <span
+        class="pointer-events-none absolute -inset-2 -z-10 bg-[var(--theme-accent)]/28"
+        [style.clip-path]="activeExperience().storyCardClipPath"
+        aria-hidden="true"
+      ></span>
+      <div class="relative z-10 mx-auto max-w-2xl">
+      <p class="text-xl leading-loose text-[var(--theme-dark)] sm:text-2xl">
+        وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا
+        وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ
+        يَّتَفَكَّرُوْنَ
+      </p>
+      <blockquote
+        class="my-6 [font-family:Cormorant_Garamond,serif] text-xl leading-relaxed font-medium sm:text-2xl"
+      >
+        “Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu
+        dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan
+        di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat
+        tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.”
+      </blockquote>
+      <span class="text-xs tracking-widest text-[var(--theme-accent-dark)]">QS. Ar-Rum: 21</span>
+      </div>
+    </div>
+  </section>
+
+  <section
+    id="couple-section"
+    class="relative z-10 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-transparent px-5 py-24 text-center"
+  >
+    <div
+      class="relative isolate flex w-full flex-col items-center transition-[transform,opacity] will-change-[transform,opacity] motion-reduce:transition-none"
+      [style.opacity]="coupleScrollProgress()"
+      [style.transform]="themedSectionTransform(coupleScrollProgress(), 'couple')"
+      [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+      [style.transition-timing-function]="themeContentEasing()"
+    >
+    <p class="mb-4 text-xs font-semibold tracking-[0.28em] text-[var(--theme-accent-dark)] uppercase">MEMPELAI · {{ activeTheme().concept }}</p>
+    <h3
+      class="mb-12 [font-family:Cormorant_Garamond,serif] text-5xl leading-none font-semibold text-[var(--theme-cream)] drop-shadow-[0_3px_14px_rgba(0,0,0,0.24)] sm:text-6xl"
+    >
+      Dengan Memohon Ridha Allah
+    </h3>
+    <div class="w-full max-w-4xl">
+      <div
+        class="relative isolate mx-auto h-72 w-full max-w-3xl overflow-visible sm:h-[28rem]"
+      >
+        <span
+          class="pointer-events-none absolute inset-0 -z-10 border border-[var(--theme-accent)]/20 bg-[var(--theme-dark)]/20 shadow-[0_28px_80px_rgba(0,0,0,0.16)]"
+          [style.clip-path]="activeExperience().coupleStageClipPath"
+          aria-hidden="true"
+        ></span>
+        <div
+          class="absolute inset-0 grid grid-cols-2 items-center gap-16 sm:gap-28"
+          aria-hidden="true"
+        >
+          <div
+            class="justify-self-end transition-all duration-700 ease-in-out motion-reduce:transition-none"
+            [class.translate-x-[45%]]="isCoupleJoined()"
+            [class.scale-90]="isCoupleJoined()"
+            [class.opacity-0]="isCoupleJoined()"
+            [style.opacity]="isCoupleJoined() ? 0 : 1"
+            [style.transform]="couplePortraitTransform(-1)"
+            [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+            [style.transition-timing-function]="themeContentEasing()"
+          >
+            <div
+              class="h-56 w-36 overflow-hidden rounded-t-full rounded-b-xl bg-linear-to-br from-[#819b82] to-[var(--theme-dark)] shadow-xl sm:h-72 sm:w-48"
+              [style.clip-path]="activeExperience().couplePortraitClipPaths[0]"
+            >
+              <img
+                class="h-full w-full origin-bottom object-contain object-bottom px-2 pt-7 pb-1 transition-[transform,filter] duration-500 motion-reduce:transition-none sm:px-3 sm:pt-9"
+                [class.scale-[1.02]]="isAlternateOutfit()"
+                [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
+                [src]="
+                  isAlternateOutfit()
+                    ? '/assets/mempelai-wanita-marun-faceless.png'
+                    : '/assets/mempelai-wanita-faceless.png'
+                "
+                alt=""
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <div
+            class="justify-self-start transition-all duration-700 ease-in-out motion-reduce:transition-none"
+            [class.-translate-x-[45%]]="isCoupleJoined()"
+            [class.scale-90]="isCoupleJoined()"
+            [class.opacity-0]="isCoupleJoined()"
+            [style.opacity]="isCoupleJoined() ? 0 : 1"
+            [style.transform]="couplePortraitTransform(1)"
+            [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+            [style.transition-timing-function]="themeContentEasing()"
+          >
+            <div
+              class="h-56 w-36 overflow-hidden rounded-t-full rounded-b-xl bg-linear-to-br from-[#9a927f] to-[#3d4e44] shadow-xl sm:h-72 sm:w-48"
+              [style.clip-path]="activeExperience().couplePortraitClipPaths[1]"
+            >
+              <img
+                class="h-full w-full origin-bottom object-contain object-bottom px-2 pt-7 pb-1 transition-[transform,filter] duration-500 motion-reduce:transition-none sm:px-3 sm:pt-9"
+                [class.scale-[1.02]]="isAlternateOutfit()"
+                [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
+                [src]="
+                  isAlternateOutfit()
+                    ? '/assets/mempelai-pria-marun-faceless.png'
+                    : '/assets/mempelai-pria-faceless.png'
+                "
+                alt=""
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="pointer-events-none absolute inset-0 flex scale-90 items-end justify-center overflow-visible px-3 pt-5 pb-1 opacity-0 transition-all duration-700 ease-out motion-reduce:transition-none sm:px-8 sm:pt-8 sm:pb-2"
+          [class.delay-500]="isCoupleJoined()"
+          [class.scale-100]="isCoupleJoined()"
+          [class.opacity-100]="isCoupleJoined()"
+          [style.opacity]="isCoupleJoined() ? 1 : 0"
+          [style.transform]="coupleJoinedTransform()"
+          [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+          [style.transition-timing-function]="themeContentEasing()"
+        >
+          <span
+            class="pointer-events-none absolute inset-[3%] border border-[var(--theme-accent)]/16 bg-[var(--theme-paper)]/4"
+            [style.clip-path]="activeExperience().coupleJoinedClipPath"
+            aria-hidden="true"
+          ></span>
+          <img
+            class="relative z-[1] h-[92%] w-[92%] object-contain object-bottom transition-[transform,filter] duration-500 motion-reduce:transition-none"
+            [class.scale-[1.02]]="isAlternateOutfit()"
+            [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
+            [src]="
+              isAlternateOutfit()
+                ? '/assets/mempelai-pasangan-marun-setelah-akad.png'
+                : '/assets/mempelai-pasangan-setelah-akad.png'
+            "
+            [attr.alt]="'Ilustrasi ' + brideName() + ' dan ' + groomName() + ' setelah akad, bergandengan tangan dengan wajah tanpa fitur'"
+            loading="lazy"
+          />
+        </div>
+
+        <button
+          class="absolute left-1/2 z-10 grid size-14 -translate-x-1/2 cursor-pointer place-items-center rounded-full border border-[var(--theme-accent-dark)]/50 bg-[var(--theme-paper)] [font-family:Cormorant_Garamond,serif] text-4xl italic text-[var(--theme-accent-dark)] shadow-lg transition-all duration-700 hover:scale-110 hover:border-[var(--theme-accent-dark)] hover:bg-white motion-reduce:transition-none"
+          [class.top-1/2]="!isCoupleJoined()"
+          [class.-translate-y-1/2]="!isCoupleJoined()"
+          [class.bottom-0]="isCoupleJoined()"
+          [class.rotate-[360deg]]="isCoupleJoined()"
+          [style.clip-path]="activeExperience().storyMarkerClipPath"
+          type="button"
+          (click)="toggleCouplePose()"
+          [attr.aria-label]="
+            isCoupleJoined() ? 'Kembalikan posisi mempelai' : 'Satukan mempelai setelah akad'
+          "
+        >
+          &
+        </button>
+
+        <span
+          class="absolute top-[67%] left-1/2 -translate-x-1/2 text-2xl text-[var(--theme-accent-dark)] opacity-0 transition-all delay-[1350ms] duration-700 motion-reduce:transition-none"
+          [class.scale-150]="isCoupleJoined()"
+          [class.opacity-100]="isCoupleJoined()"
+          aria-hidden="true"
+          >✦</span
+        >
+      </div>
+
+      <p class="mt-3 mb-3 text-[10px] font-semibold tracking-[0.2em] text-[var(--theme-accent-dark)] uppercase">
+        {{
+          isCoupleJoined()
+            ? 'Setelah Akad · Klik & untuk kembali'
+            : 'Klik tanda & untuk menyatukan mempelai'
+        }}
+      </p>
+
+      <button
+        class="mb-8 inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--theme-accent-dark)]/50 bg-white px-5 py-2.5 text-xs font-semibold tracking-[0.12em] text-[var(--theme-dark)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--theme-accent-dark)] hover:bg-[var(--theme-soft)] hover:shadow-md motion-reduce:transform-none motion-reduce:transition-none"
+        type="button"
+        (click)="toggleOutfit()"
+        [attr.aria-pressed]="isAlternateOutfit()"
+        [attr.aria-label]="
+          isAlternateOutfit()
+            ? 'Kembali ke pakaian awal'
+            : 'Ganti ke pakaian ' + activeOutfitPalette().label
+        "
+      >
+        <svg
+          class="size-4 text-[var(--theme-accent-dark)]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 6.5a2.25 2.25 0 1 0-2.25-2.25M12 6.5 3.5 12a1.75 1.75 0 0 0 .95 3.22h15.1A1.75 1.75 0 0 0 20.5 12L12 6.5Z"
+          />
+        </svg>
+        <span
+          class="size-2.5 rounded-full border border-black/10 bg-[var(--theme-primary)] shadow-sm"
+          aria-hidden="true"
+        ></span>
+        {{ isAlternateOutfit() ? 'Kembali ke Pakaian Awal' : 'Ganti ke ' + activeOutfitPalette().label }}
+      </button>
+
+      <div
+        class="grid grid-cols-[1fr_auto_1fr] items-start gap-3 sm:gap-8"
+        [style.text-align]="activeExperience().storyTextAlign"
+      >
+        <article>
+          <h4
+            class="mb-2 [font-family:Cormorant_Garamond,serif] text-2xl font-semibold text-[var(--theme-cream)] sm:text-3xl"
+          >
+            {{ brideFullName() }}
+          </h4>
+          <p class="text-xs leading-6 text-[var(--theme-cream)]/75 sm:text-sm sm:leading-7">
+            Putri pertama dari<br />Bapak Ahmad & Ibu Siti
+          </p>
+        </article>
+        <div class="pt-1 [font-family:Cormorant_Garamond,serif] text-4xl italic text-[var(--theme-accent-dark)]">
+          &
+        </div>
+        <article>
+          <h4
+            class="mb-2 [font-family:Cormorant_Garamond,serif] text-2xl font-semibold text-[var(--theme-cream)] sm:text-3xl"
+          >
+            {{ groomFullName() }}
+          </h4>
+          <p class="text-xs leading-6 text-[var(--theme-cream)]/75 sm:text-sm sm:leading-7">
+            Putra kedua dari<br />Bapak Budi & Ibu Ratna
+          </p>
+        </article>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section
+    id="journey-scroll-scene"
+    class="relative z-10 h-[500vh] bg-transparent text-white motion-reduce:h-auto"
+  >
+    <div
+      class="sticky top-0 flex min-h-screen flex-col items-center justify-center overflow-hidden px-5 py-10 text-center motion-reduce:relative sm:py-16"
+    >
+      @switch (activeThemeId()) {
+        @case ('emerald') { <span class="mb-3 size-5 rotate-45 border border-[var(--theme-accent)]/70" aria-hidden="true"></span> }
+        @case ('maroon') { <span class="mb-1 text-4xl text-[var(--theme-accent)]/75 motion-safe:animate-spin [animation-duration:9s]" aria-hidden="true">❀</span> }
+        @case ('midnight') { <span class="mb-1 text-5xl text-[var(--theme-accent)]/75" aria-hidden="true">☾</span> }
+        @case ('mocha') {
+          <svg class="mb-1 h-10 w-12 text-[var(--theme-accent)]/75" viewBox="0 0 50 40" fill="none" stroke="currentColor" aria-hidden="true"><path d="M2 35C15 28 25 17 36 3M17 23C8 24 4 20 3 14c9-1 14 2 14 9ZM28 13c1-8 5-12 12-12 0 8-4 12-12 12Z" /></svg>
+        }
+        @case ('ivory') { <span class="mb-3 flex items-center gap-2 text-[9px] tracking-[0.4em] text-[var(--theme-accent)]"><span class="h-px w-8 bg-current"></span>VOL. 01<span class="h-px w-8 bg-current"></span></span> }
+        @case ('javanese') { <svg class="mb-1 h-12 w-10 text-[var(--theme-accent)]/80" viewBox="0 0 50 62" fill="none" stroke="currentColor" aria-hidden="true"><path d="M25 2C21 16 10 22 7 36c-4 15 6 21 18 24 12-3 22-9 18-24C40 22 29 16 25 2Z" /><path d="M25 11v39" /></svg> }
+        @case ('boho') { <span class="mb-2 text-4xl font-light text-[var(--theme-accent)]/80" aria-hidden="true">⌁</span> }
+        @case ('watercolor') { <span class="mb-1 text-4xl text-[var(--theme-accent)]/80" aria-hidden="true">❦</span> }
+        @case ('mihrab') { <span class="mb-1 grid h-12 w-10 place-items-center rounded-t-full border border-[var(--theme-accent)]/60 text-xl text-[var(--theme-accent)]" aria-hidden="true">☾</span> }
+        @case ('terracotta') { <span class="mb-2 text-4xl text-[var(--theme-accent)]/80" aria-hidden="true">⌇</span> }
+        @case ('pearl') { <span class="mb-2 size-4 rounded-full bg-[var(--theme-cream)] ring-4 ring-[var(--theme-accent)]/30" aria-hidden="true"></span> }
+        @case ('indigo') { <span class="mb-3 size-6 rotate-45 border-2 border-[var(--theme-accent)]/60" aria-hidden="true"></span> }
+      }
+      <p class="mb-4 text-xs font-semibold tracking-[0.28em] text-[var(--theme-accent)] uppercase">
+        {{ activeExperience().journeyLabel }}
+      </p>
+      <h3 class="mb-4 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold sm:text-6xl">
+        Jejak Menuju Akad
+      </h3>
+      <p class="mb-5 max-w-xl text-sm leading-7 text-white/60 sm:mb-8">
+        Lima tahap perjalanan yang dijalani dengan menjaga niat, batas, dan adab hingga tibanya
+        akad.
+      </p>
+      <figure
+        class="w-full max-w-4xl overflow-hidden border border-[var(--theme-accent)]/30 bg-[var(--theme-dark)] p-2 shadow-2xl sm:p-3"
+        [class.rounded-t-[8rem]]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor'"
+        [class.rounded-b-3xl]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor'"
+        [class.rounded-3xl]="activeThemeId() === 'midnight'"
+        [class.border-dashed]="activeThemeId() === 'mocha'"
+        [class.rounded-xl]="activeThemeId() === 'mocha'"
+        [class.border-x-0]="activeThemeId() === 'ivory'"
+        [class.border-2]="activeThemeId() === 'javanese'"
+        [class.rounded-lg]="activeThemeId() === 'javanese'"
+        [class.rounded-tr-[5rem]]="activeThemeId() === 'boho'"
+        [class.rounded-bl-[3rem]]="activeThemeId() === 'boho'"
+        [class.rounded-t-[8rem]]="activeThemeId() === 'mihrab'"
+        [class.rounded-b-xl]="activeThemeId() === 'mihrab'"
+        [class.border-dashed]="activeThemeId() === 'terracotta'"
+        [class.-rotate-1]="activeThemeId() === 'terracotta'"
+        [class.rounded-[3rem]]="activeThemeId() === 'pearl'"
+        [class.border-2]="activeThemeId() === 'indigo'"
+        [style.clip-path]="activeExperience().journeyFrameClipPath"
+        [style.max-width]="activeExperience().storyCardWidth"
+      >
+        <div
+          class="relative mx-auto h-[38vh] min-h-64 max-h-[30rem] w-full max-w-md overflow-hidden bg-[var(--theme-paper)] shadow-inner sm:h-[44vh] sm:max-w-lg"
+          [style.clip-path]="activeExperience().journeyImageClipPath"
+        >
+          @if (isJourneyRendered()) {
+            @for (scene of journeyScenes; track scene.base; let index = $index) {
+              <img
+                class="absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform] motion-reduce:transition-none"
+                [style.opacity]="journeySceneOpacity(index)"
+                [style.transform]="journeySceneTransform(index)"
+                [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+                [style.transition-timing-function]="themeContentEasing()"
+                [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
+                [class.saturate-50]="index !== activeJourneyStep()"
+                [src]="journeySceneUrl(index)"
+                [alt]="scene.alt"
+                [attr.aria-hidden]="index !== activeJourneyStep()"
+                loading="lazy"
+              />
+            }
+          }
+          <div
+            class="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-[var(--theme-deep)] via-[var(--theme-deep)]/65 to-transparent"
+            aria-hidden="true"
+          ></div>
+          <div class="absolute inset-x-5 bottom-4 text-left text-[var(--theme-cream)] sm:inset-x-7 sm:bottom-6">
+            <span class="text-[9px] font-semibold tracking-[0.24em] text-[var(--theme-accent)] uppercase">
+              Tahap 0{{ activeJourneyStep() + 1 }}
+            </span>
+            <h4 class="mt-1 [font-family:Cormorant_Garamond,serif] text-3xl font-semibold sm:text-4xl">
+              {{ journeySteps[activeJourneyStep()] }}
+            </h4>
+            <p class="mt-1 max-w-md text-[10px] leading-5 text-[var(--theme-cream)]/80 sm:text-xs sm:leading-6">
+              {{ journeyScenes[activeJourneyStep()].description }}
+            </p>
+          </div>
+        </div>
+
+        <div class="relative h-14 px-1 sm:h-16" aria-hidden="true">
+          <svg
+            class="h-full w-full overflow-visible"
+            viewBox="0 0 1000 120"
+            preserveAspectRatio="none"
+            fill="none"
+          >
+            <path
+              d="M100 60C155 10 245 110 300 60S445 10 500 60S645 110 700 60S845 10 900 60"
+              stroke="rgba(245,230,197,0.18)"
+              stroke-width="4"
+              stroke-linecap="round"
+              vector-effect="non-scaling-stroke"
+            />
+            @if (isJourneyRendered()) {
+              <path
+                d="M100 60C155 10 245 110 300 60S445 10 500 60S645 110 700 60S845 10 900 60"
+                pathLength="1"
+                stroke="var(--theme-accent)"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-dasharray="1"
+                vector-effect="non-scaling-stroke"
+                [style.stroke-dashoffset]="1 - journeyScrollProgress()"
+              />
+
+              @for (step of journeySteps; track step; let index = $index) {
+                <g [style.opacity]="journeyPanelProgress(index)">
+                  <circle
+                    [attr.cx]="journeyNodePositions[index]"
+                    cy="60"
+                    r="17"
+                    fill="var(--theme-dark)"
+                    stroke="var(--theme-accent)"
+                    stroke-width="4"
+                    vector-effect="non-scaling-stroke"
+                  />
+                  <circle
+                    [attr.cx]="journeyNodePositions[index]"
+                    cy="60"
+                    r="6"
+                    fill="var(--theme-cream)"
+                    class="animate-pulse motion-reduce:animate-none"
+                  />
+                </g>
+              }
+            }
+          </svg>
+        </div>
+
+        <figcaption
+          class="grid grid-cols-5 gap-1 px-1 pb-2 text-center [font-family:Cormorant_Garamond,serif] text-[10px] text-[var(--theme-cream)] min-[390px]:text-xs sm:text-lg"
+        >
+          @if (isJourneyRendered()) {
+            @for (step of journeySteps; track step; let index = $index) {
+              <span [style.opacity]="journeyPanelProgress(index)">{{ step }}</span>
+            }
+          }
+        </figcaption>
+        <div
+          class="mt-3 mb-1 flex items-center justify-center gap-3 text-[9px] font-semibold tracking-[0.18em] text-[var(--theme-cream)]/70 uppercase sm:mt-4 sm:text-[10px]"
+        >
+          <span class="h-px w-8 bg-[var(--theme-accent)]/50"></span>
+          <span>{{ journeySteps[activeJourneyStep()] }} · Scroll perlahan</span>
+          <span class="h-px w-8 bg-[var(--theme-accent)]/50"></span>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section
+    id="event-scroll-scene"
+    class="relative z-10 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-transparent px-5 py-24 text-center"
+  >
+    @if (activeThemeId() === 'maroon') {
+      <div class="pointer-events-none absolute top-12 left-1/2 h-64 w-[90%] max-w-4xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-primary)]/10" aria-hidden="true"></div>
+    } @else if (activeThemeId() === 'midnight') {
+      <span class="pointer-events-none absolute top-12 right-[10%] text-7xl text-[var(--theme-primary)]/10" aria-hidden="true">☾</span>
+      <span class="pointer-events-none absolute bottom-16 left-[9%] text-lg text-[var(--theme-accent-dark)]/20" aria-hidden="true">✦</span>
+    } @else if (activeThemeId() === 'mocha') {
+      <span class="pointer-events-none absolute inset-x-5 top-8 border-t border-dashed border-[var(--theme-accent-dark)]/20" aria-hidden="true"></span>
+      <span class="pointer-events-none absolute inset-x-5 bottom-8 border-b border-dashed border-[var(--theme-accent-dark)]/20" aria-hidden="true"></span>
+    } @else if (activeThemeId() === 'mihrab') {
+      <span class="pointer-events-none absolute top-10 left-1/2 h-72 w-[82%] max-w-3xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-primary)]/10" aria-hidden="true"></span>
+    } @else if (activeThemeId() === 'terracotta') {
+      <span class="pointer-events-none absolute inset-x-6 top-8 border-t border-dashed border-[var(--theme-accent-dark)]/20" aria-hidden="true"></span>
+    } @else if (activeThemeId() === 'pearl') {
+      <span class="pointer-events-none absolute top-10 right-[10%] size-4 rounded-full bg-[var(--theme-primary)]/10" aria-hidden="true"></span><span class="pointer-events-none absolute bottom-10 left-[10%] size-3 rounded-full bg-[var(--theme-accent)]/16" aria-hidden="true"></span>
+    } @else if (activeThemeId() === 'indigo') {
+      <span class="pointer-events-none absolute top-16 left-[8%] size-28 rotate-45 border border-[var(--theme-primary)]/8" aria-hidden="true"></span><span class="pointer-events-none absolute right-[8%] bottom-16 size-28 rotate-45 border border-[var(--theme-primary)]/8" aria-hidden="true"></span>
+    }
+    <p class="mb-4 text-xs font-semibold tracking-[0.28em] text-[var(--theme-accent)] uppercase">UNDANGAN WALIMAH · {{ activeTheme().concept }}</p>
+    <h3
+      class="mb-12 [font-family:Cormorant_Garamond,serif] text-5xl font-semibold text-[var(--theme-cream)] drop-shadow-[0_3px_14px_rgba(0,0,0,0.24)] sm:text-6xl"
+    >
+      Akad & Walimatul ‘Urs
+    </h3>
+    <div
+      class="grid w-full max-w-4xl gap-6"
+      [style.grid-template-columns]="activeExperience().eventColumns"
+    >
+      <article
+        class="relative border-[var(--theme-accent-dark)] bg-[var(--theme-paper)] px-8 py-10 opacity-0 shadow-xl transition-[transform,opacity] will-change-[opacity,transform] motion-reduce:transform-none motion-reduce:transition-none"
+        [class.border-t-4]="activeThemeId() === 'emerald'"
+        [class.rounded-t-[6rem]]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor'"
+        [class.rounded-b-3xl]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor'"
+        [class.border]="activeThemeId() !== 'emerald'"
+        [class.rounded-3xl]="activeThemeId() === 'midnight'"
+        [class.border-2]="activeThemeId() === 'midnight' || activeThemeId() === 'javanese'"
+        [class.-rotate-1]="activeThemeId() === 'mocha'"
+        [class.border-dashed]="activeThemeId() === 'mocha'"
+        [class.border-x-0]="activeThemeId() === 'ivory'"
+        [class.rounded-lg]="activeThemeId() === 'javanese'"
+        [class.rounded-tr-[4rem]]="activeThemeId() === 'boho'"
+        [class.rounded-bl-[3rem]]="activeThemeId() === 'boho'"
+        [class.rounded-t-[6rem]]="activeThemeId() === 'mihrab'"
+        [class.rounded-b-xl]="activeThemeId() === 'mihrab'"
+        [class.border-dashed]="activeThemeId() === 'terracotta'"
+        [class.-rotate-1]="activeThemeId() === 'terracotta'"
+        [class.rounded-[2.5rem]]="activeThemeId() === 'pearl'"
+        [class.border-2]="activeThemeId() === 'indigo'"
+        [style.opacity]="eventCardProgress(0)"
+        [style.transform]="eventCardTransform(-1, 0)"
+        [style.clip-path]="activeExperience().eventCardClipPaths[0]"
+        [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+        [style.transition-timing-function]="themeContentEasing()"
+      >
+        @switch (activeThemeId()) {
+          @case ('maroon') { <span class="inline-block text-4xl text-[var(--theme-accent-dark)] motion-safe:animate-pulse">❀</span> }
+          @case ('midnight') { <span class="text-4xl text-[var(--theme-accent-dark)]">☾</span> }
+          @case ('mocha') { <span class="text-3xl text-[var(--theme-accent-dark)]">⌁</span> }
+          @case ('ivory') { <span class="text-xs tracking-[0.35em] text-[var(--theme-accent-dark)]">01 /</span> }
+          @case ('javanese') { <span class="text-3xl text-[var(--theme-accent-dark)]">◆</span> }
+          @case ('boho') { <span class="text-4xl font-light text-[var(--theme-accent-dark)]">⌇</span> }
+          @case ('watercolor') { <span class="text-4xl text-[var(--theme-accent-dark)]">❦</span> }
+          @case ('mihrab') { <span class="inline-grid h-12 w-10 place-items-center rounded-t-full border border-[var(--theme-accent-dark)] text-xl text-[var(--theme-accent-dark)]">☾</span> }
+          @case ('terracotta') { <span class="text-3xl text-[var(--theme-accent-dark)]">⌇</span> }
+          @case ('pearl') { <span class="inline-block size-4 rounded-full bg-[var(--theme-accent)] ring-4 ring-[var(--theme-accent)]/20"></span> }
+          @case ('indigo') { <span class="inline-block size-6 rotate-45 border-2 border-[var(--theme-accent-dark)]"></span> }
+          @default { <span class="text-3xl text-[var(--theme-accent-dark)]">◇</span> }
+        }
+        <h4
+          class="mt-4 mb-2 [font-family:Cormorant_Garamond,serif] text-3xl font-semibold text-[var(--theme-dark)]"
+        >
+          Akad Nikah
+        </h4>
+        <p class="text-sm text-[var(--theme-muted)]"><strong>Selasa, 20 Oktober 2026</strong></p>
+        <p class="text-sm text-[var(--theme-muted)]">Pukul 10.00 WIB</p>
+        <hr class="mx-auto my-5 w-12 border-[var(--theme-border)]" />
+        <p class="text-sm leading-7 text-[var(--theme-muted)]">
+          Gedung Serbaguna Bahagia<br />Jl. Contoh Bahagia No. 20, Jakarta
+        </p>
+        <div
+          class="mx-auto mt-5 w-fit border border-[var(--theme-border)] bg-[var(--theme-paper)] p-2 opacity-0 will-change-[opacity,transform] motion-reduce:transform-none"
+          [style.opacity]="eventQrProgress(0)"
+          [style.transform]="eventQrTransform(0)"
+        >
+          <img
+            class="size-28 sm:size-32"
+            src="/assets/qr-lokasi-undangan.png"
+            alt="QR code lokasi akad nikah di Google Maps"
+          />
+        </div>
+        <p class="mt-2 text-[10px] tracking-wider text-[var(--theme-muted)] uppercase">Pindai lokasi akad</p>
+        <a
+          class="mt-3 inline-block border border-[var(--theme-dark)] px-4 py-2 text-xs font-semibold text-[var(--theme-dark)] no-underline hover:bg-[var(--theme-dark)] hover:text-white"
+          [href]="locationUrl"
+          target="_blank"
+          rel="noreferrer"
+          >Lihat Lokasi</a
+        >
+      </article>
+      <article
+        class="relative border-[var(--theme-accent-dark)] bg-[var(--theme-paper)] px-8 py-10 opacity-0 shadow-xl transition-[transform,opacity] will-change-[opacity,transform] motion-reduce:transform-none motion-reduce:transition-none"
+        [class.border-t-4]="activeThemeId() === 'emerald'"
+        [class.rounded-t-[6rem]]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor'"
+        [class.rounded-b-3xl]="activeThemeId() === 'maroon' || activeThemeId() === 'watercolor'"
+        [class.border]="activeThemeId() !== 'emerald'"
+        [class.rounded-3xl]="activeThemeId() === 'midnight'"
+        [class.border-2]="activeThemeId() === 'midnight' || activeThemeId() === 'javanese'"
+        [class.rotate-1]="activeThemeId() === 'mocha'"
+        [class.border-dashed]="activeThemeId() === 'mocha'"
+        [class.border-x-0]="activeThemeId() === 'ivory'"
+        [class.rounded-lg]="activeThemeId() === 'javanese'"
+        [class.rounded-tl-[4rem]]="activeThemeId() === 'boho'"
+        [class.rounded-br-[3rem]]="activeThemeId() === 'boho'"
+        [class.rounded-t-[6rem]]="activeThemeId() === 'mihrab'"
+        [class.rounded-b-xl]="activeThemeId() === 'mihrab'"
+        [class.border-dashed]="activeThemeId() === 'terracotta'"
+        [class.rotate-1]="activeThemeId() === 'terracotta'"
+        [class.rounded-[2.5rem]]="activeThemeId() === 'pearl'"
+        [class.border-2]="activeThemeId() === 'indigo'"
+        [style.opacity]="eventCardProgress(1)"
+        [style.transform]="eventCardTransform(1, 1)"
+        [style.clip-path]="activeExperience().eventCardClipPaths[1]"
+        [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+        [style.transition-timing-function]="themeContentEasing()"
+      >
+        @switch (activeThemeId()) {
+          @case ('maroon') { <span class="inline-block text-4xl text-[var(--theme-accent-dark)] motion-safe:animate-pulse">❀</span> }
+          @case ('midnight') { <span class="text-4xl text-[var(--theme-accent-dark)]">✦</span> }
+          @case ('mocha') { <span class="text-3xl text-[var(--theme-accent-dark)]">⌁</span> }
+          @case ('ivory') { <span class="text-xs tracking-[0.35em] text-[var(--theme-accent-dark)]">02 /</span> }
+          @case ('javanese') { <span class="text-3xl text-[var(--theme-accent-dark)]">◆</span> }
+          @case ('boho') { <span class="text-4xl font-light text-[var(--theme-accent-dark)]">⌇</span> }
+          @case ('watercolor') { <span class="text-4xl text-[var(--theme-accent-dark)]">❦</span> }
+          @case ('mihrab') { <span class="inline-grid h-12 w-10 place-items-center rounded-t-full border border-[var(--theme-accent-dark)] text-xl text-[var(--theme-accent-dark)]">◇</span> }
+          @case ('terracotta') { <span class="text-3xl text-[var(--theme-accent-dark)]">⌇</span> }
+          @case ('pearl') { <span class="inline-block size-4 rounded-full bg-[var(--theme-accent)] ring-4 ring-[var(--theme-accent)]/20"></span> }
+          @case ('indigo') { <span class="inline-block size-6 rotate-45 border-2 border-[var(--theme-accent-dark)]"></span> }
+          @default { <span class="text-3xl text-[var(--theme-accent-dark)]">◇</span> }
+        }
+        <h4
+          class="mt-4 mb-2 [font-family:Cormorant_Garamond,serif] text-3xl font-semibold text-[var(--theme-dark)]"
+        >
+          Walimatul ‘Urs
+        </h4>
+        <p class="text-sm text-[var(--theme-muted)]"><strong>Selasa, 20 Oktober 2026</strong></p>
+        <p class="text-sm text-[var(--theme-muted)]">Pukul 13.00 WIB</p>
+        <hr class="mx-auto my-5 w-12 border-[var(--theme-border)]" />
+        <p class="text-sm leading-7 text-[var(--theme-muted)]">
+          Gedung Serbaguna Bahagia<br />Jl. Contoh Bahagia No. 20, Jakarta
+        </p>
+        <div
+          class="mx-auto mt-5 w-fit border border-[var(--theme-border)] bg-[var(--theme-paper)] p-2 opacity-0 will-change-[opacity,transform] motion-reduce:transform-none"
+          [style.opacity]="eventQrProgress(1)"
+          [style.transform]="eventQrTransform(1)"
+        >
+          <img
+            class="size-28 sm:size-32"
+            src="/assets/qr-lokasi-undangan.png"
+            alt="QR code lokasi walimatul urs di Google Maps"
+          />
+        </div>
+        <p class="mt-2 text-[10px] tracking-wider text-[var(--theme-muted)] uppercase">
+          Pindai lokasi walimah
+        </p>
+        <a
+          class="mt-3 inline-block border border-[var(--theme-dark)] px-4 py-2 text-xs font-semibold text-[var(--theme-dark)] no-underline hover:bg-[var(--theme-dark)] hover:text-white"
+          [href]="locationUrl"
+          target="_blank"
+          rel="noreferrer"
+          >Lihat Lokasi</a
+        >
+      </article>
+    </div>
+    <div
+      class="relative isolate mt-10 w-full max-w-3xl overflow-visible rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-paper)]/96 px-6 py-5 text-sm leading-7 text-[var(--theme-copy)] opacity-0 shadow-lg backdrop-blur-md will-change-[opacity,transform] sm:px-9 sm:py-7"
+      [style.opacity]="eventNoteProgress()"
+      [style.transform]="'translate3d(0,' + (1 - eventNoteProgress()) * 20 + 'px,0)'"
+    >
+      <span
+        class="pointer-events-none absolute -inset-2 -z-10 bg-[var(--theme-accent)]/24"
+        [style.clip-path]="activeExperience().storyCardClipPath"
+        aria-hidden="true"
+      ></span>
+      <p class="relative z-10 mx-auto max-w-2xl">
+        Dengan hormat, kami memohon para tamu untuk mengenakan pakaian yang menutup aurat, menjaga
+        waktu salat, serta menjaga adab dan interaksi selama acara.
+      </p>
+    </div>
+  </section>
+
+  <section
+    id="closing-section"
+    class="relative z-10 flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-transparent px-5 py-24 text-center text-white"
+  >
+    @switch (activeThemeId()) {
+      @case ('emerald') {
+        <span class="pointer-events-none absolute top-10 left-10 size-28 rotate-45 border border-[var(--theme-accent)]/10" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute right-10 bottom-10 size-28 rotate-45 border border-[var(--theme-accent)]/10" aria-hidden="true"></span>
+      }
+      @case ('maroon') {
+        <span class="pointer-events-none absolute top-8 left-[8%] text-8xl text-[var(--theme-cream)]/8 motion-safe:animate-spin [animation-duration:17s]" aria-hidden="true">❀</span>
+        <span class="pointer-events-none absolute right-[8%] bottom-8 text-8xl text-[var(--theme-cream)]/8 motion-safe:animate-spin [animation-direction:reverse] [animation-duration:21s]" aria-hidden="true">❀</span>
+      }
+      @case ('midnight') {
+        <span class="pointer-events-none absolute top-8 right-[10%] text-9xl text-[var(--theme-accent)]/12" aria-hidden="true">☾</span>
+        <span class="pointer-events-none absolute bottom-[18%] left-[12%] text-lg text-[var(--theme-accent)]/30" aria-hidden="true">✦</span>
+      }
+      @case ('mocha') {
+        <svg class="pointer-events-none absolute -bottom-12 -left-12 h-72 w-56 text-[var(--theme-accent)]/18" viewBox="0 0 240 300" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 290C55 210 117 128 219 18M78 191c-42-4-62-26-61-64 41 1 62 22 61 64ZM135 112c-1-39 19-62 56-68 4 37-16 61-56 68Z" stroke-width="2" /></svg>
+      }
+      @case ('ivory') {
+        <span class="pointer-events-none absolute top-[10%] left-[6%] text-[9px] tracking-[0.5em] text-white/25 [writing-mode:vertical-rl]" aria-hidden="true">THE FINAL PAGE</span>
+        <span class="pointer-events-none absolute right-[4%] bottom-0 [font-family:Cormorant_Garamond,serif] text-[13rem] leading-none text-white/[0.04]" aria-hidden="true">{{ coupleInitials() }}</span>
+      }
+      @case ('javanese') {
+        <svg class="pointer-events-none absolute top-[8%] left-1/2 h-[78%] w-[80%] max-w-xl -translate-x-1/2 text-[var(--theme-accent)]/10" viewBox="0 0 500 650" fill="none" stroke="currentColor" aria-hidden="true"><path d="M250 18C225 94 174 129 132 198c-43 70-61 158-26 238 29 66 83 114 144 168 61-54 115-102 144-168 35-80 17-168-26-238-42-69-93-104-118-180Z" stroke-width="3" /></svg>
+      }
+      @case ('boho') {
+        <span class="pointer-events-none absolute top-[7%] left-1/2 h-[86%] w-[88%] max-w-3xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-accent)]/10" aria-hidden="true"></span>
+        <svg class="pointer-events-none absolute -right-10 -bottom-10 h-72 w-52 text-[var(--theme-accent)]/16" viewBox="0 0 220 340" fill="none" stroke="currentColor" aria-hidden="true"><path d="M32 332C58 238 111 147 190 29M81 231c-31-25-43-57-35-94 40 17 54 48 35 94ZM126 151c8-42 31-66 68-70-1 43-23 67-68 70Z" stroke-width="2" /></svg>
+      }
+      @case ('watercolor') {
+        <span class="pointer-events-none absolute -top-16 -left-12 size-64 rounded-full bg-[var(--theme-accent)]/14 blur-3xl" aria-hidden="true"></span>
+        <svg class="pointer-events-none absolute right-0 bottom-0 h-64 w-72 text-[var(--theme-cream)]/10" viewBox="0 0 300 250" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 235V95h45V55h38v180M197 235V55h38v40h45v140M103 235V125h94v110M130 235v-62h40v62" stroke-width="2" /></svg>
+      }
+      @case ('mihrab') {
+        <span class="pointer-events-none absolute top-[8%] left-1/2 h-[82%] w-[84%] max-w-3xl -translate-x-1/2 rounded-t-[50%] border border-[var(--theme-accent)]/10" aria-hidden="true"></span><span class="pointer-events-none absolute top-[10%] left-1/2 -translate-x-1/2 text-5xl text-[var(--theme-accent)]/25" aria-hidden="true">☾</span>
+      }
+      @case ('terracotta') {
+        <span class="pointer-events-none absolute -right-20 -bottom-24 h-96 w-56 -rotate-35 rounded-[100%_0_100%_0] border border-[var(--theme-accent)]/12" aria-hidden="true"></span><span class="pointer-events-none absolute inset-x-[8%] top-[9%] border-t border-dashed border-white/12" aria-hidden="true"></span>
+      }
+      @case ('pearl') {
+        <span class="pointer-events-none absolute top-[10%] left-[9%] size-3 rounded-full bg-[var(--theme-cream)]/25" aria-hidden="true"></span><span class="pointer-events-none absolute right-[11%] bottom-[14%] size-4 rounded-full bg-[var(--theme-accent)]/22" aria-hidden="true"></span><span class="pointer-events-none absolute inset-8 rounded-[4rem] border border-white/8" aria-hidden="true"></span>
+      }
+      @case ('indigo') {
+        <span class="pointer-events-none absolute top-[10%] left-[8%] size-40 rotate-45 border border-[var(--theme-accent)]/8" aria-hidden="true"></span><span class="pointer-events-none absolute right-[8%] bottom-[10%] size-40 rotate-45 border border-[var(--theme-accent)]/8" aria-hidden="true"></span>
+      }
+    }
+    <div
+      class="relative isolate flex w-full flex-col items-center transition-[transform,opacity] will-change-[transform,opacity] motion-reduce:transition-none"
+      [style.opacity]="closingScrollProgress()"
+      [style.transform]="themedSectionTransform(closingScrollProgress(), 'closing')"
+      [style.max-width]="activeExperience().closingWidth"
+      [style.text-align]="activeExperience().closingTextAlign"
+      [style.padding]="activeExperience().closingPadding"
+      [style.transition-duration.ms]="themeContentTransitionDurationMs()"
+      [style.transition-timing-function]="themeContentEasing()"
+    >
+    <span
+      class="pointer-events-none absolute inset-0 -z-10 border border-[var(--theme-accent)]/18 bg-[var(--theme-dark)]/18 backdrop-blur-[1px]"
+      [style.clip-path]="activeExperience().closingClipPath"
+      aria-hidden="true"
+    ></span>
+    <p class="mb-4 text-xs font-semibold tracking-[0.28em] text-[var(--theme-accent-dark)] uppercase">{{ activeExperience().closingLabel }} · Doa untuk Mempelai</p>
+    <p class="max-w-3xl text-2xl leading-loose text-[var(--theme-cream)] sm:text-3xl">
+      بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
+    </p>
+    <p class="mt-5 max-w-2xl [font-family:Cormorant_Garamond,serif] text-2xl leading-relaxed">
+      “Semoga Allah memberkahimu, memberkahi atasmu, dan mengumpulkan kalian berdua dalam kebaikan.”
+    </p>
+    <p class="mt-3 text-xs tracking-widest text-white/50">HR. Abu Dawud no. 2130</p>
+    <div class="my-10 h-px w-16 bg-[var(--theme-accent)]/50"></div>
+    <h3
+      class="max-w-3xl [font-family:Cormorant_Garamond,serif] text-4xl leading-tight font-semibold sm:text-5xl"
+    >
+      Merupakan kehormatan bagi kami apabila Anda berkenan hadir dan mendoakan kedua mempelai.
+    </h3>
+    <p class="mt-8 text-white/60">
+      Jazākumullāhu khairan. Wassalāmu‘alaikum warahmatullāhi wabarakātuh.
+    </p>
+    <div class="mt-10 [font-family:Cormorant_Garamond,serif] text-5xl italic text-[var(--theme-accent)]">
+      {{ coupleName() }}
+    </div>
+    <div
+      class="mt-10 flex items-center justify-center gap-3 text-[9px] font-semibold tracking-[0.32em] text-white/45 uppercase"
+      aria-label="Design by Zaputlah"
+    >
+      <span class="h-px w-8 bg-[var(--theme-accent)]/35" aria-hidden="true"></span>
+      <span>Design by <strong class="font-semibold text-[var(--theme-accent)]">Zaputlah</strong></span>
+      <span class="h-px w-8 bg-[var(--theme-accent)]/35" aria-hidden="true"></span>
+    </div>
+    </div>
+  </section>
+</main>
+
+@if (isCoverHidden()) {
+  <nav
+    class="fixed inset-x-0 bottom-0 z-[90] border-t border-[var(--theme-border)] bg-[var(--theme-paper)]/95 shadow-[0_-12px_35px_rgba(0,0,0,0.12)] backdrop-blur-xl [padding-bottom:env(safe-area-inset-bottom)] sm:hidden"
+    aria-label="Navigasi undangan"
+  >
+    <div class="mx-auto flex max-w-lg items-stretch px-1">
+      <button
+        class="relative flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 px-1 pt-2.5 pb-2 text-[9px] font-medium transition-colors"
+        [class.text-[var(--theme-primary)]]="activeMobileSection() === 'couple-section'"
+        [class.text-[var(--theme-muted)]]="activeMobileSection() !== 'couple-section'"
+        type="button"
+        (click)="scrollToSection('couple-section')"
+        [attr.aria-current]="activeMobileSection() === 'couple-section' ? 'page' : null"
+      >
+        <span class="absolute inset-x-4 top-0 h-0.5 rounded-full bg-[var(--theme-accent-dark)] transition-opacity" [class.opacity-100]="activeMobileSection() === 'couple-section'" [class.opacity-0]="activeMobileSection() !== 'couple-section'"></span>
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 19.25v-1.4a4.1 4.1 0 0 0-4.1-4.1H7.1A4.1 4.1 0 0 0 3 17.85v1.4M9.25 9.75a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM16 10.5a3.1 3.1 0 0 0 0-6.1M17.2 13.9a4 4 0 0 1 3.8 4v1.35" /></svg>
+        <span>Mempelai</span>
+      </button>
+
+      <button
+        class="relative flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 px-1 pt-2.5 pb-2 text-[9px] font-medium transition-colors"
+        [class.text-[var(--theme-primary)]]="activeMobileSection() === 'event-scroll-scene'"
+        [class.text-[var(--theme-muted)]]="activeMobileSection() !== 'event-scroll-scene'"
+        type="button"
+        (click)="scrollToSection('event-scroll-scene')"
+        [attr.aria-current]="activeMobileSection() === 'event-scroll-scene' ? 'page' : null"
+      >
+        <span class="absolute inset-x-4 top-0 h-0.5 rounded-full bg-[var(--theme-accent-dark)] transition-opacity" [class.opacity-100]="activeMobileSection() === 'event-scroll-scene'" [class.opacity-0]="activeMobileSection() !== 'event-scroll-scene'"></span>
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.5 2.5v3M17.5 2.5v3M3.5 8.5h17M5.5 4h13a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" /><path stroke-linecap="round" stroke-linejoin="round" d="m9 14 2 2 4-4" /></svg>
+        <span>Acara</span>
+      </button>
+
+      <button
+        class="relative flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 px-1 pt-2.5 pb-2 text-[9px] font-medium transition-colors"
+        [class.text-[var(--theme-primary)]]="activeMobileSection() === 'stories-section'"
+        [class.text-[var(--theme-muted)]]="activeMobileSection() !== 'stories-section'"
+        type="button"
+        (click)="scrollToSection('stories-section')"
+        [attr.aria-current]="activeMobileSection() === 'stories-section' ? 'page' : null"
+      >
+        <span class="absolute inset-x-4 top-0 h-0.5 rounded-full bg-[var(--theme-accent-dark)] transition-opacity" [class.opacity-100]="activeMobileSection() === 'stories-section'" [class.opacity-0]="activeMobileSection() !== 'stories-section'"></span>
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4.5h5.2A2.8 2.8 0 0 1 12 7.3v12.2a3.4 3.4 0 0 0-3.4-3.4H4V4.5ZM20 4.5h-5.2A2.8 2.8 0 0 0 12 7.3v12.2a3.4 3.4 0 0 1 3.4-3.4H20V4.5Z" /></svg>
+        <span>Cerita</span>
+      </button>
+
+      <button
+        class="relative flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 px-1 pt-2.5 pb-2 text-[9px] font-medium transition-colors"
+        [class.text-[var(--theme-primary)]]="activeMobileSection() === 'gallery-section'"
+        [class.text-[var(--theme-muted)]]="activeMobileSection() !== 'gallery-section'"
+        type="button"
+        (click)="scrollToSection('gallery-section')"
+        [attr.aria-current]="activeMobileSection() === 'gallery-section' ? 'page' : null"
+      >
+        <span class="absolute inset-x-4 top-0 h-0.5 rounded-full bg-[var(--theme-accent-dark)] transition-opacity" [class.opacity-100]="activeMobileSection() === 'gallery-section'" [class.opacity-0]="activeMobileSection() !== 'gallery-section'"></span>
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="8" cy="9" r="1.5" /><path stroke-linecap="round" stroke-linejoin="round" d="m4 17 4.5-4.5 3.2 3.2 2.4-2.4L20 19" /></svg>
+        <span>Galeri</span>
+      </button>
+
+      <button
+        class="relative flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-1 px-1 pt-2.5 pb-2 text-[9px] font-medium transition-colors"
+        [class.text-[var(--theme-primary)]]="activeMobileSection() === 'journey-scroll-scene' || activeMobileSection() === 'closing-section'"
+        [class.text-[var(--theme-muted)]]="activeMobileSection() !== 'journey-scroll-scene' && activeMobileSection() !== 'closing-section'"
+        type="button"
+        (click)="scrollToSection('journey-scroll-scene')"
+        [attr.aria-current]="activeMobileSection() === 'journey-scroll-scene' || activeMobileSection() === 'closing-section' ? 'page' : null"
+      >
+        <span class="absolute inset-x-4 top-0 h-0.5 rounded-full bg-[var(--theme-accent-dark)] transition-opacity" [class.opacity-100]="activeMobileSection() === 'journey-scroll-scene' || activeMobileSection() === 'closing-section'" [class.opacity-0]="activeMobileSection() !== 'journey-scroll-scene' && activeMobileSection() !== 'closing-section'"></span>
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1" /><rect x="15" y="3" width="6" height="6" rx="1" /><rect x="3" y="15" width="6" height="6" rx="1" /><rect x="15" y="15" width="6" height="6" rx="1" /></svg>
+        <span>Lain-lain</span>
+      </button>
+    </div>
+  </nav>
+}

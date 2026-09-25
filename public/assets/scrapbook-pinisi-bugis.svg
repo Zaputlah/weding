@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="paper"><feTurbulence baseFrequency=".017 .07" numOctaves="3" seed="67"/><feColorMatrix values="1 0 0 0 .64 0 1 0 0 .76 0 0 1 0 .8 0 0 0 .13 0"/></filter>
+    <radialGradient id="sea"><stop stop-color="#2f6b79" stop-opacity=".4"/><stop offset="1" stop-color="#2f6b79" stop-opacity="0"/></radialGradient>
+    <pattern id="waves" width="180" height="70" patternUnits="userSpaceOnUse"><path d="M0 35c30-30 60-30 90 0s60 30 90 0" fill="none" stroke="#17485b" stroke-opacity=".12" stroke-width="3"/></pattern>
+  </defs>
+  <rect width="1600" height="1200" fill="#edf0e8"/>
+  <rect width="1600" height="1200" filter="url(#paper)" opacity=".55"/>
+  <ellipse cx="260" cy="1040" rx="680" ry="500" fill="url(#sea)"/>
+  <ellipse cx="1430" cy="150" rx="560" ry="410" fill="url(#sea)" opacity=".65"/>
+  <rect width="1600" height="1200" fill="url(#waves)" opacity=".8"/>
+  <g fill="none" stroke="#102d3a" stroke-linejoin="round" opacity=".18" stroke-width="7">
+    <path d="M1160 850h310l-62 86h-187Z"/><path d="M1298 850V460l-108 199h108Zm18-366v366h128Z"/><path d="M1260 946h220" stroke="#e0b765" stroke-width="4"/>
+  </g>
+  <path d="M0 1090c260-100 500-95 720 16 280 142 552 116 880-54v148H0Z" fill="#102d3a" opacity=".08"/>
+</svg>

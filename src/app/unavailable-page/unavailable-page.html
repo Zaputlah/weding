@@ -1,0 +1,66 @@
+<main
+  class="relative grid min-h-screen place-items-center overflow-hidden bg-[#f7f2e9] px-5 py-12 text-center text-[#302b27]"
+>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(193,158,95,0.18),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(49,92,74,0.14),transparent_40%)]"
+    aria-hidden="true"
+  ></div>
+  <span
+    class="pointer-events-none absolute -top-28 -right-28 size-80 rounded-full border border-[#b8924d]/15 sm:size-[28rem]"
+    aria-hidden="true"
+  ></span>
+  <span
+    class="pointer-events-none absolute -bottom-36 -left-36 size-96 rotate-45 border border-[#315c4a]/10"
+    aria-hidden="true"
+  ></span>
+
+  <section
+    class="relative w-full max-w-xl overflow-hidden rounded-[2.5rem] border border-[#d8c8ac] bg-white/80 px-6 py-12 shadow-[0_28px_90px_rgba(48,43,39,0.14)] backdrop-blur-sm sm:px-12 sm:py-16"
+  >
+    <div
+      class="mx-auto mb-7 grid size-20 place-items-center rounded-full border border-[#c9aa70] bg-[#253f35] text-[#f5e6c5] shadow-lg"
+    >
+      <svg
+        class="size-9"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M7.5 10V7.75a4.5 4.5 0 0 1 9 0V10M6.5 10h11A1.5 1.5 0 0 1 19 11.5v7A1.5 1.5 0 0 1 17.5 20h-11A1.5 1.5 0 0 1 5 18.5v-7A1.5 1.5 0 0 1 6.5 10Z"
+        />
+        <path stroke-linecap="round" d="M12 14v2" />
+      </svg>
+    </div>
+
+    <p class="mb-4 text-[10px] font-semibold tracking-[0.3em] text-[#9b793f] uppercase">
+      {{ eyebrow }}
+    </p>
+    <h1
+      class="[font-family:Cormorant_Garamond,serif] text-5xl leading-none font-semibold text-[#253a32] sm:text-6xl"
+    >
+      {{ heading }}
+    </h1>
+    <p class="mx-auto mt-6 max-w-md text-sm leading-7 text-[#716960] sm:text-base sm:leading-8">
+      {{ description }}
+    </p>
+
+    <div class="mx-auto my-8 flex max-w-xs items-center gap-3 text-[#b8924d]/55" aria-hidden="true">
+      <span class="h-px flex-1 bg-current"></span>
+      <span class="size-2 rotate-45 border border-current"></span>
+      <span class="h-px flex-1 bg-current"></span>
+    </div>
+
+    <!-- <a
+      class="inline-flex items-center gap-2 rounded-full bg-[#253f35] px-6 py-3 text-xs font-semibold tracking-[0.1em] text-[#f5e6c5] no-underline shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-[#315c4a] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b8924d]"
+      routerLink="/"
+    >
+      Kembali ke Katalog
+      <span aria-hidden="true">→</span>
+    </a> -->
+  </section>
+</main>

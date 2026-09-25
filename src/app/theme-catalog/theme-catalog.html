@@ -1,0 +1,146 @@
+<main
+  class="relative min-h-screen overflow-hidden bg-[#f7f2e9] px-5 py-10 text-[#302b27] sm:px-8 sm:py-16"
+>
+  <div
+    class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(193,158,95,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(49,92,74,0.12),transparent_38%)]"
+    aria-hidden="true"
+  ></div>
+  <span
+    class="pointer-events-none fixed -top-24 -right-24 size-72 rounded-full border border-[#b8924d]/15 sm:size-96"
+    aria-hidden="true"
+  ></span>
+  <span
+    class="pointer-events-none fixed -bottom-32 -left-32 size-80 rotate-45 border border-[#315c4a]/10 sm:size-[28rem]"
+    aria-hidden="true"
+  ></span>
+
+  <div class="relative mx-auto w-full min-w-0 max-w-7xl">
+    <header class="mx-auto mb-12 w-full min-w-0 max-w-3xl text-center sm:mb-16">
+      <div
+        class="mb-5 inline-flex items-center gap-3 text-[10px] font-semibold tracking-[0.32em] text-[#8f6d35] uppercase"
+      >
+        <span class="h-px w-8 bg-current/45"></span>
+        Zaputlah
+        <span class="h-px w-8 bg-current/45"></span>
+      </div>
+      <h1
+        class="[font-family:Cormorant_Garamond,serif] text-5xl leading-none font-semibold text-[#253a32] sm:text-7xl"
+      >
+        Katalog Tema Undangan
+      </h1>
+      <p class="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#6b655e] sm:text-base sm:leading-8">
+        Pilih salah satu desain untuk melihat amplop, alur cerita, galeri, dan detail acara secara
+        lengkap.
+      </p>
+      <div
+        class="mt-6 inline-flex items-center gap-2 rounded-full border border-[#d7c6a7] bg-white/70 px-4 py-2 text-[10px] font-semibold tracking-[0.16em] text-[#756344] uppercase shadow-sm backdrop-blur-sm"
+      >
+        <span class="size-1.5 rounded-full bg-[#315c4a]"></span>
+        {{ themes.length }} tema tersedia
+      </div>
+    </header>
+
+    <section
+      class="grid w-full min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      aria-label="Daftar tema undangan"
+    >
+      @for (theme of themes; track theme.slug; let index = $index) {
+        <a
+          class="group w-full min-w-0 overflow-hidden rounded-[2rem] border border-black/8 bg-white/80 text-left no-underline shadow-[0_18px_55px_rgba(48,43,39,0.10)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_28px_70px_rgba(48,43,39,0.18)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b8924d]"
+          [routerLink]="['/undangan', theme.slug]"
+          [attr.aria-label]="'Buka tema ' + theme.name"
+        >
+          <div class="relative aspect-[4/3] overflow-hidden" [style.background-color]="theme.deep">
+            <img
+              class="absolute inset-0 h-full w-full object-cover opacity-55 mix-blend-soft-light transition duration-700 group-hover:scale-110 group-hover:opacity-70"
+              [src]="scrapbookBackground(theme)"
+              alt=""
+              loading="lazy"
+            />
+            <div
+              class="absolute inset-0 bg-linear-to-br from-black/5 via-transparent to-black/40"
+              aria-hidden="true"
+            ></div>
+
+            <span
+              class="absolute top-5 left-5 grid size-9 place-items-center rounded-full border border-white/25 bg-black/10 text-[10px] font-semibold text-white/85 backdrop-blur-sm"
+              >{{ (index + 1).toString().padStart(2, '0') }}</span
+            >
+
+            <div class="absolute inset-x-[12%] top-[24%] h-[54%] [perspective:800px]">
+              <div
+                class="absolute inset-0 rounded-b-2xl border border-white/15 shadow-2xl"
+                [style.background-color]="theme.dark"
+              ></div>
+              <div
+                class="absolute inset-x-0 top-0 h-[58%] origin-top transition-transform duration-700 ease-out group-hover:[transform:rotateX(-18deg)] [clip-path:polygon(0_0,100%_0,50%_100%)]"
+                [style.background-color]="theme.primary"
+              ></div>
+              <div
+                class="absolute top-[46%] left-1/2 grid size-11 -translate-x-1/2 place-items-center rounded-full border-2 text-sm font-semibold shadow-lg transition duration-500 group-hover:scale-110"
+                [style.background-color]="theme.accent"
+                [style.border-color]="theme.cream"
+                [style.color]="theme.deep"
+              >
+                D&A
+              </div>
+              <span
+                class="absolute inset-x-0 bottom-[12%] text-center text-[8px] font-semibold tracking-[0.22em] uppercase"
+                [style.color]="theme.cream"
+                >Buka Undangan</span
+              >
+            </div>
+          </div>
+
+          <div class="p-6 sm:p-7">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="mb-2 text-[9px] font-semibold tracking-[0.24em] text-[#9b793f] uppercase">
+                  {{ theme.concept }}
+                </p>
+                <h2
+                  class="[font-family:Cormorant_Garamond,serif] text-3xl font-semibold text-[#302b27]"
+                >
+                  {{ theme.name }}
+                </h2>
+              </div>
+              <span
+                class="grid size-10 shrink-0 place-items-center rounded-full border border-black/8 text-lg transition duration-300 group-hover:translate-x-1 group-hover:bg-[#302b27] group-hover:text-white"
+                aria-hidden="true"
+                >→</span
+              >
+            </div>
+            <p class="mt-3 min-h-12 text-sm leading-6 text-[#756e67]">{{ theme.description }}</p>
+            <div class="mt-5 flex items-center gap-2" aria-hidden="true">
+              <span
+                class="size-4 rounded-full border border-black/10"
+                [style.background-color]="theme.deep"
+              ></span>
+              <span
+                class="size-4 rounded-full border border-black/10"
+                [style.background-color]="theme.primary"
+              ></span>
+              <span
+                class="size-4 rounded-full border border-black/10"
+                [style.background-color]="theme.accent"
+              ></span>
+              <span
+                class="size-4 rounded-full border border-black/10"
+                [style.background-color]="theme.cream"
+              ></span>
+              <span class="ml-2 text-[9px] font-semibold tracking-[0.16em] text-[#9a9187] uppercase"
+                >Lihat tema</span
+              >
+            </div>
+          </div>
+        </a>
+      }
+    </section>
+
+    <footer
+      class="mt-14 border-t border-[#d9ccb7] pt-8 text-center text-xs leading-6 text-[#81786f] sm:mt-20"
+    >
+      Pilih tema untuk membuka preview undangan lengkap.
+    </footer>
+  </div>
+</main>

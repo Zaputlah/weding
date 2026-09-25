@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="paper"><feTurbulence baseFrequency=".02 .07" numOctaves="3" seed="33"/><feColorMatrix values="1 0 0 0 .86 0 1 0 0 .77 0 0 1 0 .58 0 0 0 .13 0"/></filter>
+    <radialGradient id="red"><stop stop-color="#7e3035" stop-opacity=".42"/><stop offset="1" stop-color="#7e3035" stop-opacity="0"/></radialGradient>
+    <pattern id="songket" width="96" height="96" patternUnits="userSpaceOnUse"><path d="M48 6 90 48 48 90 6 48Zm0 22 20 20-20 20-20-20Z" fill="none" stroke="#a87722" stroke-opacity=".19" stroke-width="2"/></pattern>
+  </defs>
+  <rect width="1600" height="1200" fill="#f5ead1"/>
+  <rect width="1600" height="1200" filter="url(#paper)" opacity=".5"/>
+  <ellipse cx="180" cy="1020" rx="620" ry="460" fill="url(#red)"/>
+  <ellipse cx="1470" cy="180" rx="530" ry="380" fill="url(#red)" opacity=".75"/>
+  <rect width="1600" height="1200" fill="url(#songket)" opacity=".55"/>
+  <g fill="none" stroke="#4a2025" opacity=".2" stroke-width="8">
+    <path d="M80 330c130-30 202-120 250-262 44 142 122 232 255 262M505 330c130-30 202-120 250-262 44 142 122 232 255 262M930 330c130-30 202-120 250-262 44 142 122 232 255 262"/>
+    <path d="M80 344h1355" stroke="#dfb84f" stroke-width="4"/>
+  </g>
+  <path d="M0 1110c330-155 565-114 802 0 264 126 507 106 798-42v132H0Z" fill="#241719" opacity=".09"/>
+</svg>
