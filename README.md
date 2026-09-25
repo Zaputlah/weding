@@ -27,14 +27,50 @@ Proyek ini berjalan sepenuhnya di sisi klien. Tidak ada backend, database, RSVP,
   <img src="./public/img/Katalogthema.png" alt="Halaman katalog tema undangan" width="100%" />
 </p>
 
-### Contoh tema
+### Semua tema
 
 <table>
   <tr>
     <td align="center" width="50%">
+      <img src="./public/img/klasik-zamrud.png" alt="Tampilan tema Klasik Zamrud" width="100%" />
+      <br />
+      <strong>Klasik Zamrud</strong>
+    </td>
+    <td align="center" width="50%">
       <img src="./public/img/mawar-andalusia.png" alt="Tampilan tema Mawar Andalusia" width="100%" />
       <br />
       <strong>Mawar Andalusia</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/langit-qamar.png" alt="Tampilan tema Langit Qamar" width="100%" />
+      <br />
+      <strong>Langit Qamar</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/kebun-senja.png" alt="Tampilan tema Kebun Senja" width="100%" />
+      <br />
+      <strong>Kebun Senja</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/ivory-editorial.png" alt="Tampilan tema Ivory Editorial" width="100%" />
+      <br />
+      <strong>Ivory Editorial</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/pusaka-jawa.png" alt="Tampilan tema Pusaka Jawa" width="100%" />
+      <br />
+      <strong>Pusaka Jawa</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/dark-boho.png" alt="Tampilan tema Dark Boho" width="100%" />
+      <br />
+      <strong>Dark Boho</strong>
     </td>
     <td align="center" width="50%">
       <img src="./public/img/chateau-watercolor.png" alt="Tampilan tema Château Watercolor" width="100%" />
@@ -44,14 +80,103 @@ Proyek ini berjalan sepenuhnya di sisi klien. Tidak ada backend, database, RSVP,
   </tr>
   <tr>
     <td align="center" width="50%">
+      <img src="./public/img/mihrab-sage.png" alt="Tampilan tema Mihrab Sage" width="100%" />
+      <br />
+      <strong>Mihrab Sage</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/surat-terracotta.png" alt="Tampilan tema Surat Terracotta" width="100%" />
+      <br />
+      <strong>Surat Terracotta</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/mutiara-nikah.png" alt="Tampilan tema Mutiara Nikah" width="100%" />
+      <br />
+      <strong>Mutiara Nikah</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/naskah-nusantara.png" alt="Tampilan tema Naskah Nusantara" width="100%" />
+      <br />
+      <strong>Naskah Nusantara</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/priangan-sunda.png" alt="Tampilan tema Priangan Sunda" width="100%" />
+      <br />
+      <strong>Priangan Sunda</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/ranah-minang.png" alt="Tampilan tema Ranah Minang" width="100%" />
+      <br />
+      <strong>Ranah Minang</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/rimba-dayak.png" alt="Tampilan tema Rimba Dayak" width="100%" />
+      <br />
+      <strong>Rimba Dayak</strong>
+    </td>
+    <td align="center" width="50%">
       <img src="./public/img/bali-agung.png" alt="Tampilan tema Bali Agung" width="100%" />
       <br />
       <strong>Bali Agung</strong>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="50%">
-      <img src="./public/img/dark-boho.png" alt="Tampilan tema Dark Boho" width="100%" />
+      <img src="./public/img/pinisi-bugis.png" alt="Tampilan tema Pinisi Bugis" width="100%" />
       <br />
-      <strong>Dark Boho</strong>
+      <strong>Pinisi Bugis</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/kembang-betawi.png" alt="Tampilan tema Kembang Betawi" width="100%" />
+      <br />
+      <strong>Kembang Betawi</strong>
+    </td>
+  </tr>
+</table>
+
+### Detail halaman undangan
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/thema1.png" alt="Detail halaman undangan bagian 1" width="100%" />
+      <br />
+      <strong>Tampilan Undangan 1</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/thema2.png" alt="Detail halaman undangan bagian 2" width="100%" />
+      <br />
+      <strong>Tampilan Undangan 2</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/thema3.png" alt="Detail halaman undangan bagian 3" width="100%" />
+      <br />
+      <strong>Tampilan Undangan 3</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/thema4.png" alt="Detail halaman undangan bagian 4" width="100%" />
+      <br />
+      <strong>Tampilan Undangan 4</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/img/thema5.png" alt="Detail halaman undangan bagian 5" width="100%" />
+      <br />
+      <strong>Tampilan Undangan 5</strong>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/img/thema6.png" alt="Detail halaman undangan bagian 6" width="100%" />
+      <br />
+      <strong>Tampilan Undangan 6</strong>
     </td>
   </tr>
 </table>
