@@ -1895,9 +1895,11 @@
           >
             {{ brideFullName() }}
           </h4>
-          <p class="text-xs leading-6 text-[var(--theme-cream)]/75 sm:text-sm sm:leading-7">
-            Putri pertama dari<br />Bapak Ahmad & Ibu Siti
-          </p>
+          @if (brideParentNames()) {
+            <p class="text-xs leading-6 text-[var(--theme-cream)]/75 sm:text-sm sm:leading-7">
+              {{ brideParents()?.description }}<br />{{ brideParentNames() }}
+            </p>
+          }
         </article>
         <div class="pt-1 [font-family:Cormorant_Garamond,serif] text-4xl italic text-[var(--theme-accent-dark)]">
           &
@@ -1908,9 +1910,11 @@
           >
             {{ groomFullName() }}
           </h4>
-          <p class="text-xs leading-6 text-[var(--theme-cream)]/75 sm:text-sm sm:leading-7">
-            Putra kedua dari<br />Bapak Budi & Ibu Ratna
-          </p>
+          @if (groomParentNames()) {
+            <p class="text-xs leading-6 text-[var(--theme-cream)]/75 sm:text-sm sm:leading-7">
+              {{ groomParents()?.description }}<br />{{ groomParentNames() }}
+            </p>
+          }
         </article>
       </div>
     </div>

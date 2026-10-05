@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { findCustomerInvitation } from '../invitation-access';
+import { PREVIEW_PARENTS, findCustomerInvitation, type ParentInfo } from '../invitation-access';
 
 type ThemeId =
   | 'emerald'
@@ -172,6 +172,14 @@ export class Invitation implements OnInit, OnDestroy {
   readonly groomName = signal('Fulan');
   readonly brideFullName = signal('Fulanah binti Fulan');
   readonly groomFullName = signal('Fulan bin Fulan');
+  readonly brideParents = signal<ParentInfo | null>(PREVIEW_PARENTS.bride);
+  readonly groomParents = signal<ParentInfo | null>(PREVIEW_PARENTS.groom);
+  readonly brideParentNames = computed(() =>
+    [this.brideParents()?.father, this.brideParents()?.mother].filter(Boolean).join(' & '),
+  );
+  readonly groomParentNames = computed(() =>
+    [this.groomParents()?.father, this.groomParents()?.mother].filter(Boolean).join(' & '),
+  );
   readonly coupleName = computed(() => `${this.brideName()} & ${this.groomName()}`);
   readonly coupleInitials = computed(
     () => `${this.brideName().charAt(0).toUpperCase()}&${this.groomName().charAt(0).toUpperCase()}`,
@@ -1252,6 +1260,8 @@ export class Invitation implements OnInit, OnDestroy {
       this.groomName.set('Fulan');
       this.brideFullName.set('Fulanah binti Fulan');
       this.groomFullName.set('Fulan bin Fulan');
+      this.brideParents.set(PREVIEW_PARENTS.bride);
+      this.groomParents.set(PREVIEW_PARENTS.groom);
       return;
     }
 
@@ -1262,6 +1272,8 @@ export class Invitation implements OnInit, OnDestroy {
     this.groomName.set(groomName);
     this.brideFullName.set(invitation.brideFullName ?? brideName);
     this.groomFullName.set(invitation.groomFullName ?? groomName);
+    this.brideParents.set(invitation.brideParents ?? null);
+    this.groomParents.set(invitation.groomParents ?? null);
   }
 
   private syncThemeFromRoute(routeThemeId: string | null, replayEnvelope = true): void {
