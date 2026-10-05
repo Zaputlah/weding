@@ -24,6 +24,14 @@ export const CUSTOMER_INVITATIONS: readonly CustomerInvitation[] = [
     groomFullName: 'Arga Pratama',
     expiresAt: '2026-08-22T23:59:59+07:00',
   },
+  {
+    themeSlug: 'ranah-minang',
+    customerSlug: 'Reza-Fitri',
+    coupleName: 'Fitri & Reza',
+    brideFullName: 'Andriani Safitri',
+    groomFullName: 'Reza Putra Fadilah',
+    expiresAt: '2026-10-30T23:59:59+07:00',
+  },
 ];
 
 export function findCustomerInvitation(
