@@ -1908,6 +1908,10 @@ export class Invitation implements OnInit, OnDestroy {
       this.nameError.set('Silakan tuliskan nama Anda.');
       return;
     }
+    if (/\p{N}/u.test(this.nameInput)) {
+      this.nameError.set('Nama tidak boleh mengandung angka.');
+      return;
+    }
     if ((name.match(/\p{L}/gu)?.length ?? 0) < 3) {
       this.nameError.set('Nama harus berisi minimal 3 huruf.');
       return;
