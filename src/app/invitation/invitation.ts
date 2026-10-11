@@ -2,8 +2,9 @@ import { Component, HostListener, OnDestroy, OnInit, computed, inject, signal } 
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
-import { PREVIEW_PARENTS, findCustomerInvitation, type ParentInfo } from '../invitation-access';
+import { PREVIEW_EVENT, PREVIEW_PARENTS, PREVIEW_STORY_DATES, findCustomerInvitation, type EventInfo, type EventLocation, type InvitationStoryMoment, type ParentInfo, type StoryDates } from '../invitation-access';
 
 type ThemeId =
   | 'emerald'
@@ -24,6 +25,86 @@ type ThemeId =
   | 'balinese'
   | 'bugis'
   | 'betawi';
+
+interface ClosingMotif {
+  outline: string;
+  detail: string;
+}
+
+const CLOSING_MOTIFS: Readonly<Record<ThemeId, ClosingMotif>> = {
+  emerald: {
+    outline: 'M80 6 106 32 80 58 54 32 80 6ZM80 15 97 32 80 49 63 32 80 15ZM36 32h18m52 0h18',
+    detail: 'M80 23 89 32 80 41 71 32 80 23Z',
+  },
+  maroon: {
+    outline: 'M80 15c-9-8-23-1-18 10-12 0-14 13-4 18 3 11 17 13 22 3 6 10 20 8 23-3 10-5 8-18-4-18 5-11-9-18-19-10ZM80 47v11m-10-7-8-4m28 4 8-4',
+    detail: 'M80 23c-9-5-14 8-4 12 8 4 14-5 6-9-4-2-7 1-5 4',
+  },
+  midnight: {
+    outline: 'M82 8a25 25 0 1 0 24 39A26 26 0 0 1 82 8Z',
+    detail: 'M116 10v13m-6-6.5h12m3 17v10m-5-5h10',
+  },
+  mocha: {
+    outline: 'M38 53c26-11 45-23 81-42M56 44c-13-3-17-11-15-20 11 1 17 8 15 20ZM79 33c-7-11-3-20 6-25 5 9 4 17-6 25ZM99 22c10 0 17 5 20 14-11 2-18-2-20-14Z',
+    detail: 'M57 42 48 30m31 2 6-16m16 8 12 8',
+  },
+  ivory: {
+    outline: 'M34 32h30m32 0h30M80 10c-17 0-18 15 0 22 18-7 17-22 0-22ZM80 32c-18 7-17 22 0 22 17 0 18-15 0-22Z',
+    detail: 'M74 32h12m-6-18v36',
+  },
+  javanese: {
+    outline: 'M80 5C61 19 52 39 62 55h36c10-16 1-36-18-50ZM62 55h36',
+    detail: 'M80 18v32m0-18c-8-6-12-2-12 4s4 9 12 14m0-18c8-6 12-2 12 4s-4 9-12 14',
+  },
+  boho: {
+    outline: 'M55 47a25 25 0 0 1 50 0M43 47h74M80 8v12M53 19l8 8m46-8-8 8M39 31l11 4m71-4-11 4',
+    detail: 'M63 47a17 17 0 0 1 34 0',
+  },
+  watercolor: {
+    outline: 'M38 54V25h14V14h12v11h32V14h12v11h14v29H38ZM66 54V40a14 14 0 0 1 28 0v14',
+    detail: 'M45 32h10m50 0h10M75 40h10M58 10h44',
+  },
+  mihrab: {
+    outline: 'M55 56V29C55 16 66 6 80 2c14 4 25 14 25 27v27H55ZM63 56V30c0-10 7-17 17-20 10 3 17 10 17 20v26',
+    detail: 'M81 21a10 10 0 1 0 9 16 10 10 0 0 1-9-16Zm14 1v7m-3.5-3.5h7',
+  },
+  terracotta: {
+    outline: 'M40 15h80v38H40V15Zm0 0 40 28 40-28M40 53l25-20m55 20L95 33',
+    detail: 'M80 39a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z',
+  },
+  pearl: {
+    outline: 'M45 48c-1-18 12-33 35-36 23 3 36 18 35 36M45 48c12 9 58 9 70 0M80 12v30M61 18l11 25m27-25L88 43',
+    detail: 'M80 39a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z',
+  },
+  indigo: {
+    outline: 'M80 53c-14-8-27-9-44-5V15c18-3 32-1 44 7 12-8 26-10 44-7v33c-17-4-30-3-44 5ZM80 22v31',
+    detail: 'M46 25c10-1 18 0 26 4m-26 8c10-1 18 0 26 4m16-12c8-4 16-5 26-4m-26 16c8-4 16-5 26-4',
+  },
+  sundanese: {
+    outline: 'M52 54V11h56v43M52 18h56M62 18v26m17-26v32m19-32v26M58 44h44M48 54h64',
+    detail: 'M62 30h12m10 3h12M73 44v6m15-6v6',
+  },
+  minangkabau: {
+    outline: 'M18 44c12-2 14-18 20-36 6 15 10 25 19 29C65 31 69 18 80 5c11 13 15 26 23 32 9-4 13-14 19-29 6 18 8 34 20 36M20 44h120M35 47v11h90V47',
+    detail: 'M55 47v11m25-11v11m25-11v11M38 8c-1 16-4 27-12 36m96-36c1 16 4 27 12 36',
+  },
+  dayak: {
+    outline: 'M54 54C46 36 61 12 106 8c-2 41-28 58-52 46ZM55 53c16-16 31-26 51-45',
+    detail: 'M63 44 49 37m25-3L62 22m23 3-8-12m-6 27 18 6m-7-15 19 5',
+  },
+  balinese: {
+    outline: 'M42 55h29V16L56 7v17L42 33v22Zm76 0H89V16l15-9v17l14 9v22ZM71 54h18',
+    detail: 'M44 40h25m22 0h25M48 48h21m22 0h21M56 24h15m18 0h15',
+  },
+  bugis: {
+    outline: 'M34 45h92l-14 12H48L34 45ZM78 45V8m6 37V13M78 10 45 40h33m6-26 32 27H84',
+    detail: 'M25 59c9-4 18-4 27 0 9-4 18-4 27 0 9-4 18-4 27 0 9-4 18-4 27 0',
+  },
+  betawi: {
+    outline: 'M80 32C70 24 69 11 80 8c11 3 10 16 0 24Zm0 0c8-10 21-11 24 0-3 11-16 10-24 0Zm0 0c10 8 11 21 0 24-11-3-10-16 0-24Zm0 0c-8 10-21 11-24 0 3-11 16-10 24 0Z',
+    detail: 'M80 27a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM50 18l9 7m51-7-9 7M50 46l9-7m51 7-9-7',
+  },
+};
 
 interface InvitationTheme {
   id: ThemeId;
@@ -170,8 +251,42 @@ export class Invitation implements OnInit, OnDestroy {
   readonly guestName = signal('Tamu Undangan');
   readonly brideName = signal('Fulanah');
   readonly groomName = signal('Fulan');
+  readonly groomFirst = signal(false);
   readonly brideFullName = signal('Fulanah binti Fulan');
   readonly groomFullName = signal('Fulan bin Fulan');
+  readonly event = signal<EventInfo>(PREVIEW_EVENT);
+  readonly akadQrCode = signal('');
+  readonly walimahQrCode = signal('');
+  private qrRequestId = 0;
+  readonly storyDates = signal<StoryDates>(PREVIEW_STORY_DATES);
+  readonly customerStoryMoments = signal<readonly InvitationStoryMoment[] | null>(null);
+  readonly eventDate = computed(() => new Date(`${this.event().date}T12:00:00+07:00`));
+  readonly eventDateLong = computed(() =>
+    this.eventDate().toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta',
+    }),
+  );
+  readonly eventDateWithWeekday = computed(() =>
+    this.eventDate().toLocaleDateString('id-ID', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta',
+    }),
+  );
+  readonly eventDateUpper = computed(() =>
+    this.eventDateWithWeekday().replace(', ', ' · ').toLocaleUpperCase('id-ID'),
+  );
+  readonly eventDateNumeric = computed(() => {
+    const [year, month, day] = this.event().date.split('-');
+    return `${day} · ${month} · ${year}`;
+  });
+  readonly eventDay = computed(() => String(Number(this.event().date.slice(8, 10))));
+  readonly eventMonthYearEnglish = computed(() =>
+    `${this.eventDate().toLocaleDateString('en-US', { month: 'long', timeZone: 'Asia/Jakarta' }).toUpperCase()} · ${this.event().date.slice(0, 4)}`,
+  );
+  readonly eventDateEnglish = computed(() =>
+    `${this.eventDay()} · ${this.eventMonthYearEnglish()}`,
+  );
+  readonly akadTimeLabel = computed(() => `${this.event().akadTime.replace(':', '.')} WIB`);
+  readonly walimahTimeLabel = computed(() => `${this.event().walimahTime.replace(':', '.')} WIB`);
   readonly brideParents = signal<ParentInfo | null>(PREVIEW_PARENTS.bride);
   readonly groomParents = signal<ParentInfo | null>(PREVIEW_PARENTS.groom);
   readonly brideParentNames = computed(() =>
@@ -180,9 +295,17 @@ export class Invitation implements OnInit, OnDestroy {
   readonly groomParentNames = computed(() =>
     [this.groomParents()?.father, this.groomParents()?.mother].filter(Boolean).join(' & '),
   );
-  readonly coupleName = computed(() => `${this.brideName()} & ${this.groomName()}`);
+  readonly firstName = computed(() => this.groomFirst() ? this.groomName() : this.brideName());
+  readonly secondName = computed(() => this.groomFirst() ? this.brideName() : this.groomName());
+  readonly firstFullName = computed(() => this.groomFirst() ? this.groomFullName() : this.brideFullName());
+  readonly secondFullName = computed(() => this.groomFirst() ? this.brideFullName() : this.groomFullName());
+  readonly firstParents = computed(() => this.groomFirst() ? this.groomParents() : this.brideParents());
+  readonly secondParents = computed(() => this.groomFirst() ? this.brideParents() : this.groomParents());
+  readonly firstParentNames = computed(() => this.groomFirst() ? this.groomParentNames() : this.brideParentNames());
+  readonly secondParentNames = computed(() => this.groomFirst() ? this.brideParentNames() : this.groomParentNames());
+  readonly coupleName = computed(() => `${this.firstName()} & ${this.secondName()}`);
   readonly coupleInitials = computed(
-    () => `${this.brideName().charAt(0).toUpperCase()}&${this.groomName().charAt(0).toUpperCase()}`,
+    () => `${this.firstName().charAt(0).toUpperCase()}&${this.secondName().charAt(0).toUpperCase()}`,
   );
   readonly nameError = signal('');
   readonly isOpen = signal(false);
@@ -1040,6 +1163,8 @@ export class Invitation implements OnInit, OnDestroy {
     },
   };
   readonly activeExperience = computed(() => this.themeExperiences[this.activeThemeId()]);
+  readonly closingMotif = computed(() => CLOSING_MOTIFS[this.activeThemeId()]);
+  readonly closingBandTiles = Array.from({ length: 32 }, (_, index) => index);
   readonly outfitPalettes: Readonly<Record<ThemeId, OutfitThemePalette>> = {
     emerald: { label: 'Zamrud–Emas', hueRotation: 168, saturation: 0.85, brightness: 0.9 },
     maroon: { label: 'Marun–Emas', hueRotation: 0, saturation: 1, brightness: 1 },
@@ -1070,6 +1195,9 @@ export class Invitation implements OnInit, OnDestroy {
   readonly isCoupleJoined = signal(false);
   readonly isAlternateOutfit = signal(false);
   readonly isJourneyRendered = signal(true);
+  readonly conceptScrollProgress = signal(0);
+  readonly conceptUpperFoldProgress = computed(() => Math.min(1, this.conceptScrollProgress() * 2));
+  readonly conceptLowerFoldProgress = computed(() => Math.min(1, Math.max(0, (this.conceptScrollProgress() - 0.5) * 2)));
   readonly storyScrollProgress = signal(0);
   readonly galleryScrollProgress = signal(0);
   readonly verseScrollProgress = signal(0);
@@ -1111,47 +1239,56 @@ export class Invitation implements OnInit, OnDestroy {
       description: 'Ijab qabul dilangsungkan di hadapan wali, penghulu, dan para saksi sebagai awal ikatan pernikahan.',
     },
   ];
-  readonly storyMoments: readonly StoryMoment[] = [
-    {
-      step: '01',
-      title: 'Ta’aruf',
-      date: 'Januari 2025',
-      description:
-        'Perkenalan dimulai melalui sebuah web biro jodoh, kemudian komunikasi dilanjutkan secara terarah dengan pendampingan keluarga.',
-    },
-    {
-      step: '02',
-      title: 'Nazhor',
-      date: 'Maret 2025',
-      description:
-        'Kami bertemu di sebuah kafe untuk nazhor; calon mempelai wanita hadir bersama ibunya dan calon mempelai pria datang sendiri.',
-    },
-    {
-      step: '03',
-      title: 'Istikharah',
-      date: 'Juni 2025',
-      description:
-        'Kami menunaikan salat istikharah dan berdoa kepada Allah, memohon petunjuk serta keteguhan hati sebelum melangkah lebih jauh.',
-    },
-    {
-      step: '04',
-      title: 'Khitbah',
-      date: 'Desember 2025',
-      description:
-        'Keluarga calon mempelai pria bersilaturahmi dengan keluarga calon mempelai wanita untuk menyampaikan niat khitbah.',
-    },
-    {
-      step: '05',
-      title: 'Akad',
-      date: '20 Oktober 2026',
-      description:
-        'Insyaallah, perjalanan ini kami sempurnakan dalam akad nikah dan memulai ibadah terpanjang bersama.',
-    },
-  ];
+  readonly storyMoments = computed<readonly StoryMoment[]>(() => {
+    const customerMoments = this.customerStoryMoments();
+    if (customerMoments) {
+      return customerMoments.map((moment, index) => ({
+        ...moment,
+        step: String(index + 1).padStart(2, '0'),
+      }));
+    }
+    return [
+      {
+        step: '01',
+        title: 'Ta’aruf',
+        date: this.storyDates().taaruf ?? '',
+        description:
+          'Perkenalan dimulai melalui sebuah web biro jodoh, kemudian komunikasi dilanjutkan secara terarah dengan pendampingan keluarga.',
+      },
+      {
+        step: '02',
+        title: 'Nazhor',
+        date: this.storyDates().nazhor ?? '',
+        description:
+          'Kami bertemu di sebuah kafe untuk nazhor; calon mempelai wanita hadir bersama ibunya dan calon mempelai pria datang sendiri.',
+      },
+      {
+        step: '03',
+        title: 'Istikharah',
+        date: this.storyDates().istikharah ?? '',
+        description:
+          'Kami menunaikan salat istikharah dan berdoa kepada Allah, memohon petunjuk serta keteguhan hati sebelum melangkah lebih jauh.',
+      },
+      {
+        step: '04',
+        title: 'Khitbah',
+        date: this.storyDates().khitbah ?? '',
+        description:
+          'Keluarga calon mempelai pria bersilaturahmi dengan keluarga calon mempelai wanita untuk menyampaikan niat khitbah.',
+      },
+      {
+        step: '05',
+        title: 'Akad',
+        date: this.eventDateLong(),
+        description:
+          'Insyaallah, perjalanan ini kami sempurnakan dalam akad nikah dan memulai ibadah terpanjang bersama.',
+      },
+    ];
+  });
   readonly activeStoryIndex = computed(() =>
     Math.min(
-      this.storyMoments.length - 1,
-      Math.max(0, Math.round(this.storyScrollProgress() * (this.storyMoments.length - 1))),
+      this.storyMoments().length - 1,
+      Math.max(0, Math.round(this.storyScrollProgress() * (this.storyMoments().length - 1))),
     ),
   );
   readonly galleryItems: readonly GalleryItem[] = [
@@ -1228,9 +1365,45 @@ export class Invitation implements OnInit, OnDestroy {
   readonly activeJourneyStep = computed(() =>
     Math.min(this.journeySteps.length - 1, Math.floor(this.journeyScrollProgress() * this.journeySteps.length)),
   );
-  readonly locationUrl = 'https://www.google.com/maps/search/?api=1&query=Gedung%20Serbaguna%20Bahagia%2C%20Jl.%20Contoh%20Bahagia%20No.%2020%2C%20Jakarta';
   readonly countdown = signal({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   nameInput = '';
+
+  locationUrlFor(location: EventLocation): string {
+    const mapInput = location.mapsUrl?.trim();
+    if (mapInput && /^https?:\/\//i.test(mapInput)) {
+      return mapInput;
+    }
+
+    const query = mapInput || [location.venue, location.address].filter(Boolean).join(', ');
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+  }
+
+  private async qrImageFor(location: EventLocation | undefined): Promise<string> {
+    if (!location) return '';
+    if (location.qrImage?.trim()) return location.qrImage.trim();
+    if (!location.mapsUrl?.trim() && !location.venue.trim() && !location.address.trim()) return '';
+
+    try {
+      return await QRCode.toDataURL(this.locationUrlFor(location), {
+        errorCorrectionLevel: 'M',
+        margin: 2,
+        width: 320,
+      });
+    } catch {
+      return '';
+    }
+  }
+
+  private async updateLocationQrCodes(): Promise<void> {
+    const requestId = ++this.qrRequestId;
+    const [akad, walimah] = await Promise.all([
+      this.qrImageFor(this.event().akadLocation),
+      this.qrImageFor(this.event().walimahLocation),
+    ]);
+    if (requestId !== this.qrRequestId) return;
+    this.akadQrCode.set(akad);
+    this.walimahQrCode.set(walimah);
+  }
 
   ngOnInit(): void {
     this.syncThemeFromRoute(this.route.snapshot.paramMap.get('themeId'), false);
@@ -1256,22 +1429,34 @@ export class Invitation implements OnInit, OnDestroy {
     const invitation = findCustomerInvitation(themeSlug, customerSlug);
 
     if (!invitation) {
+      this.groomFirst.set(false);
       this.brideName.set('Fulanah');
       this.groomName.set('Fulan');
       this.brideFullName.set('Fulanah binti Fulan');
       this.groomFullName.set('Fulan bin Fulan');
+      this.event.set(PREVIEW_EVENT);
+      void this.updateLocationQrCodes();
+      this.storyDates.set(PREVIEW_STORY_DATES);
+      this.customerStoryMoments.set(null);
       this.brideParents.set(PREVIEW_PARENTS.bride);
       this.groomParents.set(PREVIEW_PARENTS.groom);
       return;
     }
 
-    const [brideName = 'Fulanah', groomName = 'Fulan'] = invitation.coupleName
+    const [firstName, secondName] = invitation.coupleName
       .split('&')
       .map((name) => name.trim());
+    const brideName = (invitation.groomFirst ? secondName : firstName) || 'Fulanah';
+    const groomName = (invitation.groomFirst ? firstName : secondName) || 'Fulan';
+    this.groomFirst.set(invitation.groomFirst ?? false);
     this.brideName.set(brideName);
     this.groomName.set(groomName);
     this.brideFullName.set(invitation.brideFullName ?? brideName);
     this.groomFullName.set(invitation.groomFullName ?? groomName);
+    this.event.set(invitation.event ?? PREVIEW_EVENT);
+    void this.updateLocationQrCodes();
+    this.storyDates.set(invitation.storyDates ?? {});
+    this.customerStoryMoments.set(invitation.storyMoments ?? null);
     this.brideParents.set(invitation.brideParents ?? null);
     this.groomParents.set(invitation.groomParents ?? null);
   }
@@ -1723,6 +1908,10 @@ export class Invitation implements OnInit, OnDestroy {
       this.nameError.set('Silakan tuliskan nama Anda.');
       return;
     }
+    if ((name.match(/\p{L}/gu)?.length ?? 0) < 3) {
+      this.nameError.set('Nama harus berisi minimal 3 huruf.');
+      return;
+    }
     this.nameError.set('');
     this.guestName.set(name);
     this.title.setTitle(`Undangan untuk ${name} | ${this.coupleName()}`);
@@ -1811,6 +2000,7 @@ export class Invitation implements OnInit, OnDestroy {
     this.isEnvelopeLetterReleased.set(false);
     this.isCoupleJoined.set(false);
     this.isAlternateOutfit.set(false);
+    this.conceptScrollProgress.set(0);
     this.storyScrollProgress.set(0);
     this.galleryScrollProgress.set(0);
     this.verseScrollProgress.set(0);
@@ -1916,6 +2106,15 @@ export class Invitation implements OnInit, OnDestroy {
       };
 
       this.galleryScrollProgress.set(sectionRevealProgress('gallery-section'));
+      const conceptScene = document.getElementById('concept-section');
+      if (conceptScene) {
+        const conceptTop = conceptScene.getBoundingClientRect().top;
+        const unfoldStart = window.innerHeight * 0.6;
+        const unfoldEnd = -window.innerHeight * 0.1;
+        this.conceptScrollProgress.set(reduceMotion
+          ? (conceptTop <= unfoldStart ? 1 : 0)
+          : Math.min(1, Math.max(0, (unfoldStart - conceptTop) / (unfoldStart - unfoldEnd))));
+      }
       this.verseScrollProgress.set(sectionRevealProgress('verse-section'));
       this.coupleScrollProgress.set(sectionRevealProgress('couple-section'));
       this.closingScrollProgress.set(sectionRevealProgress('closing-section'));
@@ -1947,7 +2146,6 @@ export class Invitation implements OnInit, OnDestroy {
     const sectionIds = [
       'home-section',
       'stories-section',
-      'gallery-section',
       'couple-section',
       'event-scroll-scene',
       'closing-section',
@@ -1971,7 +2169,16 @@ export class Invitation implements OnInit, OnDestroy {
     this.activeMobileSection.set(nearestId);
   }
 
+  conceptFoldRows(progress: number): string {
+    return `minmax(0, ${progress}fr)`;
+  }
+
+  conceptPanelTransform(progress: number): string {
+    return `rotateX(${(1 - progress) * -82}deg)`;
+  }
+
   journeyPanelProgress(index: number): number {
+    if (index === 0) return 1;
     const stepDuration = 1 / this.journeySteps.length;
     const start = index * stepDuration * 0.94;
     return Math.min(1, Math.max(0, (this.journeyScrollProgress() - start) / (stepDuration * 0.7)));
@@ -2404,7 +2611,8 @@ export class Invitation implements OnInit, OnDestroy {
   }
 
   private updateCountdown(): void {
-    const distance = Math.max(0, new Date('2026-10-20T10:00:00+07:00').getTime() - Date.now());
+    const target = Date.parse(`${this.event().date}T${this.event().akadTime}:00+07:00`);
+    const distance = Number.isFinite(target) ? Math.max(0, target - Date.now()) : 0;
     this.countdown.set({ days: Math.floor(distance / 86_400_000), hours: Math.floor((distance % 86_400_000) / 3_600_000), minutes: Math.floor((distance % 3_600_000) / 60_000), seconds: Math.floor((distance % 60_000) / 1000) });
   }
 }
