@@ -27,7 +27,7 @@ for (const invitation of CUSTOMER_INVITATIONS) {
   const date = event?.date ? new Intl.DateTimeFormat('id-ID', {
     dateStyle: 'full', timeZone: 'Asia/Jakarta',
   }).format(new Date(`${event.date}T12:00:00+07:00`)) : '';
-  const description = `${date ? `${date}. ` : ''}Dengan memohon rahmat dan ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam pernikahan ${coupleName}.`;
+  const description = `Undangan pernikahan ${coupleName}.${date ? ` ${date}.` : ''} Kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu.`;
   const url = `${origin}/undangan/${themeSlug}/${customerSlug}`;
   let imagePath = `/assets/scrapbook-${themeSlug}.jpg`;
   try {

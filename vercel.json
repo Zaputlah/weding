@@ -2,6 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/undangan-app/browser",
   "routes": [
+    {
+      "src": "^/undangan/([a-z0-9-]+)/([a-z0-9-]+)/?$",
+      "dest": "/undangan/$1/$2/index.html",
+      "check": true
+    },
     { "handle": "filesystem" },
     { "src": "/.*", "dest": "/index.html" }
   ]
