@@ -968,7 +968,7 @@
 }
 
 <main
-  class="relative isolate bg-[var(--theme-deep)] pb-20 text-white sm:pb-0"
+  class="relative isolate bg-[var(--theme-deep)] pb-[calc(3.75rem+env(safe-area-inset-bottom))] text-white sm:pb-0"
   [attr.aria-hidden]="!isOpen()"
 >
   <div
@@ -1921,12 +1921,11 @@
       </button>
 
       <div
-        class="grid grid-cols-[1fr_auto_1fr] items-start gap-3 sm:gap-8"
-        [style.text-align]="activeExperience().storyTextAlign"
+        class="mx-auto grid w-full max-w-md grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2 text-center sm:gap-4"
       >
-        <article>
+        <article class="min-w-0">
           <h4
-            class="mb-2 [font-family:Cormorant_Garamond,serif] text-2xl font-semibold text-[var(--theme-cream)] sm:text-3xl"
+            class="mx-auto mb-2 flex min-h-[2.5em] max-w-[10ch] items-start justify-center [font-family:Cormorant_Garamond,serif] text-[clamp(1.25rem,5vw,1.5rem)] leading-[1.25] font-semibold text-balance break-words text-[var(--theme-cream)] sm:text-3xl"
           >
             {{ firstFullName() }}
           </h4>
@@ -1936,12 +1935,12 @@
             </p>
           }
         </article>
-        <div class="pt-1 [font-family:Cormorant_Garamond,serif] text-4xl italic text-[var(--theme-accent-dark)]">
+        <div class="pt-2 [font-family:Cormorant_Garamond,serif] text-3xl italic text-[var(--theme-accent-dark)] sm:text-4xl">
           &
         </div>
-        <article>
+        <article class="min-w-0">
           <h4
-            class="mb-2 [font-family:Cormorant_Garamond,serif] text-2xl font-semibold text-[var(--theme-cream)] sm:text-3xl"
+            class="mx-auto mb-2 flex min-h-[2.5em] max-w-[10ch] items-start justify-center [font-family:Cormorant_Garamond,serif] text-[clamp(1.25rem,5vw,1.5rem)] leading-[1.25] font-semibold text-balance break-words text-[var(--theme-cream)] sm:text-3xl"
           >
             {{ secondFullName() }}
           </h4>
@@ -2490,8 +2489,32 @@
     <div class="closing-theme-band" [attr.data-theme]="activeThemeId()" aria-hidden="true">
       @for (tile of closingBandTiles; track tile) {
         <svg class="closing-theme-band-tile" viewBox="0 0 160 64" preserveAspectRatio="xMidYMax meet" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          @if (activeThemeId() === 'mocha') {
+            <g class="closing-botanical-stems">
+              <path d="M26 66Q32 40 16 12M31 49 10 32M29 39 43 24M74 66Q69 40 87 12M74 45 57 29M77 35 99 24M118 66Q120 39 140 17M124 44 107 30M130 33 149 29" />
+            </g>
+            <g class="closing-botanical-leaves">
+              <path d="M22 29Q5 27 7 15Q20 15 22 29ZM29 40Q29 24 43 24Q44 36 29 40ZM27 48Q9 48 9 34Q24 34 27 48ZM74 43Q55 41 55 28Q69 28 74 43ZM77 34Q82 20 96 22Q94 34 77 34ZM124 44Q106 43 105 29Q120 29 124 44ZM130 34Q136 23 150 27Q145 37 130 34Z" />
+            </g>
+            <g class="closing-theme-band-detail closing-botanical-flowers">
+              @for (flower of [0, 1, 2]; track flower) {
+                <g [attr.transform]="flower === 0 ? 'translate(16 12)' : flower === 1 ? 'translate(87 12)' : 'translate(140 17)'">
+                  <ellipse cy="-4" rx="3" ry="5" />
+                  <ellipse cx="4" cy="-1" rx="5" ry="3" transform="rotate(-25 4 -1)" />
+                  <ellipse cx="3" cy="4" rx="3" ry="5" transform="rotate(-35 3 4)" />
+                  <ellipse cx="-3" cy="4" rx="3" ry="5" transform="rotate(35 -3 4)" />
+                  <ellipse cx="-4" cy="-1" rx="5" ry="3" transform="rotate(25 -4 -1)" />
+                  <circle class="closing-botanical-center" r="2" />
+                </g>
+              }
+              <path d="M50 65Q46 50 53 41M99 65Q95 52 102 43" class="closing-botanical-stems" />
+              <ellipse cx="53" cy="40" rx="3" ry="4" />
+              <ellipse cx="102" cy="42" rx="3" ry="4" />
+            </g>
+          } @else {
           <path [attr.d]="closingMotif().outline" />
           <path class="closing-theme-band-detail" [attr.d]="closingMotif().detail" />
+          }
         </svg>
       }
     </div>

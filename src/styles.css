@@ -170,6 +170,35 @@
   animation: closing-band-glimmer 4s ease-in-out infinite;
 }
 
+.closing-theme-band[data-theme='mocha'] {
+  opacity: 0.85;
+}
+
+.closing-botanical-stems {
+  fill: none;
+  stroke: #b39770;
+  stroke-width: 0.9;
+}
+
+.closing-botanical-leaves {
+  fill: #a88d65;
+  fill-opacity: 0.7;
+  stroke: #c0a17a;
+  stroke-width: 0.5;
+}
+
+.closing-botanical-flowers {
+  fill: #cd9577;
+  fill-opacity: 0.85;
+  stroke: #deb18d;
+  stroke-width: 0.4;
+}
+
+.closing-botanical-center {
+  fill: #e5c498;
+  stroke: none;
+}
+
 .closing-theme-band:is([data-theme='minangkabau'], [data-theme='javanese'], [data-theme='balinese'], [data-theme='watercolor'], [data-theme='mihrab']) .closing-theme-band-tile {
   animation-name: closing-band-rise;
 }
@@ -230,7 +259,7 @@
   }
 
   .closing-theme-band {
-    bottom: 4.5rem;
+    bottom: 0;
   }
 }
 
