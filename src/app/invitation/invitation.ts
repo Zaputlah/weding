@@ -1217,7 +1217,7 @@ export class Invitation implements OnInit, OnDestroy {
   readonly verseScrollProgress = signal(0);
   readonly coupleScrollProgress = signal(0);
   readonly journeyScrollProgress = signal(0);
-  readonly eventScrollProgress = signal(0);
+  readonly elementRevealProgress = signal<Record<string, number>>({});
   readonly closingScrollProgress = signal(0);
   readonly journeySteps = ['Ta’aruf', 'Nazhor', 'Istikharah', 'Khitbah', 'Akad'] as const;
   readonly journeyNodePositions = [100, 300, 500, 700, 900] as const;
@@ -2024,7 +2024,7 @@ export class Invitation implements OnInit, OnDestroy {
     this.verseScrollProgress.set(0);
     this.coupleScrollProgress.set(0);
     this.journeyScrollProgress.set(0);
-    this.eventScrollProgress.set(0);
+    this.elementRevealProgress.set({});
     this.closingScrollProgress.set(0);
     this.selectedGalleryItem.set(null);
     this.activeMobileSection.set('home-section');
@@ -2112,16 +2112,30 @@ export class Invitation implements OnInit, OnDestroy {
         this.storyScrollProgress.set(progress);
       }
 
-      const sectionRevealProgress = (sectionId: string): number => {
+      const sectionRevealProgress = (sectionId: string, startRatio = 0.92, endRatio = 0.28): number => {
         const section = document.getElementById(sectionId);
         if (!section) return 0;
         const bounds = section.getBoundingClientRect();
-        const animationStart = window.innerHeight * 0.92;
-        const animationEnd = window.innerHeight * 0.28;
+        const animationStart = window.innerHeight * startRatio;
+        const animationEnd = window.innerHeight * endRatio;
         return reduceMotion
           ? (bounds.top <= animationStart ? 1 : 0)
           : Math.min(1, Math.max(0, (animationStart - bounds.top) / (animationStart - animationEnd)));
       };
+
+      const elementProgress: Record<string, number> = {};
+      for (const id of [
+        'stories-intro', 'stories-steps', 'event-intro',
+        'event-akad-card', 'event-walimah-card', 'event-adab-note',
+        'event-akad-qr', 'event-walimah-qr',
+      ]) {
+        elementProgress[id] = sectionRevealProgress(id);
+      }
+      for (let index = 0; index < 6; index++) {
+        const id = `event-adab-point-${index}`;
+        elementProgress[id] = sectionRevealProgress(id, 0.84, 0.62);
+      }
+      this.elementRevealProgress.set(elementProgress);
 
       this.galleryScrollProgress.set(sectionRevealProgress('gallery-section'));
       const conceptScene = document.getElementById('concept-section');
@@ -2147,17 +2161,11 @@ export class Invitation implements OnInit, OnDestroy {
         this.journeyScrollProgress.set(progress);
       }
 
-      const eventScene = document.getElementById('event-scroll-scene');
-      if (eventScene) {
-        const eventBounds = eventScene.getBoundingClientRect();
-        const animationStart = window.innerHeight * 0.9;
-        const animationEnd = window.innerHeight * 0.18;
-        const progress = reduceMotion
-          ? (eventBounds.top <= animationStart ? 1 : 0)
-          : Math.min(1, Math.max(0, (animationStart - eventBounds.top) / (animationStart - animationEnd)));
-        this.eventScrollProgress.set(progress);
-      }
     });
+  }
+
+  revealProgressFor(id: string): number {
+    return this.elementRevealProgress()[id] ?? 0;
   }
 
   private updateActiveMobileSection(): void {
@@ -2355,8 +2363,7 @@ export class Invitation implements OnInit, OnDestroy {
   }
 
   eventCardProgress(index: number): number {
-    const start = 0.04 + index * 0.08;
-    return Math.min(1, Math.max(0, (this.eventScrollProgress() - start) / 0.46));
+    return this.revealProgressFor(index === 0 ? 'event-akad-card' : 'event-walimah-card');
   }
 
   eventCardTransform(direction: -1 | 1, index: number): string {
@@ -2611,8 +2618,7 @@ export class Invitation implements OnInit, OnDestroy {
   }
 
   eventQrProgress(index: number): number {
-    const start = 0.52 + index * 0.07;
-    return Math.min(1, Math.max(0, (this.eventScrollProgress() - start) / 0.28));
+    return this.revealProgressFor(index === 0 ? 'event-akad-qr' : 'event-walimah-qr');
   }
 
   eventQrTransform(index: number): string {
@@ -2621,7 +2627,15 @@ export class Invitation implements OnInit, OnDestroy {
   }
 
   eventNoteProgress(): number {
-    return Math.min(1, Math.max(0, (this.eventScrollProgress() - 0.72) / 0.22));
+    return this.revealProgressFor('event-adab-note');
+  }
+
+  adabPointProgress(index: number): number {
+    return this.revealProgressFor(`event-adab-point-${index}`);
+  }
+
+  adabPointTransform(index: number): string {
+    return `translate3d(0, ${(1 - this.adabPointProgress(index)) * 12}px, 0)`;
   }
 
   private startRevealAnimations(): void {
