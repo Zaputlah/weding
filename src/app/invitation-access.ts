@@ -111,13 +111,13 @@ export const CUSTOMER_INVITATIONS: readonly CustomerInvitation[] = [
     groomFullName: 'Reza Putra Fadilah, S.Kom.',
     brideParents: {
       description: 'Putri dari',
-      father: 'Aulia Umar (rahimahullah)',
-      mother: 'Ike Kusmawati',
+      father: 'Bpk. Aulia Umar (rahimahullah)',
+      mother: 'Ibu Ike Kusmawati',
     },
     groomParents: {
       description: 'Putra dari',
-      father: 'Nursalim',
-      mother: 'Atun Qonatun',
+      father: 'Bpk. Nursalim',
+      mother: 'Ibu Atun Qonatun',
     },
     event: {
       date: '2026-11-08',

@@ -271,20 +271,17 @@ export class Invitation implements OnInit, OnDestroy {
       month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta',
     }),
   );
-  readonly eventWeekday = computed(() =>
-    this.eventDate().toLocaleDateString('id-ID', {
+  readonly eventWeekday = computed(() => {
+    const weekday = this.eventDate().toLocaleDateString('id-ID', {
       weekday: 'long', timeZone: 'Asia/Jakarta',
-    }),
-  );
+    });
+    return weekday === 'Minggu' ? 'Ahad' : weekday;
+  });
   readonly hijriDateParts = computed(() => {
     const match = this.event().hijriDate?.match(/^(\d{1,2})\s+(.+)$/);
     return match ? { day: match[1], monthYear: match[2] } : null;
   });
-  readonly eventDateWithWeekday = computed(() =>
-    this.eventDate().toLocaleDateString('id-ID', {
-      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta',
-    }),
-  );
+  readonly eventDateWithWeekday = computed(() => `${this.eventWeekday()}, ${this.eventDateLong()}`);
   readonly eventDateUpper = computed(() =>
     this.eventDateWithWeekday().replace(', ', ' · ').toLocaleUpperCase('id-ID'),
   );
@@ -791,11 +788,11 @@ export class Invitation implements OnInit, OnDestroy {
       journeyImageClipPath: 'polygon(3% 0,100% 4%,96% 100%,0 96%)',
       eventColumns: 'minmax(0,1fr)',
       eventCardClipPaths: ['polygon(0 0,94% 4%,100% 92%,6% 100%,2% 18%)', 'polygon(6% 0,100% 6%,96% 100%,0 94%,0 12%)'],
-      closingLabel: 'Catatan Senja',
+      closingLabel: '',
       closingClipPath: 'polygon(2% 4%,98% 0,100% 92%,94% 100%,4% 96%,0 12%)',
       closingWidth: '52rem',
       closingTextAlign: 'left',
-      closingPadding: 'clamp(2rem,6vw,4.5rem)',
+      closingPadding: 'clamp(0.75rem,4vw,4.5rem)',
     },
     ivory: {
       storyLabel: 'Wedding Journal · Chapter 01',
