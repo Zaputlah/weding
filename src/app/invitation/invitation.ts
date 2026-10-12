@@ -255,6 +255,16 @@ export class Invitation implements OnInit, OnDestroy {
   readonly brideFullName = signal('Fulanah binti Fulan');
   readonly groomFullName = signal('Fulan bin Fulan');
   readonly event = signal<EventInfo>(PREVIEW_EVENT);
+  readonly sharedEventLocation = computed(() => {
+    const { akadLocation, walimahLocation } = this.event();
+    if (!akadLocation || !walimahLocation) return null;
+
+    const sameLocation = akadLocation.venue.trim() === walimahLocation.venue.trim()
+      && akadLocation.address.trim() === walimahLocation.address.trim()
+      && (akadLocation.mapsUrl?.trim() ?? '') === (walimahLocation.mapsUrl?.trim() ?? '')
+      && (akadLocation.qrImage?.trim() ?? '') === (walimahLocation.qrImage?.trim() ?? '');
+    return sameLocation ? akadLocation : null;
+  });
   readonly akadQrCode = signal('');
   readonly walimahQrCode = signal('');
   private qrRequestId = 0;
@@ -768,7 +778,7 @@ export class Invitation implements OnInit, OnDestroy {
       closingPadding: 'clamp(3rem,9vw,7rem)',
     },
     mocha: {
-      storyLabel: 'Jurnal Kebun',
+      storyLabel: 'Awal Perjalanan',
       storyCardClipPath: 'polygon(2% 4%,98% 0,96% 96%,4% 100%,0 12%)',
       storyCardWidth: '40rem',
       storyCardMinHeight: '18rem',
@@ -1574,6 +1584,22 @@ export class Invitation implements OnInit, OnDestroy {
       block: 'start',
     });
     this.scheduleScrollEffectsUpdate();
+  }
+
+  scrollToStory(index: number): void {
+    const scene = document.getElementById('stories-section');
+    const panel = scene?.querySelector<HTMLElement>('.sticky');
+    const lastIndex = this.storyMoments().length - 1;
+    if (!scene || !panel || lastIndex < 1) return;
+
+    const targetIndex = Math.min(lastIndex, Math.max(0, index));
+    const scrollableDistance = Math.max(1, scene.offsetHeight - panel.offsetHeight);
+    const sceneTop = window.scrollY + scene.getBoundingClientRect().top;
+    this.recordUserActivity();
+    window.scrollTo({
+      top: sceneTop + (targetIndex / lastIndex) * scrollableDistance,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
   }
 
   toggleEnvelopeSide(): void {
