@@ -266,6 +266,20 @@ export class Invitation implements OnInit, OnDestroy {
       day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta',
     }),
   );
+  readonly eventMonthYearIndonesian = computed(() =>
+    this.eventDate().toLocaleDateString('id-ID', {
+      month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta',
+    }),
+  );
+  readonly eventWeekday = computed(() =>
+    this.eventDate().toLocaleDateString('id-ID', {
+      weekday: 'long', timeZone: 'Asia/Jakarta',
+    }),
+  );
+  readonly hijriDateParts = computed(() => {
+    const match = this.event().hijriDate?.match(/^(\d{1,2})\s+(.+)$/);
+    return match ? { day: match[1], monthYear: match[2] } : null;
+  });
   readonly eventDateWithWeekday = computed(() =>
     this.eventDate().toLocaleDateString('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta',

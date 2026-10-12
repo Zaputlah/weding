@@ -370,7 +370,12 @@
       >
         {{ firstName() }} <span class="font-medium italic text-[var(--theme-accent)]">&</span> {{ secondName() }}
       </h1>
-      <p class="my-7 text-xs tracking-[0.17em]">{{ eventDateUpper() }}</p>
+      <div class="my-7 space-y-1 text-xs tracking-[0.17em]">
+        <strong class="block font-bold">{{ eventDateUpper() }}</strong>
+        @if (event().hijriDate; as hijriDate) {
+          <span class="block font-light tracking-[0.08em] text-white/75">{{ hijriDate }}</span>
+        }
+      </div>
       <form
         class="w-full max-w-md border-y border-white/20 px-6 py-5"
         (ngSubmit)="openInvitation()"
@@ -433,14 +438,17 @@
     >
       UNDANGAN WALIMATUL ‘URS
     </p>
-    <p
-      class="mb-2 text-[9px] tracking-[0.17em] text-white/50 transition-[transform,opacity] duration-700 ease-out motion-reduce:transition-none"
+    <div
+      class="mb-2 space-y-1 text-[9px] tracking-[0.17em] text-white/50 transition-[transform,opacity] duration-700 ease-out motion-reduce:transition-none"
       [style.opacity]="isEnvelopeReady() ? 1 : 0"
       [style.transform]="isEnvelopeReady() ? 'translateY(0)' : 'translateY(-10px)'"
       [style.transition-delay]="'250ms'"
     >
-      {{ eventDateUpper() }}
-    </p>
+      <strong class="block font-bold">{{ eventDateUpper() }}</strong>
+      @if (event().hijriDate; as hijriDate) {
+        <span class="block font-light tracking-[0.08em]">{{ hijriDate }}</span>
+      }
+    </div>
 
     <div
       class="relative h-[22rem] w-full max-w-md -translate-y-4 [perspective:1200px] sm:h-[27rem] sm:-translate-y-8"
@@ -1302,7 +1310,12 @@
               [style.transform]="conceptPanelTransform(conceptUpperFoldProgress())">
               <div class="border-b border-[var(--theme-border)] py-7 text-left sm:grid sm:grid-cols-[1fr_auto] sm:items-end sm:gap-8">
                 <h3 class="[font-family:Cormorant_Garamond,serif] text-5xl leading-none font-semibold">{{ firstName() }}<span class="block text-[var(--theme-accent-dark)]">& {{ secondName() }}</span></h3>
-                <span class="mt-5 inline-block text-[10px] tracking-[0.26em] text-[var(--theme-muted)] sm:mt-0">{{ eventDateNumeric() }}</span>
+                <span class="mt-5 inline-flex flex-col gap-1 text-[10px] tracking-[0.18em] text-[var(--theme-muted)] sm:mt-0 sm:text-right">
+                  <strong class="font-bold">{{ eventDateNumeric() }}</strong>
+                  @if (event().hijriDate; as hijriDate) {
+                    <span class="font-light tracking-[0.08em]">{{ hijriDate }}</span>
+                  }
+                </span>
               </div>
             </div>
           </div>
@@ -2196,8 +2209,25 @@
         >
           Akad Nikah
         </h4>
-        <p class="text-sm text-[var(--theme-muted)]"><strong>{{ eventDateWithWeekday() }}</strong></p>
-        <p class="text-sm text-[var(--theme-muted)]">Pukul {{ akadTimeLabel() }}</p>
+        @if (hijriDateParts(); as hijriDate) {
+          <div class="mx-auto mt-4 grid w-full max-w-72 grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] items-stretch gap-2 border-y border-[var(--theme-border)] bg-[var(--theme-soft)]/45 px-2 py-3 sm:gap-4 sm:px-4">
+            <div class="min-w-0">
+              <span class="block text-[9px] font-semibold tracking-[0.18em] text-[var(--theme-accent-dark)] uppercase">Masehi</span>
+              <strong class="mt-1 block [font-family:Cormorant_Garamond,serif] text-[2.75rem] leading-none font-bold text-[var(--theme-dark)]">{{ eventDay().padStart(2, '0') }}</strong>
+              <span class="mt-1 block text-[11px] leading-4 font-bold text-[var(--theme-dark)]">{{ eventMonthYearIndonesian() }}</span>
+            </div>
+            <span class="w-px bg-[var(--theme-border)]" aria-hidden="true"></span>
+            <div class="min-w-0">
+              <span class="block text-[9px] font-light tracking-[0.18em] text-[var(--theme-accent-dark)] uppercase">Hijriah</span>
+              <span class="mt-1 block [font-family:Cormorant_Garamond,serif] text-[2.75rem] leading-none font-light text-[var(--theme-accent-dark)]">{{ hijriDate.day.padStart(2, '0') }}</span>
+              <span class="mt-1 block text-[11px] leading-4 font-light text-[var(--theme-muted)]">{{ hijriDate.monthYear }}</span>
+            </div>
+          </div>
+          <p class="mt-2 text-xs text-[var(--theme-muted)]">{{ eventWeekday() }}</p>
+        } @else {
+          <p class="text-sm text-[var(--theme-muted)]"><strong>{{ eventDateWithWeekday() }}</strong></p>
+        }
+        <p class="mt-2 text-sm text-[var(--theme-muted)]">Pukul {{ akadTimeLabel() }}</p>
         <hr class="mx-auto my-5 w-12 border-[var(--theme-border)]" />
         @if (event().akadLocation; as location) {
           @if (location.venue || location.address) {
@@ -2277,8 +2307,25 @@
         >
           Walimatul ‘Urs
         </h4>
-        <p class="text-sm text-[var(--theme-muted)]"><strong>{{ eventDateWithWeekday() }}</strong></p>
-        <p class="text-sm text-[var(--theme-muted)]">Pukul {{ walimahTimeLabel() }}</p>
+        @if (hijriDateParts(); as hijriDate) {
+          <div class="mx-auto mt-4 grid w-full max-w-72 grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] items-stretch gap-2 border-y border-[var(--theme-border)] bg-[var(--theme-soft)]/45 px-2 py-3 sm:gap-4 sm:px-4">
+            <div class="min-w-0">
+              <span class="block text-[9px] font-semibold tracking-[0.18em] text-[var(--theme-accent-dark)] uppercase">Masehi</span>
+              <strong class="mt-1 block [font-family:Cormorant_Garamond,serif] text-[2.75rem] leading-none font-bold text-[var(--theme-dark)]">{{ eventDay().padStart(2, '0') }}</strong>
+              <span class="mt-1 block text-[11px] leading-4 font-bold text-[var(--theme-dark)]">{{ eventMonthYearIndonesian() }}</span>
+            </div>
+            <span class="w-px bg-[var(--theme-border)]" aria-hidden="true"></span>
+            <div class="min-w-0">
+              <span class="block text-[9px] font-light tracking-[0.18em] text-[var(--theme-accent-dark)] uppercase">Hijriah</span>
+              <span class="mt-1 block [font-family:Cormorant_Garamond,serif] text-[2.75rem] leading-none font-light text-[var(--theme-accent-dark)]">{{ hijriDate.day.padStart(2, '0') }}</span>
+              <span class="mt-1 block text-[11px] leading-4 font-light text-[var(--theme-muted)]">{{ hijriDate.monthYear }}</span>
+            </div>
+          </div>
+          <p class="mt-2 text-xs text-[var(--theme-muted)]">{{ eventWeekday() }}</p>
+        } @else {
+          <p class="text-sm text-[var(--theme-muted)]"><strong>{{ eventDateWithWeekday() }}</strong></p>
+        }
+        <p class="mt-2 text-sm text-[var(--theme-muted)]">Pukul {{ walimahTimeLabel() }}</p>
         <hr class="mx-auto my-5 w-12 border-[var(--theme-border)]" />
         @if (event().walimahLocation; as location) {
           @if (location.venue || location.address) {
