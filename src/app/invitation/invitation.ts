@@ -1208,6 +1208,7 @@ export class Invitation implements OnInit, OnDestroy {
   readonly isFrameVisible = signal(false);
   readonly isCoupleJoined = signal(false);
   readonly isAlternateOutfit = signal(false);
+  readonly isOutfitFixed = signal(false);
   readonly isJourneyRendered = signal(true);
   readonly conceptScrollProgress = signal(0);
   readonly conceptUpperFoldProgress = computed(() => Math.min(1, this.conceptScrollProgress() * 2));
@@ -1443,6 +1444,8 @@ export class Invitation implements OnInit, OnDestroy {
     const invitation = findCustomerInvitation(themeSlug, customerSlug);
 
     if (!invitation) {
+      this.isOutfitFixed.set(false);
+      this.isAlternateOutfit.set(false);
       this.groomFirst.set(false);
       this.brideName.set('Fulanah');
       this.groomName.set('Fulan');
@@ -1456,6 +1459,9 @@ export class Invitation implements OnInit, OnDestroy {
       this.groomParents.set(PREVIEW_PARENTS.groom);
       return;
     }
+
+    this.isOutfitFixed.set(invitation.fixedThemeOutfit ?? false);
+    this.isAlternateOutfit.set(invitation.fixedThemeOutfit ?? false);
 
     const [firstName, secondName] = invitation.coupleName
       .split('&')
@@ -1529,6 +1535,7 @@ export class Invitation implements OnInit, OnDestroy {
   }
 
   toggleOutfit(): void {
+    if (this.isOutfitFixed()) return;
     this.isAlternateOutfit.update((isAlternate) => !isAlternate);
   }
 
@@ -2017,7 +2024,7 @@ export class Invitation implements OnInit, OnDestroy {
     this.isEnvelopeReady.set(false);
     this.isEnvelopeLetterReleased.set(false);
     this.isCoupleJoined.set(false);
-    this.isAlternateOutfit.set(false);
+    this.isAlternateOutfit.set(this.isOutfitFixed());
     this.conceptScrollProgress.set(0);
     this.storyScrollProgress.set(0);
     this.galleryScrollProgress.set(0);
@@ -2107,7 +2114,8 @@ export class Invitation implements OnInit, OnDestroy {
       const storyScene = document.getElementById('stories-section');
       if (storyScene) {
         const storyBounds = storyScene.getBoundingClientRect();
-        const storyScrollableDistance = Math.max(1, storyScene.offsetHeight - window.innerHeight);
+        const storyPanel = storyScene.querySelector<HTMLElement>('.sticky');
+        const storyScrollableDistance = Math.max(1, storyScene.offsetHeight - (storyPanel?.offsetHeight ?? window.innerHeight));
         const progress = Math.min(1, Math.max(0, -storyBounds.top / storyScrollableDistance));
         this.storyScrollProgress.set(progress);
       }

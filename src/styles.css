@@ -228,6 +228,16 @@
 }
 
 @media (max-width: 639px) {
+  #stories-section {
+    height: var(--story-mobile-height);
+  }
+
+  @supports (height: 100svh) {
+    #stories-section {
+      height: var(--story-mobile-height-svh);
+    }
+  }
+
   .story-long-form-layout {
     padding-block: 1rem;
     min-height: 100svh;

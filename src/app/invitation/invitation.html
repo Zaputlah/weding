@@ -1302,7 +1302,7 @@
           class="relative w-full max-w-xl border border-dashed border-[var(--theme-accent)]/45 bg-[var(--theme-paper)] px-7 py-12 text-[var(--theme-copy)] shadow-[12px_16px_0_rgba(0,0,0,0.14)] sm:px-14"
         >
           <div class="border-b border-[var(--theme-border)] pb-8 text-left">
-            <p class="text-[9px] font-semibold tracking-[0.34em] text-[var(--theme-accent-dark)] uppercase">Catatan Kebun Senja</p>
+            <p class="text-[9px] font-semibold tracking-[0.34em] text-[var(--theme-accent-dark)] uppercase">Bersama Meniti Langkah Baru</p>
           </div>
           <div class="grid [perspective:900px]" [style.grid-template-rows]="conceptFoldRows(conceptUpperFoldProgress())">
             <div class="min-h-0 origin-top overflow-hidden [backface-visibility:hidden] will-change-[opacity,transform]"
@@ -1471,6 +1471,8 @@
   <section
     id="stories-section"
     class="relative z-10 h-[450vh] overflow-clip bg-transparent"
+    [style.--story-mobile-height]="(100 + (storyMoments().length - 1) * 45) + 'vh'"
+    [style.--story-mobile-height-svh]="(100 + (storyMoments().length - 1) * 45) + 'svh'"
   >
     <span class="pointer-events-none absolute -top-24 -right-24 size-72 rounded-full border border-[var(--theme-accent)]/15" aria-hidden="true"></span>
     <span class="pointer-events-none absolute -bottom-24 -left-24 size-72 rotate-45 border border-[var(--theme-primary)]/10" aria-hidden="true"></span>
@@ -1697,7 +1699,7 @@
 
   <section
     id="verse-section"
-    class="relative z-10 flex min-h-[70vh] items-center justify-center overflow-hidden bg-transparent px-5 py-24 text-center"
+    class="relative z-10 flex items-center justify-center overflow-hidden bg-transparent px-3 py-10 text-center sm:min-h-[70vh] sm:px-5 sm:py-24"
   >
     @if (activeThemeId() === 'maroon') {
       <span class="pointer-events-none absolute -top-10 left-6 text-9xl text-[var(--theme-primary)]/8 motion-safe:animate-spin [animation-duration:16s]" aria-hidden="true">❀</span>
@@ -1717,7 +1719,7 @@
       <span class="pointer-events-none absolute top-14 left-1/2 size-64 -translate-x-1/2 rotate-45 border border-[var(--theme-primary)]/8" aria-hidden="true"></span>
     }
     <div
-      class="relative isolate w-full max-w-3xl overflow-visible rounded-[2rem] border border-[var(--theme-border)] bg-[var(--theme-paper)]/96 px-6 py-10 text-[var(--theme-copy)] shadow-[0_24px_70px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[transform,opacity] will-change-[transform,opacity] motion-reduce:transition-none sm:p-12"
+      class="relative isolate w-full max-w-3xl overflow-visible rounded-[2rem] border border-[var(--theme-border)] bg-[var(--theme-paper)]/96 px-4 py-6 text-[var(--theme-copy)] shadow-[0_24px_70px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[transform,opacity] will-change-[transform,opacity] motion-reduce:transition-none sm:p-12"
       [class.rounded-t-[8rem]]="activeThemeId() === 'maroon'"
       [class.rounded-b-3xl]="activeThemeId() === 'maroon'"
       [class.rounded-3xl]="activeThemeId() === 'midnight'"
@@ -1742,13 +1744,13 @@
         aria-hidden="true"
       ></span>
       <div class="relative z-10 mx-auto max-w-2xl">
-      <p class="text-xl leading-loose text-[var(--theme-dark)] sm:text-2xl" lang="ar" dir="rtl">
+      <p class="text-xl leading-[1.7] text-[var(--theme-dark)] sm:text-2xl sm:leading-loose" lang="ar" dir="rtl">
         وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا
         وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ
         يَّتَفَكَّرُوْنَ
       </p>
       <blockquote
-        class="my-6 [font-family:Cormorant_Garamond,serif] text-xl leading-relaxed font-medium sm:text-2xl"
+        class="my-4 [font-family:Cormorant_Garamond,serif] text-lg leading-[1.45] font-medium sm:my-6 sm:text-2xl sm:leading-relaxed"
       >
         “Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu
         dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan
@@ -1910,6 +1912,7 @@
         }}
       </p>
 
+      @if (!isOutfitFixed()) {
       <button
         class="mb-8 inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--theme-accent-dark)]/50 bg-white px-5 py-2.5 text-xs font-semibold tracking-[0.12em] text-[var(--theme-dark)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--theme-accent-dark)] hover:bg-[var(--theme-soft)] hover:shadow-md motion-reduce:transform-none motion-reduce:transition-none"
         type="button"
@@ -1941,9 +1944,11 @@
         ></span>
         {{ isAlternateOutfit() ? 'Kembali ke Pakaian Awal' : 'Ganti ke ' + activeOutfitPalette().label }}
       </button>
+      }
 
       <div
         class="mx-auto grid w-full max-w-md grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2 text-center sm:gap-4"
+        [class.mt-5]="isOutfitFixed()"
       >
         <article class="min-w-0">
           <h4

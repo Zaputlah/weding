@@ -73,6 +73,7 @@ export interface CustomerInvitation {
   customerSlug: string;
   coupleName: string;
   groomFirst?: boolean;
+  fixedThemeOutfit?: boolean;
   brideFullName?: string;
   groomFullName?: string;
   brideParents?: ParentInfo;
@@ -105,11 +106,12 @@ export const CUSTOMER_INVITATIONS: readonly CustomerInvitation[] = [
     customerSlug: 'reza-fitri',
     coupleName: 'Reza & Fitri',
     groomFirst: true,
-    brideFullName: 'Adriani Safitri',
-    groomFullName: 'Reza Putra Fadilah',
+    fixedThemeOutfit: true,
+    brideFullName: 'Adriani Safitri, S.Pd.',
+    groomFullName: 'Reza Putra Fadilah, S.Kom.',
     brideParents: {
       description: 'Putri dari',
-      father: 'Aulia Umar',
+      father: 'Aulia Umar (rahimahullah)',
       mother: 'Ike Kusmawati',
     },
     groomParents: {
