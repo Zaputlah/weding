@@ -2,7 +2,7 @@
 
 Aplikasi undangan pernikahan digital berbasis Angular dengan katalog tema, halaman undangan personal, galeri, cerita perjalanan pasangan, hitung mundur acara, dan petunjuk lokasi.
 
-Proyek ini berjalan sepenuhnya di sisi klien. Tidak ada backend, database, RSVP, atau halaman admin. Nama tamu dapat diisi melalui `#to=` (atau `?to=` pada tautan lama) di tautan undangan atau diketik langsung; nama yang digunakan dan tema yang dipilih disimpan di `localStorage` browser. Untuk membuat tautan dari daftar tamu, lihat [panduan Google Sheets](./docs/tautan-tamu-google-sheets.md).
+Halaman undangan berjalan di sisi klien. Dua Vercel Function membuat kartu pratinjau WhatsApp berisi amplop dan nama tamu. Tidak ada database, RSVP, atau halaman admin. Nama tamu dapat diisi melalui `#to=` atau `?to=` di tautan undangan maupun diketik langsung; nama yang digunakan dan tema yang dipilih disimpan di `localStorage` browser. Untuk membuat tautan berbagi dari daftar tamu, lihat [panduan Google Sheets](./docs/tautan-tamu-google-sheets.md).
 
 ## Fitur
 
@@ -11,6 +11,7 @@ Proyek ini berjalan sepenuhnya di sisi klien. Tidak ada backend, database, RSVP,
 - URL personal berdasarkan tema dan nama pelanggan.
 - Validasi undangan serta masa berlaku pelanggan.
 - Sampul interaktif dengan nama tamu.
+- Kartu pratinjau WhatsApp personal dengan gambar amplop dan nama tamu.
 - Hitung mundur menuju hari pernikahan.
 - Profil kedua mempelai dan kutipan ayat.
 - Galeri foto dengan tampilan yang mengikuti tema.

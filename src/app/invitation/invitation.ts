@@ -1467,7 +1467,15 @@ export class Invitation implements OnInit, OnDestroy {
   }
 
   private guestNameFromLink(fragment: string | null, queryName: string | null): string | null {
-    return (fragment ? new URLSearchParams(fragment).get('to') : null) ?? queryName;
+    if (!fragment?.startsWith('to=')) return queryName;
+
+    // The fragment only contains a guest name; a literal '&' belongs to that name.
+    const name = fragment.slice(3).replace(/\+/g, ' ');
+    try {
+      return decodeURIComponent(name);
+    } catch {
+      return name;
+    }
   }
 
   private syncCoupleFromRoute(themeSlug: string | null, customerSlug: string | null): void {

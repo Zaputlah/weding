@@ -1,6 +1,11 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/undangan-app/browser",
+  "functions": {
+    "api/og.mjs": {
+      "includeFiles": "public/assets/scrapbook-kebun-senja.jpg"
+    }
+  },
   "routes": [
     {
       "src": "^/undangan/([a-z0-9-]+)/([a-z0-9-]+)/?$",
