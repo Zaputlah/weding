@@ -2,7 +2,7 @@
 
 Aplikasi undangan pernikahan digital berbasis Angular dengan katalog tema, halaman undangan personal, galeri, cerita perjalanan pasangan, hitung mundur acara, dan petunjuk lokasi.
 
-Proyek ini berjalan sepenuhnya di sisi klien. Tidak ada backend, database, RSVP, daftar tamu Excel, atau halaman admin. Nama tamu dan tema yang dipilih hanya disimpan di `localStorage` browser.
+Proyek ini berjalan sepenuhnya di sisi klien. Tidak ada backend, database, RSVP, atau halaman admin. Nama tamu dapat diisi melalui parameter `?to=` pada tautan undangan atau diketik langsung; nama yang digunakan dan tema yang dipilih disimpan di `localStorage` browser. Untuk membuat tautan dari daftar tamu, lihat [panduan Google Sheets](./docs/tautan-tamu-google-sheets.md).
 
 ## Fitur
 

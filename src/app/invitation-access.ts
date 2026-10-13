@@ -16,6 +16,7 @@ export interface EventInfo {
   hijriDate?: string; // Tanggal Hijriah sesuai kalender yang dipakai keluarga
   akadTime: string; // HH:mm, WIB
   walimahTime: string; // HH:mm, WIB
+  walimahEndTime?: string; // HH:mm, WIB
   akadLocation?: EventLocation;
   walimahLocation?: EventLocation;
 }
@@ -124,6 +125,7 @@ export const CUSTOMER_INVITATIONS: readonly CustomerInvitation[] = [
       hijriDate: '28 Jumadilawal 1448 H',
       akadTime: '10:00',
       walimahTime: '11:00',
+      walimahEndTime: '14:00',
       // QR dibuat otomatis dari lokasi. Isi qrImage hanya jika memakai gambar QR sendiri.
       akadLocation: {
         venue: 'Kediaman Keluarga Pihak Wanita',

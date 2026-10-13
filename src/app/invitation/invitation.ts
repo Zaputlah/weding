@@ -248,6 +248,7 @@ export class Invitation implements OnInit, OnDestroy {
   private envelopeEntranceStartFrame?: number;
   private scrollAnimationFrame?: number;
   private themeRouteSubscription?: Subscription;
+  private guestNameQuerySubscription?: Subscription;
   readonly guestName = signal('Tamu Undangan');
   readonly brideName = signal('Fulanah');
   readonly groomName = signal('Fulan');
@@ -307,7 +308,13 @@ export class Invitation implements OnInit, OnDestroy {
     `${this.eventDay()} · ${this.eventMonthYearEnglish()}`,
   );
   readonly akadTimeLabel = computed(() => `${this.event().akadTime.replace(':', '.')} WIB`);
-  readonly walimahTimeLabel = computed(() => `${this.event().walimahTime.replace(':', '.')} WIB`);
+  readonly walimahTimeLabel = computed(() => {
+    const { walimahTime, walimahEndTime } = this.event();
+    const start = walimahTime.replace(':', '.');
+    return walimahEndTime
+      ? `${start}–${walimahEndTime.replace(':', '.')} WIB`
+      : `${start} WIB`;
+  });
   readonly brideParents = signal<ParentInfo | null>(PREVIEW_PARENTS.bride);
   readonly groomParents = signal<ParentInfo | null>(PREVIEW_PARENTS.groom);
   readonly brideParentNames = computed(() =>
@@ -1437,14 +1444,23 @@ export class Invitation implements OnInit, OnDestroy {
       this.syncThemeFromRoute(params.get('themeId'));
       this.syncCoupleFromRoute(params.get('themeId'), params.get('customerSlug'));
     });
-    this.nameInput = '';
-    this.guestName.set('Tamu Undangan');
-    this.title.setTitle(`Undangan Pernikahan ${this.coupleName()}`);
+    this.guestNameQuerySubscription = this.route.queryParamMap.subscribe((params) => {
+      if (!this.isOpen()) this.prefillGuestName(params.get('to'));
+    });
     this.updateCountdown();
     this.timer = setInterval(() => this.updateCountdown(), 1000);
 
     document.body.classList.add('overflow-hidden');
     this.playEnvelopeEntrance();
+  }
+
+  private prefillGuestName(value: string | null): void {
+    const name = value?.trim().replace(/\s+/g, ' ').slice(0, 120) ?? '';
+    const validName = !/\p{N}/u.test(name) && (name.match(/\p{L}/gu)?.length ?? 0) >= 3;
+    this.nameInput = validName ? name : '';
+    this.guestName.set(this.nameInput || 'Tamu Undangan');
+    this.nameError.set('');
+    this.title.setTitle(`Undangan Pernikahan ${this.coupleName()}`);
   }
 
   private syncCoupleFromRoute(themeSlug: string | null, customerSlug: string | null): void {
@@ -1512,6 +1528,7 @@ export class Invitation implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.themeRouteSubscription?.unsubscribe();
+    this.guestNameQuerySubscription?.unsubscribe();
     if (this.timer) clearInterval(this.timer);
     if (this.inactivityTimer) clearTimeout(this.inactivityTimer);
     if (this.revealTimer) clearTimeout(this.revealTimer);
@@ -2058,10 +2075,7 @@ export class Invitation implements OnInit, OnDestroy {
     this.closingScrollProgress.set(0);
     this.selectedGalleryItem.set(null);
     this.activeMobileSection.set('home-section');
-    this.guestName.set('Tamu Undangan');
-    this.nameInput = '';
-    this.nameError.set('');
-    this.title.setTitle(`Undangan Pernikahan ${this.coupleName()}`);
+    this.prefillGuestName(this.route.snapshot.queryParamMap.get('to'));
 
     window.scrollTo({ top: 0, behavior: 'auto' });
     document.body.classList.add('overflow-hidden');
