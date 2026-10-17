@@ -20,4 +20,6 @@ Contoh: `Bapak Ahmad` menghasilkan `https://weding-sage.vercel.app/api/share?to=
 
 Jika nama tamu mengandung `&`, misalnya `Ka Riri & Keluarga`, rumus di atas otomatis mengubahnya menjadi `%26`. Saat menulis tautan sendiri, gunakan `Ka%20Riri%20%26%20Keluarga` setelah `to=` agar nama tidak terpotong.
 
+Nama yang sudah ada di tautan ditampilkan sebagai teks pada sampul sehingga tamu tidak bisa mengeditnya di kolom undangan. Tautannya sendiri masih dapat diubah atau dibuat ulang; nama dari tautan bukan verifikasi identitas tamu.
+
 Jika undangan dipublikasikan di domain lain, ganti bagian `https://weding-sage.vercel.app` pada rumus. Perubahan nama di Sheets setelah tautan dikirim tidak mengubah tautan yang sudah diterima tamu.

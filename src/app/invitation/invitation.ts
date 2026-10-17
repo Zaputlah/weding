@@ -250,6 +250,14 @@ export class Invitation implements OnInit, OnDestroy {
   private themeRouteSubscription?: Subscription;
   private guestNameLinkSubscription?: Subscription;
   readonly guestName = signal('Tamu Undangan');
+  readonly linkedGuestName = signal<string | null>(null);
+  readonly hasParkingGallery = signal(false);
+  readonly parkingPhotos = [
+    { src: '/assets/parkir-reza-fitri-depan.webp', alt: 'Area parkir di samping masjid, dilihat dari tepi jalan' },
+    { src: '/assets/parkir-reza-fitri-area.webp', alt: 'Deretan tempat parkir mobil di samping masjid' },
+    { src: '/assets/parkir-reza-fitri-sisi-jalan.webp', alt: 'Area parkir di sisi jalan dekat masjid' },
+    { src: '/assets/parkir-reza-fitri-samping.webp', alt: 'Area parkir di samping bangunan masjid' },
+  ] as const;
   readonly brideName = signal('Fulanah');
   readonly groomName = signal('Fulan');
   readonly groomFirst = signal(false);
@@ -1460,6 +1468,7 @@ export class Invitation implements OnInit, OnDestroy {
   private prefillGuestName(value: string | null): void {
     const name = value?.trim().replace(/\s+/g, ' ').slice(0, 120) ?? '';
     const validName = !/\p{N}/u.test(name) && (name.match(/\p{L}/gu)?.length ?? 0) >= 3;
+    this.linkedGuestName.set(validName ? name : null);
     this.nameInput = validName ? name : '';
     this.guestName.set(this.nameInput || 'Tamu Undangan');
     this.nameError.set('');
@@ -1480,6 +1489,7 @@ export class Invitation implements OnInit, OnDestroy {
 
   private syncCoupleFromRoute(themeSlug: string | null, customerSlug: string | null): void {
     const invitation = findCustomerInvitation(themeSlug, customerSlug);
+    this.hasParkingGallery.set(themeSlug === 'kebun-senja' && customerSlug === 'reza-fitri');
 
     if (!invitation) {
       this.isOutfitFixed.set(false);
@@ -1979,12 +1989,12 @@ export class Invitation implements OnInit, OnDestroy {
   openInvitation(): void {
     if (this.isOpening()) return;
 
-    const name = this.nameInput.trim().replace(/\s+/g, ' ').slice(0, 120);
+    const name = (this.linkedGuestName() ?? this.nameInput).trim().replace(/\s+/g, ' ').slice(0, 120);
     if (!name) {
       this.nameError.set('Silakan tuliskan nama Anda.');
       return;
     }
-    if (/\p{N}/u.test(this.nameInput)) {
+    if (/\p{N}/u.test(name)) {
       this.nameError.set('Nama tidak boleh mengandung angka.');
       return;
     }
@@ -2189,7 +2199,7 @@ export class Invitation implements OnInit, OnDestroy {
       const elementProgress: Record<string, number> = {};
       for (const id of [
         'stories-intro', 'stories-steps', 'event-intro',
-        'event-akad-card', 'event-walimah-card', 'event-adab-note',
+        'event-akad-card', 'event-walimah-card', 'event-parking-gallery', 'event-adab-note',
         'event-akad-qr', 'event-walimah-qr',
       ]) {
         elementProgress[id] = sectionRevealProgress(id);
