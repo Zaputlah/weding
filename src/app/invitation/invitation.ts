@@ -253,11 +253,14 @@ export class Invitation implements OnInit, OnDestroy {
   readonly linkedGuestName = signal<string | null>(null);
   readonly hasParkingGallery = signal(false);
   readonly parkingPhotos = [
-    { src: '/assets/parkir-reza-fitri-depan.webp', alt: 'Area parkir di samping masjid, dilihat dari tepi jalan' },
+    { src: '/assets/parkir-reza-fitri-depan.webp', alt: 'Area parkir di samping masjid dengan penanda tangga menuju rumah mempelai wanita' },
     { src: '/assets/parkir-reza-fitri-area.webp', alt: 'Deretan tempat parkir mobil di samping masjid' },
     { src: '/assets/parkir-reza-fitri-sisi-jalan.webp', alt: 'Area parkir di sisi jalan dekat masjid' },
     { src: '/assets/parkir-reza-fitri-samping.webp', alt: 'Area parkir di samping bangunan masjid' },
   ] as const;
+  readonly activeParkingPhotoIndex = signal(-1);
+  readonly activeParkingPhoto = computed(() => this.parkingPhotos[this.activeParkingPhotoIndex()] ?? null);
+  private parkingTouchStart?: { x: number; y: number };
   readonly brideName = signal('Fulanah');
   readonly groomName = signal('Fulan');
   readonly groomFirst = signal(false);
@@ -1601,6 +1604,44 @@ export class Invitation implements OnInit, OnDestroy {
     this.recordUserActivity();
   }
 
+  openParkingPhoto(index: number): void {
+    this.activeParkingPhotoIndex.set(index);
+    document.body.classList.add('overflow-hidden');
+    this.recordUserActivity();
+  }
+
+  closeParkingPhoto(): void {
+    if (this.activeParkingPhotoIndex() < 0) return;
+    this.activeParkingPhotoIndex.set(-1);
+    this.parkingTouchStart = undefined;
+    if (this.isOpen()) document.body.classList.remove('overflow-hidden');
+    this.recordUserActivity();
+  }
+
+  changeParkingPhoto(step: -1 | 1): void {
+    if (this.activeParkingPhotoIndex() < 0) return;
+    this.activeParkingPhotoIndex.update((index) =>
+      (index + step + this.parkingPhotos.length) % this.parkingPhotos.length,
+    );
+    this.recordUserActivity();
+  }
+
+  onParkingTouchStart(event: TouchEvent): void {
+    if (event.touches.length !== 1) return;
+    this.parkingTouchStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+  }
+
+  onParkingTouchEnd(event: TouchEvent): void {
+    const start = this.parkingTouchStart;
+    this.parkingTouchStart = undefined;
+    if (!start || event.changedTouches.length !== 1) return;
+    const deltaX = event.changedTouches[0].clientX - start.x;
+    const deltaY = event.changedTouches[0].clientY - start.y;
+    if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      this.changeParkingPhoto(deltaX < 0 ? 1 : -1);
+    }
+  }
+
   surpriseParticleTransform(particle: SurpriseParticle): string {
     if (!this.isSurpriseActive()) {
       return 'translate3d(0,0,0) scale(0.2) rotate(0deg)';
@@ -1967,7 +2008,18 @@ export class Invitation implements OnInit, OnDestroy {
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
+    this.closeParkingPhoto();
     this.closeGallery();
+  }
+
+  @HostListener('document:keydown.arrowleft')
+  onParkingArrowLeft(): void {
+    this.changeParkingPhoto(-1);
+  }
+
+  @HostListener('document:keydown.arrowright')
+  onParkingArrowRight(): void {
+    this.changeParkingPhoto(1);
   }
 
   @HostListener('document:visibilitychange')
@@ -2099,6 +2151,8 @@ export class Invitation implements OnInit, OnDestroy {
     this.elementRevealProgress.set({});
     this.closingScrollProgress.set(0);
     this.selectedGalleryItem.set(null);
+    this.activeParkingPhotoIndex.set(-1);
+    this.parkingTouchStart = undefined;
     this.activeMobileSection.set('home-section');
     this.prefillGuestName(this.guestNameFromLink(
       this.route.snapshot.fragment,

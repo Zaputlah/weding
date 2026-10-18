@@ -159,7 +159,7 @@ export const CUSTOMER_INVITATIONS: readonly CustomerInvitation[] = [
       {
         date: 'November 2026',
         title: 'Akad Nikah',
-        description: 'Bismillah, semoga Allah mudahkan. Ikrar janji suci penyatuan dua insan itu terucap. Dalam kesederhanaan namun penuh makna, kami merayakan karunia terindah ini dengan penuh syukur, mengawali perjalanan bersama dalam cinta, doa, dan ridha-Nya. Semoga Allah Ta’ala menurunkan pertolongan-Nya dalam setiap kondisi bahtera rumah tangga kami. Aamiin.',
+        description: 'Bismillah, semoga Allah mudahkan prosesi akad pada hari yang telah ditetapkan dan memberkahi awal perjalanan kami. Ikrar janji suci penyatuan dua insan itu terucap. Dalam kesederhanaan namun penuh makna, kami merayakan karunia terindah ini dengan penuh syukur, mengawali perjalanan bersama dalam cinta, doa, dan ridha-Nya. Semoga Allah Ta’ala menurunkan pertolongan-Nya dalam setiap kondisi bahtera rumah tangga kami. Aamiin.',
       },
     ],
     expiresAt: '2026-11-08T23:59:59+07:00',
