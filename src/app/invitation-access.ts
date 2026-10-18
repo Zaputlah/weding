@@ -149,7 +149,7 @@ export const CUSTOMER_INVITATIONS: readonly CustomerInvitation[] = [
       {
         date: 'Juni 2026',
         title: 'Nazhor',
-        description: 'Pertemuan pertama kami bertatap muka untuk pertama kalinya dalam penjagaan. Percakapan yang lebih dalam dan hati yang perlahan menimbang. Bukan sekadar rupa, melainkan mengenal arah dan tujuan yang hendak dituju bersama.',
+        description: 'Pertemuan pertama kami  bertatap muka didampingi oleh ibu dari pihak wanita. Percakapan yang lebih dalam dan hati yang perlahan menimbang. Bukan sekadar rupa, melainkan mengenal arah dan tujuan yang hendak dituju bersama.',
       },
       {
         date: 'Oktober 2026',

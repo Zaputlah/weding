@@ -1829,17 +1829,20 @@
             [style.transition-timing-function]="themeContentEasing()"
           >
             <div
-              class="h-56 w-36 overflow-hidden rounded-t-full rounded-b-xl bg-linear-to-br from-[#819b82] to-[var(--theme-dark)] shadow-xl sm:h-72 sm:w-48"
+              class="h-56 w-36 overflow-hidden rounded-t-full rounded-b-xl shadow-xl sm:h-72 sm:w-48"
+              [style.background]="groomFirst() ? 'linear-gradient(to bottom right, #9a927f, #3d4e44)' : 'linear-gradient(to bottom right, #819b82, var(--theme-dark))'"
               [style.clip-path]="activeExperience().couplePortraitClipPaths[0]"
             >
               <img
                 class="h-full w-full origin-bottom object-contain object-bottom px-2 pt-7 pb-1 transition-[transform,filter] duration-500 motion-reduce:transition-none sm:px-3 sm:pt-9"
                 [class.scale-[1.02]]="isAlternateOutfit()"
+                [style.transform]="groomFirst() && isAlternateOutfit() ? 'scale(1.5)' : null"
+                [style.transform-origin]="groomFirst() && isAlternateOutfit() ? 'center top' : null"
                 [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
                 [src]="
-                  isAlternateOutfit()
-                    ? '/assets/mempelai-wanita-marun-faceless.png'
-                    : '/assets/mempelai-wanita-faceless.png'
+                  groomFirst()
+                    ? (isAlternateOutfit() ? '/assets/mempelai-pria-marun-kiri.webp' : '/assets/mempelai-pria-faceless.png')
+                    : (isAlternateOutfit() ? '/assets/mempelai-wanita-marun-faceless.png' : '/assets/mempelai-wanita-faceless.png')
                 "
                 alt=""
                 loading="lazy"
@@ -1857,17 +1860,20 @@
             [style.transition-timing-function]="themeContentEasing()"
           >
             <div
-              class="h-56 w-36 overflow-hidden rounded-t-full rounded-b-xl bg-linear-to-br from-[#9a927f] to-[#3d4e44] shadow-xl sm:h-72 sm:w-48"
+              class="h-56 w-36 overflow-hidden rounded-t-full rounded-b-xl shadow-xl sm:h-72 sm:w-48"
+              [style.background]="groomFirst() ? 'linear-gradient(to bottom right, #819b82, var(--theme-dark))' : 'linear-gradient(to bottom right, #9a927f, #3d4e44)'"
               [style.clip-path]="activeExperience().couplePortraitClipPaths[1]"
             >
               <img
                 class="h-full w-full origin-bottom object-contain object-bottom px-2 pt-7 pb-1 transition-[transform,filter] duration-500 motion-reduce:transition-none sm:px-3 sm:pt-9"
                 [class.scale-[1.02]]="isAlternateOutfit()"
+                [style.transform]="groomFirst() && isAlternateOutfit() ? 'scale(1.5)' : null"
+                [style.transform-origin]="groomFirst() && isAlternateOutfit() ? 'center top' : null"
                 [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
                 [src]="
-                  isAlternateOutfit()
-                    ? '/assets/mempelai-pria-marun-faceless.png'
-                    : '/assets/mempelai-pria-faceless.png'
+                  groomFirst()
+                    ? (isAlternateOutfit() ? '/assets/mempelai-wanita-marun-kanan.webp' : '/assets/mempelai-wanita-faceless.png')
+                    : (isAlternateOutfit() ? '/assets/mempelai-pria-marun-faceless.png' : '/assets/mempelai-pria-faceless.png')
                 "
                 alt=""
                 loading="lazy"
@@ -1897,7 +1903,7 @@
             [style.filter]="isAlternateOutfit() ? outfitImageFilter : 'none'"
             [src]="
               isAlternateOutfit()
-                ? '/assets/mempelai-pasangan-marun-setelah-akad.png'
+                ? (groomFirst() ? '/assets/mempelai-pasangan-marun-pria-kiri.webp' : '/assets/mempelai-pasangan-marun-setelah-akad.png')
                 : '/assets/mempelai-pasangan-setelah-akad.png'
             "
             [attr.alt]="'Ilustrasi ' + firstName() + ' dan ' + secondName() + ' setelah akad, bergandengan tangan dengan wajah tanpa fitur'"
@@ -2534,9 +2540,8 @@
             <h4 id="parking-gallery-heading" class="m-0 [font-family:Cormorant_Garamond,serif] text-2xl font-semibold leading-none">Informasi Area Parkir</h4>
           </div>
         </div>
-        <div class="mb-4 space-y-3 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-soft)] px-4 py-4 text-sm leading-6">
-          <p class="m-0">Untuk kenyamanan bersama, Bapak/Ibu yang membawa kendaraan baik roda dua maupun roda empat, tersedia area parkir di samping Masjid Jami At Taqwa.</p>
-          <p class="m-0">Akses menuju rumah mempelai wanita dapat melalui tangga kecil di area parkir.</p>
+        <div class="mb-4 space-y-3 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-soft)] px-4 py-4 text-xs leading-5 sm:text-sm sm:leading-6">
+          <p class="m-0">Untuk kenyamanan bersama, Bapak/Ibu yang membawa kendaraan baik roda dua maupun roda empat, tersedia area parkir di samping Masjid Jami At Taqwa. Akses menuju rumah mempelai wanita dapat melalui tangga kecil di area parkir.</p>
           <p class="m-0">Terima kasih atas perhatian dan pengertiannya.</p>
         </div>
         <div class="grid grid-cols-3 gap-2 sm:gap-3">
